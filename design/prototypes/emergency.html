@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>紧急求助 - 戒色助手</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#34D399',
+                        secondary: '#06B6D4',
+                        accent: '#F59E0B',
+                        danger: '#EF4444',
+                        success: '#10B981',
+                        background: '#F8FAFC',
+                        surface: '#FFFFFF',
+                        calm: '#8B5CF6',
+                        soothing: '#06B6D4'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        }
+        .breathing-circle {
+            background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%);
+            animation: breathe 4s ease-in-out infinite;
+        }
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .calm-gradient {
+            background: linear-gradient(135deg, #E0E7FF 0%, #DBEAFE 50%, #E0F2FE 100%);
+        }
+    </style>
+</head>
+<body class="bg-background">
+    <!-- Status Bar -->
+    <div class="flex justify-between items-center px-4 py-2 text-xs text-gray-800">
+        <span class="font-medium">9:41</span>
+        <div class="flex items-center space-x-1">
+            <i class="fas fa-signal text-xs"></i>
+            <i class="fas fa-wifi text-xs"></i>
+            <div class="w-6 h-3 border border-gray-800 rounded-sm">
+                <div class="w-4 h-1.5 bg-green-500 rounded-sm mt-0.5 ml-0.5"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="calm-gradient px-6 pt-4 pb-8">
+        <div class="flex items-center justify-between mb-6">
+            <button class="p-2 bg-white/50 rounded-full backdrop-blur-sm">
+                <i class="fas fa-arrow-left text-gray-700"></i>
+            </button>
+            <h1 class="text-xl font-bold text-gray-800">紧急求助</h1>
+            <button class="p-2 bg-white/50 rounded-full backdrop-blur-sm">
+                <i class="fas fa-phone text-gray-700"></i>
+            </button>
+        </div>
+        
+        <div class="text-center">
+            <div class="breathing-circle w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center">
+                <i class="fas fa-heart text-white text-2xl"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">你并不孤单</h2>
+            <p class="text-gray-700">这种感觉会过去的，让我们一起度过</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="px-6 pb-20">
+        <!-- Immediate Actions -->
+        <div class="mb-8">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">立即行动</h3>
+            
+            <!-- Breathing Exercise -->
+            <div class="bg-surface rounded-2xl p-6 mb-4 shadow-sm">
+                <div class="flex items-center space-x-4 mb-4">
+                    <div class="w-12 h-12 bg-calm/10 rounded-full flex items-center justify-center">
+                        <i class="fas fa-lungs text-calm text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">深呼吸练习</h4>
+                        <p class="text-sm text-gray-600">4-7-8呼吸法，立即平静心情</p>
+                    </div>
+                </div>
+                <button class="w-full bg-calm text-white font-semibold py-3 rounded-xl active:scale-95 transition-transform">
+                    开始 3 分钟呼吸练习
+                </button>
+            </div>
+
+            <!-- Physical Exercise -->
+            <div class="bg-surface rounded-2xl p-6 mb-4 shadow-sm">
+                <div class="flex items-center space-x-4 mb-4">
+                    <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                        <i class="fas fa-dumbbell text-primary text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">快速运动</h4>
+                        <p class="text-sm text-gray-600">20个俯卧撑或深蹲，释放压力</p>
+                    </div>
+                </div>
+                <button class="w-full bg-primary text-white font-semibold py-3 rounded-xl active:scale-95 transition-transform">
+                    开始运动指导
+                </button>
+            </div>
+        </div>
+
+        <!-- Distraction Activities -->
+        <div class="mb-8">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">转移注意力</h3>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <button class="bg-surface rounded-2xl p-4 shadow-sm active:scale-95 transition-transform">
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                            <i class="fas fa-puzzle-piece text-purple-600 text-xl"></i>
+                        </div>
+                        <h4 class="font-medium text-gray-800 mb-1">益智游戏</h4>
+                        <p class="text-xs text-gray-600">数独、拼图</p>
+                    </div>
+                </button>
+                
+                <button class="bg-surface rounded-2xl p-4 shadow-sm active:scale-95 transition-transform">
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                            <i class="fas fa-seedling text-green-600 text-xl"></i>
+                        </div>
+                        <h4 class="font-medium text-gray-800 mb-1">正念冥想</h4>
+                        <p class="text-xs text-gray-600">5分钟冥想</p>
+                    </div>
+                </button>
+                
+                <button class="bg-surface rounded-2xl p-4 shadow-sm active:scale-95 transition-transform">
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                            <i class="fas fa-music text-blue-600 text-xl"></i>
+                        </div>
+                        <h4 class="font-medium text-gray-800 mb-1">舒缓音乐</h4>
+                        <p class="text-xs text-gray-600">放松播放列表</p>
+                    </div>
+                </button>
+                
+                <button class="bg-surface rounded-2xl p-4 shadow-sm active:scale-95 transition-transform">
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                            <i class="fas fa-book text-orange-600 text-xl"></i>
+                        </div>
+                        <h4 class="font-medium text-gray-800 mb-1">励志文章</h4>
+                        <p class="text-xs text-gray-600">正能量内容</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Community Support -->
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 mb-6 border border-blue-100">
+            <div class="text-center mb-4">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-users text-blue-600 text-2xl"></i>
+                </div>
+                <h3 class="font-semibold text-gray-800 mb-2">寻求社区支持</h3>
+                <p class="text-sm text-gray-600 mb-4">
+                    有 23 位伙伴正在线上，他们愿意为你提供支持和鼓励
+                </p>
+            </div>
+            
+            <div class="space-y-3">
+                <button class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl active:scale-95 transition-transform">
+                    匿名求助 - 立即连接
+                </button>
+                <button class="w-full border-2 border-blue-600 text-blue-600 font-semibold py-3 rounded-xl active:scale-95 transition-transform">
+                    查看励志故事
+                </button>
+            </div>
+        </div>
+
+        <!-- Motivational Quote -->
+        <div class="text-center p-6 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl border border-yellow-100">
+            <i class="fas fa-quote-left text-2xl text-yellow-600 mb-3"></i>
+            <p class="text-lg font-medium text-gray-800 mb-2 italic">
+                "你比你想象的更坚强，这个时刻会过去的。"
+            </p>
+            <p class="text-sm text-gray-600">— 戒色社区</p>
+        </div>
+    </div>
+</body>
+</html> 

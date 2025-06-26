@@ -1,0 +1,199 @@
+# 生产环境配置文件
+# Production Configuration for NoFap Assistant
+
+# MySQL 生产数据库配置
+mysql:
+  path: '${DB_HOST:localhost}:${DB_PORT:3306}'
+  port: '${DB_PORT:3306}'
+  config: 'charset=utf8mb4&parseTime=True&loc=Local'
+  db-name: '${DB_NAME:nofap_production}'
+  username: '${DB_USER:root}'
+  password: '${DB_PASSWORD:}'
+  prefix: 'nofap_'
+  singular: false
+  engine: 'InnoDB'
+  max-idle-conns: 20
+  max-open-conns: 100
+  log-mode: 'error'
+  log-zap: true
+
+# Redis 生产缓存配置
+redis:
+  addr: '${REDIS_HOST:localhost}:${REDIS_PORT:6379}'
+  password: '${REDIS_PASSWORD:}'
+  db: 0
+  pool-size: 50
+  min-idle-conns: 10
+
+# 系统配置
+system:
+  env: 'production'
+  addr: '${SERVER_PORT:8888}'
+  db-type: 'mysql'
+  oss-type: 'local'
+  use-multipoint: false
+  use-redis: true
+  iplimit-count: 15000
+  iplimit-time: 3600
+  router-prefix: '/api'
+
+# JWT 配置
+jwt:
+  signing-key: '${JWT_SECRET:nofap-production-secret-key-change-me}'
+  expires-time: '7d'
+  buffer-time: '1d'
+  issuer: 'nofap-assistant'
+
+# 微信小程序配置
+wechat:
+  mini-program:
+    app-id: '${WECHAT_APPID:}'
+    app-secret: '${WECHAT_APPSECRET:}'
+
+# 跨域配置
+cors:
+  mode: 'strict-whitelist'
+  whitelist:
+    - 'https://nofap.yourdomain.com'
+    - 'https://admin.yourdomain.com'
+  allow-origins:
+    - 'https://nofap.yourdomain.com'
+    - 'https://admin.yourdomain.com'
+  allow-methods:
+    - 'GET'
+    - 'POST'
+    - 'PUT'
+    - 'DELETE'
+    - 'OPTIONS'
+  allow-headers:
+    - 'Origin'
+    - 'Content-Length'
+    - 'Content-Type'
+    - 'Authorization'
+    - 'x-token'
+    - 'x-user-id'
+
+# 日志配置
+zap:
+  level: 'info'
+  format: 'json'
+  prefix: '[NOFAP-PROD]'
+  director: '/var/log/nofap'
+  encode-level: 'LowercaseColorLevelEncoder'
+  stacktrace-key: 'stacktrace'
+  max-age: 30
+  show-line: false
+  log-in-console: false
+
+# 验证码配置
+captcha:
+  key-long: 6
+  img-width: 240
+  img-height: 80
+  open-captcha: 0
+  open-captcha-timeout: 3600
+
+# 安全配置
+security:
+  # 加密配置
+  encryption:
+    aes-key: '${AES_KEY:nofap-aes-key-32-chars-long-12345}'
+    enable-data-encryption: true
+    
+  # 限流配置
+  rate-limit:
+    enable: true
+    requests-per-minute: 100
+    burst-size: 50
+    
+  # JWT 安全配置
+  jwt-security:
+    enable-blacklist: true
+    blacklist-cleanup-interval: 3600
+    max-failed-attempts: 10
+    lockout-duration: 3600
+    
+  # 输入验证配置
+  input-validation:
+    max-input-length: 10000
+    enable-xss-protection: true
+    enable-sql-injection-protection: true
+    
+  # 审计日志配置
+  audit-log:
+    enable: true
+    log-level: 'info'
+    retention-days: 90
+    
+  # 敏感数据配置
+  sensitive-data:
+    enable-masking: true
+    phone-mask-length: 4
+    email-mask-length: 3
+
+# 文件上传配置
+local:
+  path: '/var/uploads/nofap'
+  store-path: '/var/uploads/nofap'
+
+# 邮件配置
+email:
+  to: '${EMAIL_TO:}'
+  from: '${EMAIL_FROM:}'
+  host: '${EMAIL_HOST:}'
+  secret: '${EMAIL_SECRET:}'
+  nickname: '戒色助手'
+  port: 587
+  is-ssl: false
+
+# 自动化代码配置
+autocode:
+  transfer-restart: false
+  root: '/var/www/nofap'
+  server: '/server'
+  server-plug: '/plugin/%s'
+  server-api: '/api/v1/%s'
+  server-initialize: '/initialize/%s.go'
+  server-model: '/model/%s'
+  server-request: '/model/%s/request/'
+  server-router: '/router/%s'
+  server-service: '/service/%s'
+  web: '/web/src'
+  web-api: '/api'
+  web-form: '/view'
+  web-table: '/view'
+
+# Excel 配置
+excel:
+  dir: '/var/uploads/nofap/excel/'
+
+# 定时任务配置
+timer:
+  start: true
+  spec: '@daily'
+  detail:
+    - tableName: 'nofap_abstinence_records'
+      compareField: 'created_at'
+      interval: '2160h'
+    - tableName: 'nofap_community_posts'
+      compareField: 'created_at'
+      interval: '8760h'
+
+# 数据库列表配置
+db-list:
+  - disabled: false
+    type: 'mysql'
+    alias-name: 'nofap_production'
+    path: '${DB_HOST:localhost}:${DB_PORT:3306}'
+    port: '${DB_PORT:3306}'
+    config: 'charset=utf8mb4&parseTime=True&loc=Local'
+    db-name: '${DB_NAME:nofap_production}'
+    username: '${DB_USER:root}'
+    password: '${DB_PASSWORD:}'
+    prefix: 'nofap_'
+    singular: false
+    engine: 'InnoDB'
+    max-idle-conns: 20
+    max-open-conns: 100
+    log-mode: 'error'
+    log-zap: true 

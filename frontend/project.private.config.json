@@ -1,0 +1,15 @@
+{
+  "libVersion": "3.8.10",
+  "projectname": "戒色助手",
+  "appid": "wx07c9e8e4f105260b",
+  "setting": {
+    "urlCheck": false,
+    "coverView": true,
+    "lazyloadPlaceholderEnable": false,
+    "skylineRenderEnable": false,
+    "preloadBackgroundData": false,
+    "autoAudits": false,
+    "showShadowRootInWxmlPanel": true,
+    "compileHotReLoad": true
+  }
+}

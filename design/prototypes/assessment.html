@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>色隐指数评估</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#34D399',
+                        secondary: '#06B6D4',
+                        accent: '#F59E0B',
+                        danger: '#EF4444',
+                        success: '#10B981',
+                        background: '#F8FAFC',
+                        surface: '#FFFFFF'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, #34D399 0%, #10B981 100%);
+        }
+    </style>
+</head>
+<body class="bg-background h-screen">
+    <!-- Status Bar -->
+    <div class="flex justify-between items-center px-4 py-2 text-xs text-gray-800">
+        <span class="font-medium">9:41</span>
+        <div class="flex items-center space-x-1">
+            <i class="fas fa-signal text-xs"></i>
+            <i class="fas fa-wifi text-xs"></i>
+            <div class="w-6 h-3 border border-gray-800 rounded-sm">
+                <div class="w-4 h-1.5 bg-green-500 rounded-sm mt-0.5 ml-0.5"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <div class="bg-surface shadow-sm border-b border-gray-100">
+        <div class="flex items-center justify-between px-4 py-3">
+            <button class="p-2 rounded-full hover:bg-gray-100 active:scale-95 transition-transform">
+                <i class="fas fa-arrow-left text-gray-600 text-lg"></i>
+            </button>
+            <h1 class="text-lg font-semibold text-gray-800">评估测试</h1>
+            <button class="p-2 rounded-full hover:bg-gray-100 active:scale-95 transition-transform">
+                <i class="fas fa-question-circle text-gray-400 text-lg"></i>
+            </button>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="px-4 pb-3">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-sm text-gray-600">问题 3 / 25</span>
+                <span class="text-sm text-gray-600">12%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="progress-bar h-2 rounded-full" style="width: 12%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 px-6 py-6">
+        <!-- Question Card -->
+        <div class="bg-surface rounded-3xl shadow-sm border border-gray-100 p-6 mb-6">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-brain text-secondary text-2xl"></i>
+                </div>
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">行为频率评估</h2>
+                <p class="text-sm text-gray-600">请根据实际情况诚实回答</p>
+            </div>
+            
+            <div class="mb-8">
+                <h3 class="text-lg font-medium text-gray-800 mb-4 leading-relaxed">
+                    在过去的一个月中，您平均多久会浏览一次色情内容？
+                </h3>
+                <p class="text-sm text-gray-500 mb-6">
+                    *此信息仅用于个人评估，不会被分享给任何第三方
+                </p>
+            </div>
+
+            <!-- Answer Options -->
+            <div class="space-y-3">
+                <button class="w-full p-4 text-left border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-primary/5 active:scale-98 transition-all">
+                    <div class="flex items-center">
+                        <div class="w-5 h-5 border-2 border-gray-300 rounded-full mr-4"></div>
+                        <span class="text-gray-700">从不</span>
+                    </div>
+                </button>
+                
+                <button class="w-full p-4 text-left border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-primary/5 active:scale-98 transition-all">
+                    <div class="flex items-center">
+                        <div class="w-5 h-5 border-2 border-gray-300 rounded-full mr-4"></div>
+                        <span class="text-gray-700">每月1-2次</span>
+                    </div>
+                </button>
+                
+                <button class="w-full p-4 text-left border-2 border-primary bg-primary/5 rounded-xl active:scale-98 transition-all">
+                    <div class="flex items-center">
+                        <div class="w-5 h-5 border-2 border-primary rounded-full mr-4 flex items-center justify-center">
+                            <div class="w-2 h-2 bg-primary rounded-full"></div>
+                        </div>
+                        <span class="text-gray-700">每周1-2次</span>
+                    </div>
+                </button>
+                
+                <button class="w-full p-4 text-left border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-primary/5 active:scale-98 transition-all">
+                    <div class="flex items-center">
+                        <div class="w-5 h-5 border-2 border-gray-300 rounded-full mr-4"></div>
+                        <span class="text-gray-700">每天1-2次</span>
+                    </div>
+                </button>
+                
+                <button class="w-full p-4 text-left border-2 border-gray-200 rounded-xl hover:border-primary hover:bg-primary/5 active:scale-98 transition-all">
+                    <div class="flex items-center">
+                        <div class="w-5 h-5 border-2 border-gray-300 rounded-full mr-4"></div>
+                        <span class="text-gray-700">每天多次</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex space-x-4">
+            <button class="flex-1 bg-gray-100 text-gray-600 font-semibold py-4 rounded-2xl active:scale-95 transition-transform">
+                上一题
+            </button>
+            <button class="flex-1 bg-primary text-white font-semibold py-4 rounded-2xl active:scale-95 transition-transform">
+                下一题
+            </button>
+        </div>
+
+        <!-- Help Text -->
+        <div class="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-100">
+            <div class="flex items-start space-x-3">
+                <i class="fas fa-info-circle text-blue-500 mt-0.5"></i>
+                <div>
+                    <h4 class="font-medium text-blue-800 mb-1">评估说明</h4>
+                    <p class="text-sm text-blue-700">
+                        本评估基于国际认可的心理健康评估标准，结果仅供参考。如需专业帮助，建议咨询心理健康专家。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

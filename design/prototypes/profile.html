@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#34D399',
+                        secondary: '#06B6D4',
+                        accent: '#F59E0B',
+                        danger: '#EF4444',
+                        success: '#10B981',
+                        background: '#F8FAFC',
+                        surface: '#FFFFFF'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background">
+    <!-- Status Bar -->
+    <div class="flex justify-between items-center px-4 py-2 text-xs text-gray-800">
+        <span class="font-medium">9:41</span>
+        <div class="flex items-center space-x-1">
+            <i class="fas fa-signal text-xs"></i>
+            <i class="fas fa-wifi text-xs"></i>
+            <div class="w-6 h-3 border border-gray-800 rounded-sm">
+                <div class="w-4 h-1.5 bg-green-500 rounded-sm mt-0.5 ml-0.5"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header with Profile -->
+    <div class="bg-gradient-to-br from-primary to-success px-6 pt-4 pb-8">
+        <div class="flex items-center justify-between mb-6">
+            <h1 class="text-xl font-bold text-white">个人中心</h1>
+            <button class="p-2 bg-white/20 rounded-full backdrop-blur-sm">
+                <i class="fas fa-cog text-white"></i>
+            </button>
+        </div>
+
+        <!-- Profile Card -->
+        <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-white">
+            <div class="flex items-center space-x-4 mb-4">
+                <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                    <span class="text-2xl font-bold">🌱</span>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold">坚持者_阳光</h2>
+                    <p class="text-green-100">等级 8 - 稳定期</p>
+                    <p class="text-sm text-green-100">加入第 45 天</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-4 text-center">
+                <div>
+                    <div class="text-2xl font-bold">23</div>
+                    <div class="text-sm text-green-100">当前连击</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold">45</div>
+                    <div class="text-sm text-green-100">最长连击</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold">1,250</div>
+                    <div class="text-sm text-green-100">经验值</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="px-6 py-6 pb-20">
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="bg-surface rounded-2xl p-4 shadow-sm">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-trophy text-blue-600 text-xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-800">成就徽章</h3>
+                    <p class="text-2xl font-bold text-blue-600">12</p>
+                </div>
+            </div>
+            
+            <div class="bg-surface rounded-2xl p-4 shadow-sm">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-users text-purple-600 text-xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-800">帮助他人</h3>
+                    <p class="text-2xl font-bold text-purple-600">28</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Achievements -->
+        <div class="bg-surface rounded-2xl p-6 mb-6 shadow-sm">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">最新成就</h3>
+            
+            <div class="space-y-3">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-medal text-white"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">三周坚持者</h4>
+                        <p class="text-sm text-gray-600">3天前获得</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-heart text-white"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">社区贡献者</h4>
+                        <p class="text-sm text-gray-600">1周前获得</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-book text-white"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-800">学习爱好者</h4>
+                        <p class="text-sm text-gray-600">2周前获得</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Options -->
+        <div class="space-y-4">
+            <button class="w-full bg-surface rounded-2xl p-4 shadow-sm flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-chart-bar text-orange-600"></i>
+                    </div>
+                    <span class="font-semibold text-gray-800">数据导出</span>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+            </button>
+
+            <button class="w-full bg-surface rounded-2xl p-4 shadow-sm flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-shield-alt text-purple-600"></i>
+                    </div>
+                    <span class="font-semibold text-gray-800">隐私设置</span>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+            </button>
+
+            <button class="w-full bg-surface rounded-2xl p-4 shadow-sm flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-bell text-blue-600"></i>
+                    </div>
+                    <span class="font-semibold text-gray-800">通知设置</span>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+            </button>
+
+            <button class="w-full bg-surface rounded-2xl p-4 shadow-sm flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-question-circle text-green-600"></i>
+                    </div>
+                    <span class="font-semibold text-gray-800">帮助中心</span>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="fixed bottom-0 left-0 right-0 bg-surface border-t border-gray-100 px-6 py-3">
+        <div class="flex justify-around items-center">
+            <button class="flex flex-col items-center space-y-1">
+                <i class="fas fa-home text-gray-400 text-lg"></i>
+                <span class="text-xs text-gray-400">主页</span>
+            </button>
+            <button class="flex flex-col items-center space-y-1">
+                <i class="fas fa-chart-line text-gray-400 text-lg"></i>
+                <span class="text-xs text-gray-400">进度</span>
+            </button>
+            <button class="flex flex-col items-center space-y-1">
+                <i class="fas fa-users text-gray-400 text-lg"></i>
+                <span class="text-xs text-gray-400">社区</span>
+            </button>
+            <button class="flex flex-col items-center space-y-1">
+                <i class="fas fa-book text-gray-400 text-lg"></i>
+                <span class="text-xs text-gray-400">学习</span>
+            </button>
+            <button class="flex flex-col items-center space-y-1">
+                <i class="fas fa-user text-primary text-lg"></i>
+                <span class="text-xs text-primary font-medium">我的</span>
+            </button>
+        </div>
+    </div>
+</body>
+</html> 

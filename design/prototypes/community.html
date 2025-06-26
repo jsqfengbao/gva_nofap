@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社区互助</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#34D399',
+                        secondary: '#06B6D4',
+                        accent: '#F59E0B',
+                        danger: '#EF4444',
+                        success: '#10B981',
+                        background: '#F8FAFC',
+                        surface: '#FFFFFF'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background">
+    <!-- Status Bar -->
+    <div class="flex justify-between items-center px-4 py-2 text-xs text-gray-800">
+        <span class="font-medium">9:41</span>
+        <div class="flex items-center space-x-1">
+            <i class="fas fa-signal text-xs"></i>
+            <i class="fas fa-wifi text-xs"></i>
+            <div class="w-6 h-3 border border-gray-800 rounded-sm">
+                <div class="w-4 h-1.5 bg-green-500 rounded-sm mt-0.5 ml-0.5"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="bg-surface px-6 pt-4 pb-4 border-b border-gray-100">
+        <div class="flex items-center justify-between mb-4">
+            <h1 class="text-2xl font-bold text-gray-800">社区互助</h1>
+            <div class="flex items-center space-x-3">
+                <button class="p-2 bg-gray-100 rounded-full">
+                    <i class="fas fa-search text-gray-600"></i>
+                </button>
+                <button class="p-2 bg-primary/10 rounded-full">
+                    <i class="fas fa-edit text-primary"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="flex space-x-2 overflow-x-auto">
+            <button class="flex-shrink-0 px-4 py-2 bg-primary text-white rounded-full text-sm font-medium">全部</button>
+            <button class="flex-shrink-0 px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">经验分享</button>
+            <button class="flex-shrink-0 px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">求助</button>
+        </div>
+    </div>
+
+    <!-- Posts -->
+    <div class="px-4 py-4 pb-20">
+        <!-- Success Story -->
+        <div class="bg-surface rounded-2xl p-4 mb-4 shadow-sm">
+            <div class="flex items-start space-x-3 mb-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                    <span class="text-white font-bold text-sm">L15</span>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-gray-800">坚持者_阳光</h3>
+                    <p class="text-xs text-gray-500">100天达成 • 3分钟前</p>
+                </div>
+            </div>
+            
+            <h4 class="font-semibold text-gray-800 mb-2">🎉 100天里程碑达成！</h4>
+            <p class="text-gray-700 text-sm mb-3">想跟大家分享一些这段路程的心得...</p>
+            
+            <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+                <div class="flex items-center space-x-6">
+                    <button class="flex items-center space-x-2">
+                        <i class="fas fa-heart text-red-500"></i>
+                        <span class="text-sm">128</span>
+                    </button>
+                    <button class="flex items-center space-x-2">
+                        <i class="fas fa-comment text-gray-600"></i>
+                        <span class="text-sm">45</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Support Request -->
+        <div class="bg-surface rounded-2xl p-4 mb-4 shadow-sm">
+            <div class="flex items-start space-x-3 mb-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
+                    <span class="text-white font-bold text-sm">L3</span>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-gray-800">新手_求助</h3>
+                    <p class="text-xs text-gray-500">15分钟前</p>
+                </div>
+            </div>
+            
+            <h4 class="font-semibold text-gray-800 mb-2">感觉很困难，需要大家的鼓励 😔</h4>
+            <p class="text-gray-700 text-sm mb-3">第7天了，总是想要放弃...</p>
+            
+            <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+                <div class="flex items-center space-x-6">
+                    <button class="flex items-center space-x-2">
+                        <i class="fas fa-heart text-gray-600"></i>
+                        <span class="text-sm">32</span>
+                    </button>
+                    <button class="flex items-center space-x-2">
+                        <i class="fas fa-comment text-gray-600"></i>
+                        <span class="text-sm">18</span>
+                    </button>
+                </div>
+                <button class="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">鼓励TA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="fixed bottom-0 left-0 right-0 bg-surface border-t border-gray-100 px-6 py-3">
+        <div class="flex justify-around items-center">
+            <button class="flex flex-col items-center space-y-1">
+                <i class="fas fa-home text-gray-400 text-lg"></i>
+                <span class="text-xs text-gray-400">主页</span>
+            </button>
+            <button class="flex flex-col items-center space-y-1">
+                <i class="fas fa-chart-line text-gray-400 text-lg"></i>
+                <span class="text-xs text-gray-400">进度</span>
+            </button>
+            <button class="flex flex-col items-center space-y-1">
+                <i class="fas fa-users text-primary text-lg"></i>
+                <span class="text-xs text-primary font-medium">社区</span>
+            </button>
+            <button class="flex flex-col items-center space-y-1">
+                <i class="fas fa-book text-gray-400 text-lg"></i>
+                <span class="text-xs text-gray-400">学习</span>
+            </button>
+            <button class="flex flex-col items-center space-y-1">
+                <i class="fas fa-user text-gray-400 text-lg"></i>
+                <span class="text-xs text-gray-400">我的</span>
+            </button>
+        </div>
+    </div>
+</body>
+</html> 

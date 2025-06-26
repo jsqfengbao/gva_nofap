@@ -1,0 +1,66 @@
+# 使用多阶段构建优化镜像大小
+FROM golang:1.21-alpine AS builder
+
+# 设置工作目录
+WORKDIR /app
+
+# 安装必要的系统依赖
+RUN apk add --no-cache git ca-certificates tzdata
+
+# 复制 go mod 文件
+COPY go.mod go.sum ./
+
+# 下载依赖
+RUN go mod download
+
+# 复制源代码
+COPY . .
+
+# 构建应用
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
+    -ldflags='-w -s -extldflags "-static"' \
+    -a -installsuffix cgo \
+    -o main .
+
+# 生产环境镜像
+FROM alpine:latest
+
+# 安装运行时依赖
+RUN apk --no-cache add ca-certificates tzdata curl
+
+# 设置时区
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+RUN echo 'Asia/Shanghai' > /etc/timezone
+
+# 创建非root用户
+RUN addgroup -g 1001 -S nofap && \
+    adduser -S nofap -u 1001 -G nofap
+
+# 创建必要的目录
+RUN mkdir -p /app /var/log/nofap /var/uploads/nofap && \
+    chown -R nofap:nofap /app /var/log/nofap /var/uploads/nofap
+
+# 设置工作目录
+WORKDIR /app
+
+# 从构建阶段复制二进制文件
+COPY --from=builder /app/main .
+
+# 复制配置文件
+COPY --chown=nofap:nofap config.prod.yaml ./
+
+# 设置文件权限
+RUN chmod +x main
+
+# 切换到非root用户
+USER nofap
+
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8888/api/health || exit 1
+
+# 暴露端口
+EXPOSE 8888
+
+# 启动命令
+CMD ["./main", "-c", "config.prod.yaml"] 

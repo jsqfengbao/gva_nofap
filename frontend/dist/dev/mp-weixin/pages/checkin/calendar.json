@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "月度日历",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "nf-nav-bar": "../../components/ui/navigation/NfNavBar",
+    "nf-card": "../../components/ui/card/NfCard"
+  }
+}

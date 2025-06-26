@@ -1,0 +1,310 @@
+aliyun-oss:
+    endpoint: yourEndpoint
+    access-key-id: yourAccessKeyId
+    access-key-secret: yourAccessKeySecret
+    bucket-name: yourBucketName
+    bucket-url: yourBucketUrl
+    base-path: yourBasePath
+autocode:
+    web: web/src
+    root: /Users/dkjin/myproject/gva_plugin/gva_NoFap
+    server: server
+    module: github.com/flipped-aurora/gin-vue-admin/server
+    ai-path: ""
+aws-s3:
+    bucket: xxxxx-10005608
+    region: ap-shanghai
+    endpoint: ""
+    secret-id: your-secret-id
+    secret-key: your-secret-key
+    base-url: https://gin.vue.admin
+    path-prefix: github.com/flipped-aurora/gin-vue-admin/server
+    s3-force-path-style: false
+    disable-ssl: false
+captcha:
+    key-long: 6
+    img-width: 240
+    img-height: 80
+    open-captcha: 0
+    open-captcha-timeout: 3600
+cloudflare-r2:
+    bucket: xxxx0bucket
+    base-url: https://gin.vue.admin.com
+    path: uploads
+    account-id: xxx_account_id
+    access-key-id: xxx_key_id
+    secret-access-key: xxx_secret_key
+cors:
+    mode: allow-all
+    whitelist:
+        - allow-origin: http://localhost:3000
+          allow-methods: POST, GET, PUT, DELETE, OPTIONS
+          allow-headers: Content-Type,AccessToken,X-CSRF-Token, Authorization, Token,X-Token,X-User-Id
+          expose-headers: Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type
+          allow-credentials: true
+        - allow-origin: http://127.0.0.1:3000
+          allow-methods: POST, GET, PUT, DELETE, OPTIONS
+          allow-headers: Content-Type,AccessToken,X-CSRF-Token, Authorization, Token,X-Token,X-User-Id
+          expose-headers: Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type
+          allow-credentials: true
+        - allow-origin: http://192.168.1.140:3000
+          allow-methods: POST, GET, PUT, DELETE, OPTIONS
+          allow-headers: Content-Type,AccessToken,X-CSRF-Token, Authorization, Token,X-Token,X-User-Id
+          expose-headers: Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type
+          allow-credentials: true
+db-list:
+    - type: ""
+      alias-name: ""
+      prefix: ""
+      port: ""
+      config: ""
+      db-name: ""
+      username: ""
+      password: ""
+      path: ""
+      engine: ""
+      log-mode: ""
+      max-idle-conns: 10
+      max-open-conns: 100
+      singular: false
+      log-zap: false
+      disable: true
+disk-list:
+    - mount-point: /
+email:
+    to: xxx@qq.com
+    from: xxx@163.com
+    host: smtp.163.com
+    secret: xxx
+    nickname: test
+    port: 465
+    is-ssl: true
+    is-loginauth: false
+excel:
+    dir: ./resource/excel/
+hua-wei-obs:
+    path: you-path
+    bucket: you-bucket
+    endpoint: you-endpoint
+    access-key: you-access-key
+    secret-key: you-secret-key
+jwt:
+    signing-key: bb02cd9f-55c6-4384-bf4a-692a773d3bde
+    expires-time: 7d
+    buffer-time: 1d
+    issuer: qmPlus
+local:
+    path: uploads/file
+    store-path: uploads/file
+mcp:
+    name: GVA_MCP
+    version: v1.0.0
+    sse_path: /sse
+    message_path: /message
+    url_prefix: ""
+minio:
+    endpoint: yourEndpoint
+    access-key-id: yourAccessKeyId
+    access-key-secret: yourAccessKeySecret
+    bucket-name: yourBucketName
+    use-ssl: false
+    base-path: ""
+    bucket-url: http://host:9000/yourBucketName
+mongo:
+    coll: ""
+    options: ""
+    database: ""
+    username: ""
+    password: ""
+    auth-source: ""
+    min-pool-size: 0
+    max-pool-size: 100
+    socket-timeout-ms: 0
+    connect-timeout-ms: 0
+    is-zap: false
+    hosts:
+        - host: ""
+          port: ""
+mssql:
+    prefix: ""
+    port: ""
+    config: ""
+    db-name: ""
+    username: ""
+    password: ""
+    path: ""
+    engine: ""
+    log-mode: ""
+    max-idle-conns: 10
+    max-open-conns: 100
+    singular: false
+    log-zap: false
+mysql:
+    prefix: ""
+    port: "3306"
+    config: charset=utf8mb4&parseTime=True&loc=Local
+    db-name: gva_nofap
+    username: root
+    password: "123456"
+    path: 127.0.0.1
+    engine: ""
+    log-mode: error
+    max-idle-conns: 10
+    max-open-conns: 100
+    singular: false
+    log-zap: false
+oracle:
+    prefix: ""
+    port: ""
+    config: ""
+    db-name: ""
+    username: ""
+    password: ""
+    path: ""
+    engine: ""
+    log-mode: ""
+    max-idle-conns: 10
+    max-open-conns: 100
+    singular: false
+    log-zap: false
+pgsql:
+    prefix: ""
+    port: ""
+    config: ""
+    db-name: ""
+    username: ""
+    password: ""
+    path: ""
+    engine: ""
+    log-mode: ""
+    max-idle-conns: 10
+    max-open-conns: 100
+    singular: false
+    log-zap: false
+qiniu:
+    zone: ZoneHuaDong
+    bucket: ""
+    img-path: ""
+    access-key: ""
+    secret-key: ""
+    use-https: false
+    use-cdn-domains: false
+redis:
+    name: ""
+    addr: 127.0.0.1:6379
+    password: ""
+    db: 0
+    useCluster: false
+    clusterAddrs:
+        - 172.21.0.3:7000
+        - 172.21.0.4:7001
+        - 172.21.0.2:7002
+redis-list:
+    - name: cache
+      addr: 127.0.0.1:6379
+      password: ""
+      db: 0
+      useCluster: false
+      clusterAddrs:
+        - 172.21.0.3:7000
+        - 172.21.0.4:7001
+        - 172.21.0.2:7002
+sqlite:
+    prefix: ""
+    port: ""
+    config: ""
+    db-name: ""
+    username: ""
+    password: ""
+    path: ""
+    engine: ""
+    log-mode: ""
+    max-idle-conns: 10
+    max-open-conns: 100
+    singular: false
+    log-zap: false
+system:
+    db-type: mysql
+    oss-type: local
+    router-prefix: ""
+    addr: 8888
+    iplimit-count: 1000
+    iplimit-time: 3600
+    use-multipoint: false
+    use-redis: true
+    use-mongo: false
+    use-strict-auth: true
+tencent-cos:
+    bucket: xxxxx-10005608
+    region: ap-shanghai
+    secret-id: your-secret-id
+    secret-key: your-secret-key
+    base-url: https://gin.vue.admin
+    path-prefix: github.com/flipped-aurora/gin-vue-admin/server
+zap:
+    level: info
+    prefix: '[github.com/flipped-aurora/gin-vue-admin/server]'
+    format: console
+    director: log
+    encode-level: LowercaseColorLevelEncoder
+    stacktrace-key: stacktrace
+    show-line: true
+    log-in-console: true
+    retention-day: -1
+
+# 微信小程序配置
+miniprogram:
+    app-id: "wx07c9e8e4f105260b"         # 微信小程序AppID（需要替换为真实值）
+    app-secret: "88f293d7efc48f0941803c497084d61d" # 微信小程序AppSecret（需要替换为真实值）
+
+# 安全配置
+security:
+    encryption:
+        secret-key: "nofap-miniprogram-secret-key-32"
+        salt: "nofap-salt-2025"
+        algorithm: "AES-256-GCM"
+    rate-limit:
+        enabled: true
+        window-size: 60s
+        max-requests: 100
+        auth-api:
+            window-size: 60s
+            max-requests: 10
+        miniprogram-api:
+            window-size: 60s
+            max-requests: 60
+    jwt:
+        blacklist-enabled: true
+        refresh-threshold: 24h
+        max-fail-attempts: 10
+        lockout-duration: 1h
+    input-validation:
+        max-request-size: 10485760  # 10MB
+        field-limits:
+            username: 50
+            nickname: 100
+            content: 2000
+            description: 500
+            title: 200
+        xss-protection:
+            enabled: true
+            strict-mode: true
+        sql-injection-protection:
+            enabled: true
+            strict-mode: true
+    audit-log:
+        enabled: true
+        log-level: "info"
+        log-path: "./log/audit.log"
+        max-size: 100
+        max-backups: 30
+        max-age: 90
+        compress: true
+    sensitive-data:
+        encrypted-fields: ["phone", "email", "real_name", "id_card", "address"]
+        masked-fields:
+            phone: "phone"
+            email: "email"
+            real_name: "name"
+            id_card: "idcard"
+            address: "address"

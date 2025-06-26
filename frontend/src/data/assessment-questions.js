@@ -1,0 +1,115 @@
+// 色隐指数评估问卷数据
+// 基于专业心理学评估标准设计，分为7个维度，总计50题
+
+export const assessmentQuestions = [
+  // 维度1：行为频率 (1-8题)
+  {
+    id: 1,
+    category: 'frequency',
+    categoryName: '行为频率评估',
+    icon: 'fa-clock',
+    question: '在过去的一个月中，您平均多久会浏览一次色情内容？',
+    type: 'single',
+    options: [
+      { value: 0, text: '从不' },
+      { value: 1, text: '每月1-2次' },
+      { value: 2, text: '每周1-2次' },
+      { value: 3, text: '每天1-2次' },
+      { value: 4, text: '每天多次' }
+    ]
+  },
+  {
+    id: 2,
+    category: 'frequency',
+    categoryName: '行为频率评估',
+    icon: 'fa-clock',
+    question: '您通常花多长时间浏览色情内容？',
+    type: 'single',
+    options: [
+      { value: 0, text: '从不浏览' },
+      { value: 1, text: '少于15分钟' },
+      { value: 2, text: '15-30分钟' },
+      { value: 3, text: '30分钟-1小时' },
+      { value: 4, text: '超过1小时' }
+    ]
+  },
+  {
+    id: 3,
+    category: 'frequency',
+    categoryName: '行为频率评估',
+    icon: 'fa-clock',
+    question: '在过去一年中，您浏览色情内容的频率是否有所增加？',
+    type: 'single',
+    options: [
+      { value: 0, text: '没有变化/从不浏览' },
+      { value: 1, text: '略有减少' },
+      { value: 2, text: '基本保持不变' },
+      { value: 3, text: '有所增加' },
+      { value: 4, text: '显著增加' }
+    ]
+  },
+  {
+    id: 4,
+    category: 'frequency',
+    categoryName: '行为频率评估',
+    icon: 'fa-clock',
+    question: '您是否曾经连续几天频繁浏览色情内容？',
+    type: 'single',
+    options: [
+      { value: 0, text: '从来没有' },
+      { value: 1, text: '很少（一年少于3次）' },
+      { value: 2, text: '偶尔（一年3-6次）' },
+      { value: 3, text: '经常（一年6-12次）' },
+      { value: 4, text: '非常频繁（一年超过12次）' }
+    ]
+  },
+  {
+    id: 5,
+    category: 'frequency',
+    categoryName: '行为频率评估',
+    icon: 'fa-clock',
+    question: '您最长连续多久没有浏览色情内容？',
+    type: 'single',
+    options: [
+      { value: 4, text: '少于一周' },
+      { value: 3, text: '1-2周' },
+      { value: 2, text: '1个月' },
+      { value: 1, text: '3个月以上' },
+      { value: 0, text: '一年以上/从不浏览' }
+    ]
+  }
+]
+
+// 评估算法和分级标准
+export const assessmentConfig = {
+  levels: [
+    {
+      range: [0, 25],
+      level: 'low',
+      name: '低风险',
+      color: '#10B981',
+      description: '您当前的状况较为健康，建议继续保持良好的生活习惯。'
+    },
+    {
+      range: [26, 60],
+      level: 'mild',
+      name: '轻度风险',
+      color: '#F59E0B',
+      description: '您可能存在一些需要关注的行为模式，建议采取预防措施。'
+    },
+    {
+      range: [61, 120],
+      level: 'moderate',
+      name: '中度风险',
+      color: '#EF4444',
+      description: '您的情况需要引起重视，强烈建议寻求专业帮助。'
+    },
+    {
+      range: [121, 200],
+      level: 'high',
+      name: '高风险',
+      color: '#DC2626',
+      description: '您的情况比较严重，急需专业医疗和心理健康支持。'
+    }
+  ]
+}

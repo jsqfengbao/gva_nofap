@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>戒色助手 - 高保真原型展示</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#34D399',
+                        secondary: '#06B6D4',
+                        accent: '#F59E0B',
+                        danger: '#EF4444',
+                        success: '#10B981',
+                        background: '#F8FAFC',
+                        surface: '#FFFFFF',
+                        'text-primary': '#1F2937',
+                        'text-secondary': '#6B7280'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        }
+        .iphone-frame {
+            background: linear-gradient(135deg, #1e1e1e 0%, #3a3a3a 100%);
+            border-radius: 3rem;
+            padding: 0.5rem;
+            position: relative;
+        }
+        .iphone-screen {
+            background: #000;
+            border-radius: 2.5rem;
+            padding: 0.25rem;
+            position: relative;
+        }
+        .notch {
+            position: absolute;
+            top: 0.25rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 28px;
+            background: #1e1e1e;
+            border-radius: 0 0 1rem 1rem;
+            z-index: 10;
+        }
+        .prototype-container {
+            background: #F8FAFC;
+            border-radius: 2.25rem;
+            height: 640px;
+            overflow: hidden;
+            position: relative;
+        }
+        .prototype-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 2.25rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div>
+                    <h1 class="text-3xl font-bold text-text-primary">戒色助手</h1>
+                    <p class="text-text-secondary mt-1">高保真 HTML 原型展示</p>
+                </div>
+                <div class="flex items-center space-x-4 text-sm text-text-secondary">
+                    <span><i class="fas fa-mobile-alt mr-2"></i>iOS 设计风格</span>
+                    <span><i class="fas fa-palette mr-2"></i>Tailwind CSS</span>
+                    <span><i class="fas fa-icons mr-2"></i>FontAwesome</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Introduction -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+            <h2 class="text-xl font-semibold text-text-primary mb-4">项目概述</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-medium text-text-primary mb-2">产品定位</h3>
+                    <p class="text-text-secondary">专注于帮助年轻人戒除色情内容依赖的游戏化健康管理应用</p>
+                </div>
+                <div>
+                    <h3 class="font-medium text-text-primary mb-2">设计原则</h3>
+                    <p class="text-text-secondary">温暖友好、私密安全、游戏化视觉、简洁明了</p>
+                </div>
+                <div>
+                    <h3 class="font-medium text-text-primary mb-2">主要平台</h3>
+                    <p class="text-text-secondary">iOS (优先) / Android / Web 应用 / 微信小程序</p>
+                </div>
+                <div>
+                    <h3 class="font-medium text-text-primary mb-2">技术栈</h3>
+                    <p class="text-text-secondary">HTML5 + Tailwind CSS + FontAwesome + JavaScript</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prototypes Grid -->
+        <div class="space-y-8">
+            <h2 class="text-2xl font-bold text-text-primary text-center">核心界面原型</h2>
+            
+            <!-- Row 1: Onboarding and Assessment -->
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Welcome Screen -->
+                <div class="flex flex-col items-center">
+                    <h3 class="text-lg font-semibold text-text-primary mb-4">欢迎界面</h3>
+                    <div class="iphone-frame w-80">
+                        <div class="iphone-screen">
+                            <div class="notch"></div>
+                            <div class="prototype-container">
+                                <iframe src="welcome.html" class="prototype-iframe"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assessment Screen -->
+                <div class="flex flex-col items-center">
+                    <h3 class="text-lg font-semibold text-text-primary mb-4">色隐指数评估</h3>
+                    <div class="iphone-frame w-80">
+                        <div class="iphone-screen">
+                            <div class="notch"></div>
+                            <div class="prototype-container">
+                                <iframe src="assessment.html" class="prototype-iframe"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 2: Home and Profile -->
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Home Screen -->
+                <div class="flex flex-col items-center">
+                    <h3 class="text-lg font-semibold text-text-primary mb-4">主页界面</h3>
+                    <div class="iphone-frame w-80">
+                        <div class="iphone-screen">
+                            <div class="notch"></div>
+                            <div class="prototype-container">
+                                <iframe src="home.html" class="prototype-iframe"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Screen -->
+                <div class="flex flex-col items-center">
+                    <h3 class="text-lg font-semibold text-text-primary mb-4">个人中心</h3>
+                    <div class="iphone-frame w-80">
+                        <div class="iphone-screen">
+                            <div class="notch"></div>
+                            <div class="prototype-container">
+                                <iframe src="profile.html" class="prototype-iframe"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3: Community and Emergency -->
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Community Screen -->
+                <div class="flex flex-col items-center">
+                    <h3 class="text-lg font-semibold text-text-primary mb-4">社区互助</h3>
+                    <div class="iphone-frame w-80">
+                        <div class="iphone-screen">
+                            <div class="notch"></div>
+                            <div class="prototype-container">
+                                <iframe src="community.html" class="prototype-iframe"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Emergency Help Screen -->
+                <div class="flex flex-col items-center">
+                    <h3 class="text-lg font-semibold text-text-primary mb-4">紧急求助</h3>
+                    <div class="iphone-frame w-80">
+                        <div class="iphone-screen">
+                            <div class="notch"></div>
+                            <div class="prototype-container">
+                                <iframe src="emergency.html" class="prototype-iframe"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 4: Progress and Learning -->
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Progress Tracking -->
+                <div class="flex flex-col items-center">
+                    <h3 class="text-lg font-semibold text-text-primary mb-4">进度追踪</h3>
+                    <div class="iphone-frame w-80">
+                        <div class="iphone-screen">
+                            <div class="notch"></div>
+                            <div class="prototype-container">
+                                <iframe src="progress.html" class="prototype-iframe"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learning Content -->
+                <div class="flex flex-col items-center">
+                    <h3 class="text-lg font-semibold text-text-primary mb-4">学习内容</h3>
+                    <div class="iphone-frame w-80">
+                        <div class="iphone-screen">
+                            <div class="notch"></div>
+                            <div class="prototype-container">
+                                <iframe src="learning.html" class="prototype-iframe"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Overview -->
+        <div class="mt-12 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 class="text-xl font-semibold text-text-primary mb-6">核心功能特性</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-chart-line text-primary text-xl"></i>
+                    </div>
+                    <h3 class="font-medium text-text-primary mb-2">科学评估</h3>
+                    <p class="text-sm text-text-secondary">基于国际认可量表的色隐指数评估系统</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-gamepad text-secondary text-xl"></i>
+                    </div>
+                    <h3 class="font-medium text-text-primary mb-2">游戏化激励</h3>
+                    <p class="text-sm text-text-secondary">50级升级系统，100+成就徽章，RPG式体验</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-users text-accent text-xl"></i>
+                    </div>
+                    <h3 class="font-medium text-text-primary mb-2">社区支持</h3>
+                    <p class="text-sm text-text-secondary">匿名互助社区，经验分享，同伴支持</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="text-center text-text-secondary">
+                <p>&copy; 2024 戒色助手团队 | 高保真 HTML 原型 | 仅供开发参考</p>
+                <p class="mt-2 text-sm">
+                    <span class="mr-4"><i class="fas fa-camera mr-1"></i>图片来源: Unsplash</span>
+                    <span class="mr-4"><i class="fas fa-palette mr-1"></i>UI框架: Tailwind CSS</span>
+                    <span><i class="fas fa-icons mr-1"></i>图标: FontAwesome</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html> 

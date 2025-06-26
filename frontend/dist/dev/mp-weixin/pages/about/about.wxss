@@ -1,0 +1,102 @@
+
+.page-content.data-v-b5177f87 {
+  padding: 80px 16px 16px;
+  min-height: 100vh;
+  background-color: var(--background);
+}
+
+/* 应用介绍 */
+.app-intro.data-v-b5177f87 {
+  text-align: center;
+}
+.intro-text.data-v-b5177f87 {
+  font-size: 16px;
+  line-height: 1.6;
+  color: white;
+}
+
+/* 功能列表 */
+.features-list.data-v-b5177f87 {
+  /* space-y-4 通过全局样式实现 */
+}
+.feature-item.data-v-b5177f87 {
+  padding-bottom: 16px;
+  border-bottom: 1px solid #E5E7EB;
+}
+.feature-item.data-v-b5177f87:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.feature-header.data-v-b5177f87 {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.feature-icon.data-v-b5177f87 {
+  font-size: 18px;
+  color: var(--primary);
+  margin-right: 12px;
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+}
+.feature-name.data-v-b5177f87 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.feature-description.data-v-b5177f87 {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  padding-left: 30px;
+}
+
+/* 设计原则 */
+.principles.data-v-b5177f87 {
+  /* space-y-3 通过全局样式实现 */
+}
+.principle-item.data-v-b5177f87 {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  background-color: #F9FAFB;
+  border-radius: 12px;
+}
+.principle-title.data-v-b5177f87 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.principle-desc.data-v-b5177f87 {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* 操作区域 */
+.action-section.data-v-b5177f87 {
+  margin-top: 24px;
+  text-align: center;
+}
+.support-text.data-v-b5177f87 {
+  margin-top: 16px;
+}
+.support-text text.data-v-b5177f87 {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* FontAwesome图标 */
+.nf-icon.data-v-b5177f87 {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+}
+
+/* 间距工具类 */
+/* 注意：微信小程序不支持通用选择器 *，使用具体选择器 */
+.space-y-3 > view + view.data-v-b5177f87 {
+  margin-top: 12px;
+}
+.space-y-4 > view + view.data-v-b5177f87 {
+  margin-top: 16px;
+}

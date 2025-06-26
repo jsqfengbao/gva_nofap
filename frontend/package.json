@@ -1,0 +1,79 @@
+{
+  "name": "nofap-helper-frontend",
+  "version": "1.0.0",
+  "description": "戒色助手微信小程序前端",
+  "main": "main.js",
+  "scripts": {
+    "build:mp-weixin": "uni build -p mp-weixin",
+    "build:app": "uni build -p app",
+    "dev:mp-weixin": "uni -p mp-weixin",
+    "dev:app": "uni -p app",
+    "dev:h5": "uni",
+    "build:h5": "uni build",
+    "serve": "npm run dev:h5",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:mp-weixin:hbuilder": "cross-env NODE_ENV=development uni -p mp-weixin",
+    "build:mp-weixin:hbuilder": "cross-env NODE_ENV=production uni build -p mp-weixin",
+    "watch:mp-weixin": "cross-env NODE_ENV=development uni build -p mp-weixin --watch",
+    "clean": "rimraf dist",
+    "clean:mp-weixin": "rimraf dist/dev/mp-weixin dist/build/mp-weixin"
+  },
+  "keywords": [
+    "uni-app",
+    "vue3",
+    "typescript",
+    "小程序",
+    "戒色助手"
+  ],
+  "author": "戒色助手开发团队",
+  "license": "MIT",
+  "dependencies": {
+    "@dcloudio/uni-app": "3.0.0-alpha-4070220250618001",
+    "@dcloudio/uni-app-plus": "3.0.0-alpha-4070220250618001",
+    "@dcloudio/uni-components": "3.0.0-alpha-4070220250618001",
+    "@dcloudio/uni-h5": "3.0.0-alpha-4070220250618001",
+    "@dcloudio/uni-mp-alipay": "3.0.0-alpha-4070220250618001",
+    "@dcloudio/uni-mp-baidu": "3.0.0-alpha-4070220250618001",
+    "@dcloudio/uni-mp-kuaishou": "3.0.0-alpha-4070220250618001",
+    "@dcloudio/uni-mp-lark": "3.0.0-alpha-4070220250618001",
+    "@dcloudio/uni-mp-qq": "3.0.0-alpha-4070220250618001",
+    "@dcloudio/uni-mp-toutiao": "3.0.0-alpha-4070220250618001",
+    "@dcloudio/uni-mp-weixin": "3.0.0-alpha-4070220250618001",
+    "@dcloudio/uni-quickapp-webview": "3.0.0-alpha-4070220250618001",
+    "@vue/shared": "^3.4.21",
+    "copy-webpack-plugin": "^13.0.0",
+    "pinia": "^2.1.7",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@dcloudio/types": "^3.4.8",
+    "@dcloudio/uni-automator": "3.0.0-alpha-4070220250618001",
+    "@dcloudio/uni-cli-shared": "^3.0.0-alpha-4070220250618001",
+    "@dcloudio/uni-mp-compiler": "^3.0.0-alpha-4070220250618001",
+    "@dcloudio/uni-mp-vite": "^3.0.0-alpha-4070220250618001",
+    "@dcloudio/vite-plugin-uni": "3.0.0-alpha-4070220250618001",
+    "@dcloudio/webpack-uni-mp-loader": "^2.0.2-4060620250520001",
+    "@types/node": "^20.12.7",
+    "@typescript-eslint/eslint-plugin": "^7.8.0",
+    "@typescript-eslint/parser": "^7.8.0",
+    "@vue/eslint-config-typescript": "^13.0.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.25.0",
+    "file-loader": "^6.2.0",
+    "rimraf": "^5.0.10",
+    "sass": "^1.89.2",
+    "typescript": "^5.4.5",
+    "url-loader": "^4.1.1",
+    "vite": "^5.2.11"
+  },
+  "browserslist": [
+    "Android >= 4.4",
+    "ios >= 9"
+  ],
+  "uni-app": {
+    "scripts": {},
+    "compilerVersion": "3.8.12"
+  }
+}

@@ -1,0 +1,123 @@
+
+/* 引入FontAwesome图标 */
+/* 注意：微信小程序不支持外部CSS导入，FontAwesome图标需要通过其他方式引入 */
+/* @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'); */
+/* 导航栏容器 */
+.nf-navbar.data-v-71c93a46 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--6652b3ff);
+  z-index: 1001;
+}
+/* 导航栏内容 */
+.nf-navbar__content.data-v-71c93a46 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  padding: 0 16px;
+  border-bottom: 1px solid #E5E7EB;
+}
+/* 左侧区域 */
+.nf-navbar__left.data-v-71c93a46 {
+  display: flex;
+  align-items: center;
+  min-width: 60px;
+  justify-content: flex-start;
+}
+/* 返回按钮 */
+.nf-navbar__back.data-v-71c93a46 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.nf-navbar__back.data-v-71c93a46:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.nf-navbar__back.data-v-71c93a46:active {
+  -webkit-transform: scale(0.95);
+          transform: scale(0.95);
+}
+.nf-navbar__back .nf-icon.data-v-71c93a46 {
+  font-size: 16px;
+  color: var(--40a4da40);
+}
+/* 中间区域 */
+.nf-navbar__center.data-v-71c93a46 {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+}
+/* 标题 */
+.nf-navbar__title.data-v-71c93a46 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--40a4da40);
+  text-align: center;
+  line-height: 1;
+}
+/* 右侧区域 */
+.nf-navbar__right.data-v-71c93a46 {
+  display: flex;
+  align-items: center;
+  min-width: 60px;
+  justify-content: flex-end;
+}
+/* 右侧按钮 */
+.nf-navbar__right-btn.data-v-71c93a46 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.nf-navbar__right-btn.data-v-71c93a46:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.nf-navbar__right-btn.data-v-71c93a46:active {
+  -webkit-transform: scale(0.95);
+          transform: scale(0.95);
+}
+.nf-navbar__right-btn .nf-icon.data-v-71c93a46 {
+  font-size: 16px;
+  color: var(--40a4da40);
+}
+/* 右侧文字按钮 */
+.nf-navbar__right-text.data-v-71c93a46 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.nf-navbar__right-text.data-v-71c93a46:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.nf-navbar__right-text.data-v-71c93a46:active {
+  -webkit-transform: scale(0.95);
+          transform: scale(0.95);
+}
+.right-text.data-v-71c93a46 {
+  font-size: 14px;
+  color: var(--40a4da40);
+  font-weight: 500;
+}
+/* 图标样式 */
+.nf-icon.data-v-71c93a46 {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+}

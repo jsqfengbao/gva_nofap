@@ -1,0 +1,208 @@
+
+.history-page.data-v-f3aa1d8e {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+.filter-section.data-v-f3aa1d8e {
+  padding: 20px;
+  padding-bottom: 10px;
+}
+.month-selector.data-v-f3aa1d8e {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.month-btn.data-v-f3aa1d8e {
+  white-space: nowrap;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.3s ease;
+}
+.month-btn.active.data-v-f3aa1d8e {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+}
+.month-btn.data-v-f3aa1d8e:active {
+  -webkit-transform: scale(0.95);
+          transform: scale(0.95);
+}
+.stats-overview.data-v-f3aa1d8e {
+  margin: 10px 20px 20px;
+}
+.stats-grid.data-v-f3aa1d8e {
+  display: flex;
+  justify-content: space-around;
+  padding: 16px 0;
+}
+.stat-item.data-v-f3aa1d8e {
+  text-align: center;
+}
+.stat-number.data-v-f3aa1d8e {
+  display: block;
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin-bottom: 4px;
+}
+.stat-label.data-v-f3aa1d8e {
+  font-size: 12px;
+  color: #666;
+}
+.history-list.data-v-f3aa1d8e {
+  padding: 0 20px 20px;
+}
+.loading-state.data-v-f3aa1d8e, .empty-state.data-v-f3aa1d8e, .no-more.data-v-f3aa1d8e {
+  text-align: center;
+  padding: 40px 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+.empty-icon.data-v-f3aa1d8e {
+  font-size: 48px;
+  color: #ccc;
+  margin-bottom: 16px;
+  display: block;
+}
+.empty-text.data-v-f3aa1d8e {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 8px;
+  display: block;
+}
+.empty-hint.data-v-f3aa1d8e {
+  font-size: 14px;
+  color: #999;
+}
+.checkin-list.data-v-f3aa1d8e {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.checkin-item.data-v-f3aa1d8e {
+  display: flex;
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+}
+.checkin-item.data-v-f3aa1d8e:last-child {
+  border-bottom: none;
+}
+.checkin-item.data-v-f3aa1d8e:active {
+  background-color: #f5f5f5;
+}
+.checkin-date.data-v-f3aa1d8e {
+  min-width: 80px;
+  margin-right: 16px;
+  text-align: center;
+}
+.date-text.data-v-f3aa1d8e {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 2px;
+}
+.weekday.data-v-f3aa1d8e {
+  font-size: 12px;
+  color: #666;
+}
+.checkin-content.data-v-f3aa1d8e {
+  flex: 1;
+}
+.mood-info.data-v-f3aa1d8e {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+.mood-emoji.data-v-f3aa1d8e {
+  font-size: 20px;
+}
+.mood-text.data-v-f3aa1d8e {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+.mood-stars.data-v-f3aa1d8e {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+.mood-star.data-v-f3aa1d8e {
+  font-size: 14px;
+  color: #e0e0e0;
+}
+.mood-star.active.data-v-f3aa1d8e {
+  color: #ffd700;
+}
+.checkin-notes.data-v-f3aa1d8e {
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 3px solid var(--primary-color);
+}
+.notes-text.data-v-f3aa1d8e {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.4;
+}
+.checkin-meta.data-v-f3aa1d8e {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.time-text.data-v-f3aa1d8e {
+  font-size: 12px;
+  color: #999;
+}
+.rewards-text.data-v-f3aa1d8e {
+  font-size: 12px;
+  color: var(--primary-color);
+  font-weight: bold;
+}
+.load-more.data-v-f3aa1d8e {
+  text-align: center;
+  margin-top: 20px;
+}
+.load-more-btn.data-v-f3aa1d8e {
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--primary-color);
+  border-radius: 20px;
+  color: var(--primary-color);
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+.load-more-btn.data-v-f3aa1d8e:active {
+  -webkit-transform: scale(0.95);
+          transform: scale(0.95);
+  background: var(--primary-color);
+  color: white;
+}
+.no-more.data-v-f3aa1d8e {
+  padding: 20px;
+  font-size: 14px;
+  color: #999;
+}
+
+/* 滚动条样式 */
+.month-selector.data-v-f3aa1d8e::-webkit-scrollbar {
+  height: 4px;
+}
+.month-selector.data-v-f3aa1d8e::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+.month-selector.data-v-f3aa1d8e::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 2px;
+}

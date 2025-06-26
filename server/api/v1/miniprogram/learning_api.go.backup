@@ -1,0 +1,441 @@
+package miniprogram
+
+import (
+	"strconv"
+
+	"github.com/flipped-aurora/gin-vue-admin/server/global"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/common/response"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/miniprogram/request"
+	"github.com/flipped-aurora/gin-vue-admin/server/service"
+	"github.com/flipped-aurora/gin-vue-admin/server/utils"
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
+)
+
+type LearningApi struct{}
+
+// CreateLearningContent
+// @Tags Learning
+// @Summary 创建学习内容
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body request.CreateLearningContentRequest true "创建学习内容请求"
+// @Success 200 {object} response.Response{msg=string} "创建成功"
+// @Router /learning/content [post]
+func (l *LearningApi) CreateLearningContent(c *gin.Context) {
+	var req request.CreateLearningContentRequest
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	content, err := service.ServiceGroupApp.MiniprogramServiceGroup.LearningService.CreateLearningContent(req)
+	if err != nil {
+		global.GVA_LOG.Error("创建学习内容失败!", zap.Error(err))
+		response.FailWithMessage("创建学习内容失败: "+err.Error(), c)
+		return
+	}
+
+	response.OkWithData(content, c)
+}
+
+// UpdateLearningContent
+// @Tags Learning
+// @Summary 更新学习内容
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body request.UpdateLearningContentRequest true "更新学习内容请求"
+// @Success 200 {object} response.Response{msg=string} "更新成功"
+// @Router /learning/content [put]
+func (l *LearningApi) UpdateLearningContent(c *gin.Context) {
+	var req request.UpdateLearningContentRequest
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	err = service.ServiceGroupApp.MiniprogramServiceGroup.LearningService.UpdateLearningContent(req)
+	if err != nil {
+		global.GVA_LOG.Error("更新学习内容失败!", zap.Error(err))
+		response.FailWithMessage("更新学习内容失败: "+err.Error(), c)
+		return
+	}
+
+	response.OkWithMessage("更新成功", c)
+}
+
+// DeleteLearningContent
+// @Tags Learning
+// @Summary 删除学习内容
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param id path int true "内容ID"
+// @Success 200 {object} response.Response{msg=string} "删除成功"
+// @Router /learning/content/{id} [delete]
+func (l *LearningApi) DeleteLearningContent(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.ParseUint(idStr, 10, 32)
+	if err != nil {
+		response.FailWithMessage("无效的内容ID", c)
+		return
+	}
+
+	err = service.ServiceGroupApp.MiniprogramServiceGroup.LearningService.DeleteLearningContent(uint(id))
+	if err != nil {
+		global.GVA_LOG.Error("删除学习内容失败!", zap.Error(err))
+		response.FailWithMessage("删除学习内容失败: "+err.Error(), c)
+		return
+	}
+
+	response.OkWithMessage("删除成功", c)
+}
+
+// GetLearningContent
+// @Tags Learning
+// @Summary 获取学习内容详情
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param id path int true "内容ID"
+// @Success 200 {object} response.Response{data=response.LearningContentResponse,msg=string} "获取成功"
+// @Router /learning/content/{id} [get]
+func (l *LearningApi) GetLearningContent(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.ParseUint(idStr, 10, 32)
+	if err != nil {
+		response.FailWithMessage("无效的内容ID", c)
+		return
+	}
+
+	// 获取当前用户ID
+	userID := utils.GetUserID(c)
+
+	content, err := service.ServiceGroupApp.MiniprogramServiceGroup.LearningService.GetLearningContent(uint(id), userID)
+	if err != nil {
+		global.GVA_LOG.Error("获取学习内容失败!", zap.Error(err))
+		response.FailWithMessage("获取学习内容失败: "+err.Error(), c)
+		return
+	}
+
+	response.OkWithData(content, c)
+}
+
+// GetLearningContents
+// @Tags Learning
+// @Summary 获取学习内容列表
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data query request.GetLearningContentsRequest true "查询参数"
+// @Success 200 {object} response.Response{data=response.LearningContentListResponse,msg=string} "获取成功"
+// @Router /learning/contents [get]
+func (l *LearningApi) GetLearningContents(c *gin.Context) {
+	var req request.GetLearningContentsRequest
+	err := c.ShouldBindQuery(&req)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	// 设置默认分页参数
+	if req.Page <= 0 {
+		req.Page = 1
+	}
+	if req.PageSize <= 0 {
+		req.PageSize = 20
+	}
+
+	// 获取当前用户ID
+	userID := utils.GetUserID(c)
+
+	contents, err := service.ServiceGroupApp.MiniprogramServiceGroup.LearningService.GetLearningContents(req, userID)
+	if err != nil {
+		global.GVA_LOG.Error("获取学习内容列表失败!", zap.Error(err))
+		response.FailWithMessage("获取学习内容列表失败: "+err.Error(), c)
+		return
+	}
+
+	response.OkWithData(contents, c)
+}
+
+// StartLearning - 暂时禁用，等待请求类型定义
+// @Tags Learning
+// @Summary 开始学习
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Success 200 {object} response.Response{msg=string} "开始学习成功"
+// @Router /learning/start [post]
+/*
+func (l *LearningApi) StartLearning(c *gin.Context) {
+	// 暂时禁用，等待StartLearningRequest类型定义
+	response.FailWithMessage("功能暂未开放", c)
+}
+*/
+
+// UpdateLearningProgress - 暂时禁用，等待请求类型定义
+// @Tags Learning
+// @Summary 更新学习进度
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Success 200 {object} response.Response{msg=string} "更新成功"
+// @Router /learning/progress [put]
+/*
+func (l *LearningApi) UpdateLearningProgress(c *gin.Context) {
+	// 暂时禁用，等待UpdateLearningProgressRequest类型定义
+	response.FailWithMessage("功能暂未开放", c)
+}
+*/
+
+// ToggleLike - 暂时禁用，等待请求类型定义
+// @Tags Learning
+// @Summary 切换点赞状态
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Success 200 {object} response.Response{data=bool,msg=string} "操作成功"
+// @Router /learning/like [post]
+/*
+func (l *LearningApi) ToggleLike(c *gin.Context) {
+	// 暂时禁用，等待ToggleLikeRequest类型定义
+	response.FailWithMessage("功能暂未开放", c)
+}
+*/
+
+// ToggleCollect
+// @Tags Learning
+// @Summary 切换收藏状态
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body request.ToggleCollectRequest true "切换收藏请求"
+// @Success 200 {object} response.Response{data=bool,msg=string} "操作成功"
+// @Router /learning/collect [post]
+func (l *LearningApi) ToggleCollect(c *gin.Context) {
+	var req request.ToggleCollectRequest
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	// 获取当前用户ID
+	userID, err := utils.GetClaims(c)
+	if err != nil {
+		response.FailWithMessage("获取用户信息失败", c)
+		return
+	}
+
+	isCollected, err := service.ServiceGroupApp.MiniprogramServiceGroup.LearningService.ToggleCollect(userID, req.ContentID)
+	if err != nil {
+		global.GVA_LOG.Error("切换收藏状态失败!", zap.Error(err))
+		response.FailWithMessage("操作失败: "+err.Error(), c)
+		return
+	}
+
+	message := "已取消收藏"
+	if isCollected {
+		message = "收藏成功"
+	}
+
+	response.OkWithDetailed(gin.H{"isCollected": isCollected}, message, c)
+}
+
+// GetRecommendations
+// @Tags Learning
+// @Summary 获取推荐内容
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data query request.GetRecommendationsRequest true "推荐请求参数"
+// @Success 200 {object} response.Response{data=[]response.LearningRecommendationResponse,msg=string} "获取成功"
+// @Router /learning/recommendations [get]
+func (l *LearningApi) GetRecommendations(c *gin.Context) {
+	var req request.GetRecommendationsRequest
+	err := c.ShouldBindQuery(&req)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	// 设置默认分页参数
+	if req.PageSize <= 0 {
+		req.PageSize = 10
+	}
+
+	// 获取当前用户ID
+	userID, err := utils.GetClaims(c)
+	if err != nil {
+		response.FailWithMessage("获取用户信息失败", c)
+		return
+	}
+
+	recommendations, err := service.ServiceGroupApp.MiniprogramServiceGroup.LearningService.GetRecommendations(userID, req)
+	if err != nil {
+		global.GVA_LOG.Error("获取推荐内容失败!", zap.Error(err))
+		response.FailWithMessage("获取推荐内容失败: "+err.Error(), c)
+		return
+	}
+
+	response.OkWithData(recommendations, c)
+}
+
+// GetUserLearningRecords
+// @Tags Learning
+// @Summary 获取用户学习记录
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data query request.GetUserLearningRecordsRequest true "查询参数"
+// @Success 200 {object} response.Response{data=response.UserLearningRecordListResponse,msg=string} "获取成功"
+// @Router /learning/records [get]
+func (l *LearningApi) GetUserLearningRecords(c *gin.Context) {
+	var req request.GetUserLearningRecordsRequest
+	err := c.ShouldBindQuery(&req)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	// 设置默认分页参数
+	if req.Page <= 0 {
+		req.Page = 1
+	}
+	if req.PageSize <= 0 {
+		req.PageSize = 20
+	}
+
+	// 获取当前用户ID
+	userID, err := utils.GetClaims(c)
+	if err != nil {
+		response.FailWithMessage("获取用户信息失败", c)
+		return
+	}
+
+	records, err := service.ServiceGroupApp.MiniprogramServiceGroup.LearningService.GetUserLearningRecords(userID, req)
+	if err != nil {
+		global.GVA_LOG.Error("获取用户学习记录失败!", zap.Error(err))
+		response.FailWithMessage("获取用户学习记录失败: "+err.Error(), c)
+		return
+	}
+
+	response.OkWithData(records, c)
+}
+
+// RateLearningContent
+// @Tags Learning
+// @Summary 评分学习内容
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body request.RateLearningContentRequest true "评分请求"
+// @Success 200 {object} response.Response{msg=string} "评分成功"
+// @Router /learning/rate [post]
+func (l *LearningApi) RateLearningContent(c *gin.Context) {
+	var req request.RateLearningContentRequest
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	// 获取当前用户ID
+	userID, err := utils.GetClaims(c)
+	if err != nil {
+		response.FailWithMessage("获取用户信息失败", c)
+		return
+	}
+
+	err = service.ServiceGroupApp.MiniprogramServiceGroup.LearningService.RateLearningContent(userID, req)
+	if err != nil {
+		global.GVA_LOG.Error("评分学习内容失败!", zap.Error(err))
+		response.FailWithMessage("评分失败: "+err.Error(), c)
+		return
+	}
+
+	response.OkWithMessage("评分成功", c)
+}
+
+// GetLearningStats
+// @Tags Learning
+// @Summary 获取学习统计
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Success 200 {object} response.Response{data=response.LearningStatsResponse,msg=string} "获取成功"
+// @Router /learning/stats [get]
+func (l *LearningApi) GetLearningStats(c *gin.Context) {
+	// 获取当前用户ID
+	userID, err := utils.GetClaims(c)
+	if err != nil {
+		response.FailWithMessage("获取用户信息失败", c)
+		return
+	}
+
+	stats, err := service.ServiceGroupApp.MiniprogramServiceGroup.LearningService.GetLearningStats(userID)
+	if err != nil {
+		global.GVA_LOG.Error("获取学习统计失败!", zap.Error(err))
+		response.FailWithMessage("获取学习统计失败: "+err.Error(), c)
+		return
+	}
+
+	response.OkWithData(stats, c)
+}
+
+// GetCategoryStats
+// @Tags Learning
+// @Summary 获取分类统计
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Success 200 {object} response.Response{data=[]response.CategoryStatsResponse,msg=string} "获取成功"
+// @Router /learning/category-stats [get]
+func (l *LearningApi) GetCategoryStats(c *gin.Context) {
+	// 获取当前用户ID
+	userID, err := utils.GetClaims(c)
+	if err != nil {
+		response.FailWithMessage("获取用户信息失败", c)
+		return
+	}
+
+	stats, err := service.ServiceGroupApp.MiniprogramServiceGroup.LearningService.GetCategoryStats(userID)
+	if err != nil {
+		global.GVA_LOG.Error("获取分类统计失败!", zap.Error(err))
+		response.FailWithMessage("获取分类统计失败: "+err.Error(), c)
+		return
+	}
+
+	response.OkWithData(stats, c)
+}
+
+// GetLearningHomepage
+// @Tags Learning
+// @Summary 获取学习首页数据
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Success 200 {object} response.Response{data=response.LearningHomepageResponse,msg=string} "获取成功"
+// @Router /learning/homepage [get]
+func (l *LearningApi) GetLearningHomepage(c *gin.Context) {
+	// 获取当前用户ID
+	userID, err := utils.GetClaims(c)
+	if err != nil {
+		response.FailWithMessage("获取用户信息失败", c)
+		return
+	}
+
+	homepage, err := service.ServiceGroupApp.MiniprogramServiceGroup.LearningService.GetLearningHomepage(userID)
+	if err != nil {
+		global.GVA_LOG.Error("获取学习首页数据失败!", zap.Error(err))
+		response.FailWithMessage("获取学习首页数据失败: "+err.Error(), c)
+		return
+	}
+
+	response.OkWithData(homepage, c)
+}

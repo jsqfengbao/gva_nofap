@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主页 - 戒色助手</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#34D399',
+                        secondary: '#06B6D4',
+                        accent: '#F59E0B',
+                        danger: '#EF4444',
+                        success: '#10B981',
+                        background: '#F8FAFC',
+                        surface: '#FFFFFF'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        }
+        .streak-glow {
+            box-shadow: 0 0 30px rgba(52, 211, 153, 0.3);
+        }
+        .level-progress {
+            background: linear-gradient(90deg, #34D399 0%, #10B981 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:active {
+            transform: scale(0.98);
+        }
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(52, 211, 153, 0); }
+        }
+        .pulse-animation {
+            animation: pulse-green 2s infinite;
+        }
+    </style>
+</head>
+<body class="bg-background">
+    <!-- Status Bar -->
+    <div class="flex justify-between items-center px-4 py-2 text-xs text-gray-800">
+        <span class="font-medium">9:41</span>
+        <div class="flex items-center space-x-1">
+            <i class="fas fa-signal text-xs"></i>
+            <i class="fas fa-wifi text-xs"></i>
+            <div class="w-6 h-3 border border-gray-800 rounded-sm">
+                <div class="w-4 h-1.5 bg-green-500 rounded-sm mt-0.5 ml-0.5"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="bg-surface px-6 pt-4 pb-6">
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">早上好 👋</h1>
+                <p class="text-gray-600">坚持成就更好的自己</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button class="p-2 bg-gray-100 rounded-full">
+                    <i class="fas fa-bell text-gray-600"></i>
+                </button>
+                <div class="w-10 h-10 bg-gradient-to-br from-primary to-success rounded-full flex items-center justify-center">
+                    <span class="text-white font-bold text-sm">L8</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="px-6 pb-20">
+        <!-- Streak Counter Card -->
+        <div class="bg-gradient-to-br from-primary to-success rounded-3xl p-6 mb-6 streak-glow">
+            <div class="text-center text-white">
+                <div class="mb-4">
+                    <i class="fas fa-fire text-4xl mb-2"></i>
+                    <h2 class="text-3xl font-bold">23</h2>
+                    <p class="text-green-100">连续坚持天数</p>
+                </div>
+                
+                <div class="bg-white/20 rounded-2xl p-4 mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm">距离下一个里程碑</span>
+                        <span class="text-sm font-semibold">7天</span>
+                    </div>
+                    <div class="w-full bg-white/30 rounded-full h-2">
+                        <div class="bg-white h-2 rounded-full" style="width: 76%"></div>
+                    </div>
+                </div>
+                
+                <button class="w-full bg-white text-primary font-bold py-3 rounded-2xl active:scale-95 transition-transform pulse-animation">
+                    今日打卡 ✓
+                </button>
+            </div>
+        </div>
+
+        <!-- Level Progress -->
+        <div class="bg-surface rounded-2xl p-4 mb-6 shadow-sm">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-br from-accent to-orange-500 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-star text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-800">等级 8 - 稳定期</h3>
+                        <p class="text-sm text-gray-600">1,250 / 1,500 EXP</p>
+                    </div>
+                </div>
+                <span class="text-2xl">🎮</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-3">
+                <div class="level-progress h-3 rounded-full" style="width: 83%"></div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <button class="bg-surface rounded-2xl p-4 card-hover shadow-sm">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-danger/10 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-exclamation-triangle text-danger text-xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-800 mb-1">紧急求助</h3>
+                    <p class="text-xs text-gray-600">需要帮助时点这里</p>
+                </div>
+            </button>
+            
+            <button class="bg-surface rounded-2xl p-4 card-hover shadow-sm">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-users text-secondary text-xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-800 mb-1">社区</h3>
+                    <p class="text-xs text-gray-600">与伙伴们交流</p>
+                </div>
+            </button>
+        </div>
+
+        <!-- Today's Achievements -->
+        <div class="bg-surface rounded-2xl p-4 mb-6 shadow-sm">
+            <h3 class="font-semibold text-gray-800 mb-4">今日成就</h3>
+            <div class="space-y-3">
+                <div class="flex items-center space-x-3 p-3 bg-green-50 rounded-xl">
+                    <div class="w-8 h-8 bg-success/20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-check text-success text-sm"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium text-gray-800">完成每日打卡</p>
+                        <p class="text-xs text-gray-600">+10 经验值</p>
+                    </div>
+                    <span class="text-success font-bold">+10</span>
+                </div>
+                
+                <div class="flex items-center space-x-3 p-3 bg-blue-50 rounded-xl">
+                    <div class="w-8 h-8 bg-secondary/20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-book text-secondary text-sm"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium text-gray-800">阅读健康文章</p>
+                        <p class="text-xs text-gray-600">+15 经验值</p>
+                    </div>
+                    <span class="text-secondary font-bold">+15</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daily Tips -->
+        <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-4 mb-6 border border-purple-100">
+            <div class="flex items-start space-x-3">
+                <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mt-1">
+                    <i class="fas fa-lightbulb text-purple-600 text-sm"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-800 mb-2">今日小贴士</h3>
+                    <p class="text-sm text-gray-700 leading-relaxed">
+                        当感到冲动时，尝试做10个深呼吸或者快速做20个俯卧撑。身体运动能有效转移注意力并释放内啡肽。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Milestones -->
+        <div class="bg-surface rounded-2xl p-4 shadow-sm">
+            <h3 class="font-semibold text-gray-800 mb-4">最近成就</h3>
+            <div class="space-y-3">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-medal text-white"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium text-gray-800">坚持3周达成</p>
+                        <p class="text-xs text-gray-600">3天前获得</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-trophy text-white"></i>
+                    </div>
+                    <div>
+                        <p class="font-medium text-gray-800">社区贡献者</p>
+                        <p class="text-xs text-gray-600">1周前获得</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="fixed bottom-0 left-0 right-0 bg-surface border-t border-gray-100 px-6 py-3">
+        <div class="flex justify-around items-center">
+            <button class="flex flex-col items-center space-y-1">
+                <i class="fas fa-home text-primary text-lg"></i>
+                <span class="text-xs text-primary font-medium">主页</span>
+            </button>
+            <button class="flex flex-col items-center space-y-1">
+                <i class="fas fa-chart-line text-gray-400 text-lg"></i>
+                <span class="text-xs text-gray-400">进度</span>
+            </button>
+            <button class="flex flex-col items-center space-y-1">
+                <i class="fas fa-users text-gray-400 text-lg"></i>
+                <span class="text-xs text-gray-400">社区</span>
+            </button>
+            <button class="flex flex-col items-center space-y-1">
+                <i class="fas fa-book text-gray-400 text-lg"></i>
+                <span class="text-xs text-gray-400">学习</span>
+            </button>
+            <button class="flex flex-col items-center space-y-1">
+                <i class="fas fa-user text-gray-400 text-lg"></i>
+                <span class="text-xs text-gray-400">我的</span>
+            </button>
+        </div>
+    </div>
+</body>
+</html> 

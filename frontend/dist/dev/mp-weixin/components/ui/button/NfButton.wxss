@@ -1,0 +1,110 @@
+
+/* 注意：微信小程序不支持外部CSS导入，FontAwesome图标需要通过其他方式引入 */
+/* @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'); */
+/* 基础按钮样式 */
+.nf-button.data-v-62d418e1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  active: transform scale(0.95);
+}
+.nf-button.data-v-62d418e1:active {
+  -webkit-transform: scale(0.95);
+          transform: scale(0.95);
+}
+/* Primary按钮样式 */
+.nf-button--primary.data-v-62d418e1 {
+  background-color: #34D399;
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+.nf-button--primary.data-v-62d418e1:hover {
+  background-color: #10B981;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+/* Secondary按钮样式 */
+.nf-button--secondary.data-v-62d418e1 {
+  background-color: transparent;
+  color: #34D399;
+  border: 2px solid #34D399;
+}
+.nf-button--secondary.data-v-62d418e1:hover {
+  background-color: rgba(52, 211, 153, 0.05);
+}
+/* Icon按钮样式 */
+.nf-button--icon.data-v-62d418e1 {
+  background-color: #F3F4F6;
+  color: #6B7280;
+  border-radius: 50%;
+}
+.nf-button--icon.data-v-62d418e1:hover {
+  background-color: #E5E7EB;
+}
+/* 尺寸样式 */
+.nf-button--small.data-v-62d418e1 {
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 12px;
+}
+.nf-button--medium.data-v-62d418e1 {
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 16px;
+}
+.nf-button--large.data-v-62d418e1 {
+  padding: 16px 32px;
+  font-size: 18px;
+  border-radius: 16px;
+}
+/* Icon按钮特殊尺寸 */
+.nf-button--icon.nf-button--small.data-v-62d418e1 {
+  padding: 8px;
+  border-radius: 50%;
+}
+.nf-button--icon.nf-button--medium.data-v-62d418e1 {
+  padding: 12px;
+  border-radius: 50%;
+}
+.nf-button--icon.nf-button--large.data-v-62d418e1 {
+  padding: 16px;
+  border-radius: 50%;
+}
+/* 禁用状态 */
+.nf-button--disabled.data-v-62d418e1 {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+/* 全宽样式 */
+.w-full.data-v-62d418e1 {
+  width: 100%;
+}
+/* 图标样式 */
+.nf-icon.data-v-62d418e1 {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+}
+.mr-2.data-v-62d418e1 {
+  margin-right: 8px;
+}
+.ml-2.data-v-62d418e1 {
+  margin-left: 8px;
+}
+/* Flexbox utilities */
+.flex.data-v-62d418e1 {
+  display: flex;
+}
+.items-center.data-v-62d418e1 {
+  align-items: center;
+}
+.justify-center.data-v-62d418e1 {
+  justify-content: center;
+}
+.font-semibold.data-v-62d418e1 {
+  font-weight: 600;
+}

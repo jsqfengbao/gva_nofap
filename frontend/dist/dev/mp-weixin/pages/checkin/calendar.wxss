@@ -1,0 +1,44 @@
+
+/* 基础样式省略... */
+.calendar-page.data-v-5c084a8a {
+  height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  display: flex;
+  flex-direction: column;
+}
+.page-content.data-v-5c084a8a {
+  flex: 1;
+  padding: 80px 16px 32px;
+  overflow-y: auto;
+}
+.calendar-grid.data-v-5c084a8a {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 8px;
+}
+.calendar-day.data-v-5c084a8a {
+  width: calc(100% / 7);
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: 8px;
+  margin: 2px 0;
+}
+.mood-dot.data-v-5c084a8a {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.mood-dot.mood-5.data-v-5c084a8a { background: #22c55e;
+}
+.mood-dot.mood-4.data-v-5c084a8a { background: #84cc16;
+}
+.mood-dot.mood-3.data-v-5c084a8a { background: #eab308;
+}
+.mood-dot.mood-2.data-v-5c084a8a { background: #f97316;
+}
+.mood-dot.mood-1.data-v-5c084a8a { background: #ef4444;
+}

@@ -1,0 +1,273 @@
+{
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+    }
+  },
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "戒色助手",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/welcome/welcome",
+      "style": {
+        "navigationBarTitleText": "欢迎",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/assessment/index",
+      "style": {
+        "navigationBarTitleText": "评估测试",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/assessment/assessment",
+      "style": {
+        "navigationBarTitleText": "色隐指数评估",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/assessment/questionnaire",
+      "style": {
+        "navigationBarTitleText": "评估问卷",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/assessment/result",
+      "style": {
+        "navigationBarTitleText": "评估结果",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/checkin/index",
+      "style": {
+        "navigationBarTitleText": "每日打卡",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/checkin/history",
+      "style": {
+        "navigationBarTitleText": "打卡历史",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/checkin/weekly",
+      "style": {
+        "navigationBarTitleText": "本周进度",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/checkin/calendar",
+      "style": {
+        "navigationBarTitleText": "月度日历",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/achievement/index",
+      "style": {
+        "navigationBarTitleText": "成就系统",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/progress/index",
+      "style": {
+        "navigationBarTitleText": "进度追踪",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/community/index",
+      "style": {
+        "navigationBarTitleText": "社区互助",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/community/post",
+      "style": {
+        "navigationBarTitleText": "发布帖子",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/community/detail",
+      "style": {
+        "navigationBarTitleText": "帖子详情",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/emergency/index",
+      "style": {
+        "navigationBarTitleText": "紧急求助",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/emergency/articles",
+      "style": {
+        "navigationBarTitleText": "励志文章",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/learning/index",
+      "style": {
+        "navigationBarTitleText": "学习成长",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/learning/detail",
+      "style": {
+        "navigationBarTitleText": "学习详情",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/profile/index",
+      "style": {
+        "navigationBarTitleText": "个人中心",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/profile/setup",
+      "style": {
+        "navigationBarTitleText": "完善资料",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/profile/auth",
+      "style": {
+        "navigationBarTitleText": "用户授权",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/profile/notification",
+      "style": {
+        "navigationBarTitleText": "通知设置",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/profile/privacy",
+      "style": {
+        "navigationBarTitleText": "隐私设置",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/profile/help",
+      "style": {
+        "navigationBarTitleText": "帮助中心",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/about/about",
+      "style": {
+        "navigationBarTitleText": "了解更多",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/legal/service-agreement",
+      "style": {
+        "navigationBarTitleText": "服务协议",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/legal/privacy-policy",
+      "style": {
+        "navigationBarTitleText": "隐私政策",
+        "navigationStyle": "custom"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "戒色助手",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "backgroundColor": "#F8FAFC",
+    "app-plus": {
+      "background": "#F8FAFC"
+    }
+  },
+  "tabBar": {
+    "color": "#6B7280",
+    "selectedColor": "#34D399",
+    "borderStyle": "white",
+    "backgroundColor": "#FFFFFF",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "🏠 首页"
+      },
+      {
+        "pagePath": "pages/checkin/index", 
+        "text": "✅ 打卡"
+      },
+      {
+        "pagePath": "pages/community/index",
+        "text": "👥 社区"
+      },
+      {
+        "pagePath": "pages/learning/index",
+        "text": "📚 学习"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "👤 我的"
+      }
+    ]
+  },
+  "condition": {
+    "current": 0,
+    "list": [
+      {
+        "name": "欢迎页面",
+        "path": "pages/welcome/welcome"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userInfo": {
+      "desc": "用于完善用户资料和个性化服务"
+    },
+    "scope.userLocation": {
+      "desc": "用于提供本地化内容推荐"
+    },
+    "scope.chooseAvatar": {
+      "desc": "用于设置个人头像"
+    },
+    "scope.chooseMedia": {
+      "desc": "用于选择头像图片"
+    }
+  },
+  "requiredBackgroundModes": [],
+  "plugins": {},
+  "resizable": true,
+  "navigateToMiniProgramAppIdList": [],
+  "uniStatistics": {
+    "enable": false
+  }
+} 

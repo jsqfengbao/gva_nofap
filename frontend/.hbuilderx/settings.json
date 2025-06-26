@@ -1,0 +1,65 @@
+{
+  "es6CompileLevel": 1,
+  "postcssCompileLevel": 2,
+  "minifyLevel": 0,
+  "vuejsCompileLevel": 3,
+  "compilerType": "weex",
+  "lazyloadResource": true,
+  "preloadLimit": 10,
+  "router": {
+    "mode": "hash",
+    "base": "./"
+  },
+  "optimization": {
+    "treeShaking": {
+      "enable": false
+    }
+  },
+  "app-plus": {
+    "compilerVersion": 3,
+    "uniStatistics": {
+      "enable": false
+    }
+  },
+  "mp-weixin": {
+    "setting": {
+      "urlCheck": false,
+      "es6": true,
+      "enhance": true,
+      "postcss": true,
+      "preloadBackgroundData": false,
+      "minified": true,
+      "newFeature": false,
+      "coverView": true,
+      "nodeModules": true,
+      "autoAudits": false,
+      "showShadowRootInWxmlPanel": true,
+      "scopeDataCheck": false,
+      "uglifyFileName": false,
+      "checkInvalidKey": true,
+      "checkSiteMap": true,
+      "uploadWithSourceMap": true,
+      "compileHotReLoad": false,
+      "lazyloadPlaceholderEnable": false,
+      "useMultiFrameRuntime": true,
+      "useApiHook": true,
+      "useApiHostProcess": true,
+      "babelSetting": {
+        "ignore": [],
+        "disablePlugins": [],
+        "outputPath": ""
+      },
+      "enableEngineNative": false,
+      "useIsolateContext": true,
+      "userConfirmedBundleSwitch": false,
+      "packNpmManually": false,
+      "packNpmRelationList": [],
+      "minifyWXSS": true,
+      "disableUseStrict": false,
+      "minifyWXML": true,
+      "showES6CompileOption": false,
+      "useCompilerPlugins": false
+    },
+    "usingComponents": true
+  }
+} 

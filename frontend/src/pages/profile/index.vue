@@ -147,6 +147,8 @@
           <text class="menu-text">帮助中心</text>
           <text class="menu-arrow">></text>
         </view>
+
+
       </view>
     </view>
 
@@ -226,7 +228,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { isLoggedIn as checkIsLoggedIn, getUserInfo, wxLogin, logout, getAvatarUrl } from '@/utils/auth'
+import { isLoggedIn as checkIsLoggedIn, getUserInfo, wxLogin, logout, getAvatarUrl, setUserInfo, debugAuthStatus, testAuth } from '@/utils/auth'
 import { userApi, achievementApi } from '@/utils/api'
 
 // 响应式数据
@@ -291,12 +293,20 @@ const updateTime = () => {
 
 const checkLoginStatus = () => {
   isUserLoggedIn.value = checkIsLoggedIn()
+  console.log('检查登录状态:', isUserLoggedIn.value)
+  
   if (isUserLoggedIn.value) {
     const userInfo = getUserInfo()
+    console.log('本地存储的用户信息:', userInfo)
+    
     if (userInfo) {
       // 设置用户基本信息
-      userProfile.value.nickname = userInfo.nickname || ''
+      userProfile.value.nickname = userInfo.nickname || '微信用户'
       userProfile.value.avatarUrl = getAvatarUrl(userInfo.avatarUrl)
+      console.log('设置用户资料:', {
+        nickname: userProfile.value.nickname,
+        avatarUrl: userProfile.value.avatarUrl
+      })
     }
   }
 }
@@ -308,26 +318,56 @@ const loadUserProfile = async () => {
     showLoading.value = true
     loadingText.value = '加载个人资料...'
     
+    console.log('开始加载用户资料...')
+    
     // 调用实际API获取用户资料
     const res = await userApi.getProfile()
+    console.log('用户资料API响应:', res.data)
     
     if (res.data.code === 0) {
       const data = res.data.data
-      userProfile.value = {
-        nickname: data.user.nickname || '用户',
-        avatarUrl: getAvatarUrl(data.user.avatarUrl),
-        level: data.user.level || 1,
-        levelTitle: data.user.levelTitle || '新手',
+      console.log('解析的用户数据:', data)
+      
+      // 更新用户资料，优先使用API返回的数据
+      // Go模型字段是 AvatarUrl，JSON序列化后是 avatarUrl
+      const updatedProfile = {
+        nickname: data.user?.nickname || userProfile.value.nickname || '微信用户',
+        avatarUrl: getAvatarUrl(data.user?.avatarUrl) || userProfile.value.avatarUrl,
+        level: data.user?.level || 1,
+        levelTitle: data.user?.levelTitle || '新手',
         joinDays: data.abstinenceRecord?.totalDays || 1,
         currentStreak: data.abstinenceRecord?.currentStreak || 0,
         longestStreak: data.abstinenceRecord?.longestStreak || 0,
-        experience: data.user.experience || 0,
-        achievementCount: data.user.achievementCount || 0,
-        helpCount: data.user.helpCount || 0
+        experience: data.user?.experience || 0,
+        achievementCount: data.user?.achievementCount || 0,
+        helpCount: data.user?.helpCount || 0
+      }
+      
+      console.log('更新后的用户资料:', updatedProfile)
+      userProfile.value = updatedProfile
+      
+      // 更新本地存储
+      const currentUser = getUserInfo()
+      if (currentUser) {
+        const updatedUser = {
+          ...currentUser,
+          nickname: updatedProfile.nickname,
+          avatarUrl: data.user?.avatarUrl || currentUser.avatarUrl,
+          level: updatedProfile.level,
+          experience: updatedProfile.experience
+        }
+        setUserInfo(updatedUser)
+        console.log('更新本地用户信息:', updatedUser)
       }
       
       // 加载最新成就
       await loadRecentAchievements()
+    } else {
+      console.error('API返回错误:', res.data.msg)
+      uni.showToast({
+        title: res.data.msg || '加载失败',
+        icon: 'error'
+      })
     }
     
     showLoading.value = false
@@ -370,6 +410,7 @@ const handleWxLogin = async () => {
     showLoading.value = true
     loadingText.value = '微信登录中...'
     
+    // 直接进行基础登录（不获取敏感信息）
     const result = await wxLogin()
     
     // 登录成功，更新状态
@@ -381,6 +422,24 @@ const handleWxLogin = async () => {
       title: '登录成功',
       icon: 'success'
     })
+    
+    // 登录成功后，询问是否要完善个人信息
+    setTimeout(() => {
+      uni.showModal({
+        title: '完善个人信息',
+        content: '是否要设置头像和昵称，获得更好的使用体验？',
+        confirmText: '去设置',
+        cancelText: '暂不',
+        success: (res) => {
+          if (res.confirm) {
+            uni.navigateTo({
+              url: '/pages/profile/auth'
+            })
+          }
+        }
+      })
+    }, 1500)
+    
   } catch (error) {
     console.error('微信登录失败:', error)
     uni.showToast({
@@ -493,7 +552,7 @@ const goToNotificationSettings = () => {
 
 const goToHelpCenter = () => {
   uni.navigateTo({
-    url: '/pages/profile/help'
+    url: '/pages/learning/help'
   })
 }
 
@@ -617,6 +676,45 @@ const updateUserAvatar = async (avatarUrl) => {
     avatarUrl: avatarUrl
   })
   return response
+}
+
+// 调试相关方法
+const handleDebugAuth = () => {
+  const debugInfo = debugAuthStatus()
+  
+  uni.showModal({
+    title: '认证调试信息',
+    content: `登录状态: ${debugInfo.isLoggedIn ? '已登录' : '未登录'}\n` +
+             `Token类型: ${debugInfo.tokenType}\n` +
+             `Token有效: ${debugInfo.tokenValid ? '是' : '否'}\n` +
+             `用户信息: ${debugInfo.hasUserInfo ? '存在' : '缺失'}`,
+    showCancel: false
+  })
+}
+
+const handleTestAuth = async () => {
+  showLoading.value = true
+  loadingText.value = '测试认证状态...'
+  
+  try {
+    const result = await testAuth()
+    
+    uni.showModal({
+      title: '认证测试结果',
+      content: result.success ? 
+        `✅ 认证成功\n服务器响应: ${JSON.stringify(result.data)}` :
+        `❌ 认证失败\n错误: ${result.error}`,
+      showCancel: false
+    })
+  } catch (error) {
+    uni.showModal({
+      title: '测试失败',
+      content: `网络错误: ${error.message}`,
+      showCancel: false
+    })
+  } finally {
+    showLoading.value = false
+  }
 }
 </script>
 
@@ -1220,4 +1318,6 @@ const updateUserAvatar = async (avatarUrl) => {
   font-size: 28rpx;
   color: #1F2937;
 }
+
+
 </style> 

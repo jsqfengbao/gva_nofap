@@ -1,6 +1,7 @@
 package miniprogram
 
 import (
+	"database/sql"
 	"errors"
 	"math"
 	"time"
@@ -239,10 +240,16 @@ func (s *CheckinService) GetCheckinStatistics(userID uint) (*response.CheckinSta
 	}
 
 	// 计算平均心情
-	var avgMood float64
+	var avgMood sql.NullFloat64
 	err = global.GVA_DB.Model(&miniprogram.DailyCheckin{}).Where("user_id = ?", userID).Select("AVG(mood_level)").Scan(&avgMood).Error
 	if err != nil {
 		return nil, err
+	}
+
+	// 处理NULL值
+	avgMoodValue := 0.0
+	if avgMood.Valid {
+		avgMoodValue = avgMood.Float64
 	}
 
 	// 计算总奖励
@@ -274,7 +281,7 @@ func (s *CheckinService) GetCheckinStatistics(userID uint) (*response.CheckinSta
 		CurrentStreak: abstinenceRecord.CurrentStreak,
 		LongestStreak: abstinenceRecord.LongestStreak,
 		SuccessRate:   abstinenceRecord.SuccessRate,
-		AverageMood:   math.Round(avgMood*10) / 10,
+		AverageMood:   math.Round(avgMoodValue*10) / 10,
 		TotalRewards:  int(totalRewards),
 		ThisMonth:     int(thisMonthDays),
 		ThisWeek:      int(thisWeekDays),

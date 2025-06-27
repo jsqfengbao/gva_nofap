@@ -49,17 +49,6 @@ func (s *AuthService) GetWxSessionInfo(code string) (*WxSessionResult, error) {
 	appID := global.GVA_CONFIG.MiniProgram.AppID
 	appSecret := global.GVA_CONFIG.MiniProgram.AppSecret
 
-	// 添加调试日志
-	global.GVA_LOG.Info("微信小程序配置信息",
-		zap.String("配置中的AppID", appID),
-		zap.String("配置中的AppSecret前4位", func() string {
-			if len(appSecret) > 4 {
-				return appSecret[:4] + "****"
-			}
-			return appSecret
-		}()),
-	)
-
 	// 临时使用测试配置，生产环境需要在配置文件中设置
 	if appID == "" {
 		appID = "test_app_id" // 需要在配置文件中设置真实的AppID
@@ -77,22 +66,29 @@ func (s *AuthService) GetWxSessionInfo(code string) (*WxSessionResult, error) {
 
 	resp, err := http.Get(url)
 	if err != nil {
+		global.GVA_LOG.Error("微信API请求失败", zap.Error(err))
 		return nil, err
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		global.GVA_LOG.Error("读取微信API响应失败", zap.Error(err))
 		return nil, err
 	}
 
 	var result WxSessionResult
 	err = json.Unmarshal(body, &result)
 	if err != nil {
+		global.GVA_LOG.Error("解析微信API响应失败", zap.Error(err))
 		return nil, err
 	}
 
 	if result.ErrCode != 0 {
+		global.GVA_LOG.Error("微信API返回错误",
+			zap.Int("错误码", result.ErrCode),
+			zap.String("错误信息", result.ErrMsg),
+		)
 		return nil, fmt.Errorf("微信API错误: %s", result.ErrMsg)
 	}
 

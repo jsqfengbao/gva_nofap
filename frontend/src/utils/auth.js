@@ -1,7 +1,7 @@
 /**
  * 认证相关工具函数
  */
-import { buildApiUrl, getImageUrl } from '../config/env.js'
+import { buildApiUrl, getImageUrl, getCurrentConfig } from '../config/env.js'
 
 // 检查是否已登录
 export function isLoggedIn() {
@@ -28,7 +28,41 @@ export function getUserInfo() {
 
 // 获取token
 export function getToken() {
-  return uni.getStorageSync('token') || ''
+  const token = uni.getStorageSync('token') || ''
+  // 验证token格式
+  if (token && token !== 'guest_token' && !isValidJWT(token)) {
+    console.warn('检测到无效token，自动清除:', token)
+    clearUserInfo()
+    return ''
+  }
+  return token
+}
+
+// 验证JWT token格式
+function isValidJWT(token) {
+  if (!token || typeof token !== 'string') {
+    return false
+  }
+  
+  // JWT应该有3个部分，用点分隔
+  const parts = token.split('.')
+  if (parts.length !== 3) {
+    return false
+  }
+  
+  // 检查每个部分是否为有效的base64
+  try {
+    for (let part of parts) {
+      // 添加必要的padding
+      while (part.length % 4) {
+        part += '='
+      }
+      atob(part.replace(/-/g, '+').replace(/_/g, '/'))
+    }
+    return true
+  } catch (e) {
+    return false
+  }
 }
 
 // 设置用户信息
@@ -85,13 +119,45 @@ export function requireAuth() {
   return true
 }
 
+// 检查微信小程序配置
+function checkWechatConfig() {
+  // 检查当前环境的AppID配置
+  const config = getCurrentConfig()
+  const appId = config.thirdParty.WECHAT_APP_ID
+  
+  // wx07c9e8e4f105260b 是真实的AppID，不是示例AppID
+  if (!appId || appId === 'your_wechat_app_id_here' || appId === 'test_app_id') {
+    console.warn('⚠️ 使用的是示例AppID，可能导致登录失败')
+    return false
+  }
+  
+  return true
+}
+
 // 微信授权登录
-export async function wxLogin(encryptedData = '', iv = '') {
+export async function wxLogin(encryptedData = '', iv = '', retryCount = 0) {
+  const maxRetries = 2 // 最大重试次数
+  
   return new Promise((resolve, reject) => {
+    console.log(`开始微信登录流程... (尝试次数: ${retryCount + 1})`)
+    
+    // 检查配置
+    if (!checkWechatConfig()) {
+      reject(new Error('微信小程序配置错误，请联系开发者'))
+      return
+    }
+    
     uni.login({
       provider: 'weixin',
       success: async (loginRes) => {
         try {
+          console.log('微信登录成功，获取到code:', loginRes.code)
+          console.log('code长度:', loginRes.code?.length)
+          console.log('完整登录响应:', loginRes)
+          
+          // 立即发送请求，减少code过期的可能性
+          const startTime = Date.now()
+          
           const requestData = {
             code: loginRes.code
           }
@@ -100,35 +166,92 @@ export async function wxLogin(encryptedData = '', iv = '') {
           if (encryptedData && iv) {
             requestData.encryptedData = encryptedData
             requestData.iv = iv
+            console.log('包含用户加密信息进行登录')
+          } else {
+            console.log('基础登录，仅使用code')
           }
           
+          console.log('准备发送登录请求，请求数据:', requestData)
+          console.log('请求URL:', buildApiUrl('/auth/wx-login'))
+          
           const res = await uni.request({
-            url: buildApiUrl('/auth/wx-login'),  // 使用环境配置的URL
+            url: buildApiUrl('/auth/wx-login'),
             method: 'POST',
             header: {
               'Content-Type': 'application/json'
             },
-            data: requestData
+            data: requestData,
+            timeout: 20000
           })
 
+          const endTime = Date.now()
+          console.log(`登录请求耗时: ${endTime - startTime}ms`)
+          console.log('登录API完整响应:', res)
+          console.log('响应状态码:', res.statusCode)
+          console.log('响应数据:', res.data)
+
+          if (res.statusCode !== 200) {
+            throw new Error(`HTTP错误: ${res.statusCode}`)
+          }
+
           if (res.data.code === 0) {
+            console.log('登录成功，保存用户信息')
             // 保存token和用户信息
             uni.setStorageSync('token', res.data.data.token)
-            uni.setStorageSync('userInfo', res.data.data.user)
+            if (res.data.data.user) {
+              uni.setStorageSync('userInfo', res.data.data.user)
+            }
             resolve(res.data.data)
           } else {
+            console.error('登录失败，服务器返回错误:', res.data)
+            
+            // 如果是code相关错误，尝试重新登录一次
+            if (res.data.msg && res.data.msg.includes('invalid code')) {
+              console.log('检测到code错误，尝试重新登录...')
+              setTimeout(() => {
+                wxLogin(encryptedData, iv).then(resolve).catch(reject)
+              }, 1000)
+              return
+            }
+            
             reject(new Error(res.data.msg || '登录失败'))
           }
         } catch (error) {
-          reject(error)
+          console.error('登录请求异常:', error)
+          
+          // 网络错误时的处理
+          if (error.errMsg && error.errMsg.includes('timeout')) {
+            reject(new Error('网络超时，请检查网络连接'))
+          } else if (error.errMsg && error.errMsg.includes('fail')) {
+            reject(new Error('网络请求失败，请稍后重试'))
+          } else {
+            reject(error)
+          }
         }
       },
       fail: (err) => {
         console.error('微信登录失败详细信息:', err)
         let errorMsg = '获取登录凭证失败'
         
+        // 处理不同类型的错误
+        if (err.errMsg) {
+          console.log('微信登录错误信息:', err.errMsg)
+          
+          // 检查是否是access_token missing错误
+          if (err.errMsg.includes('access_token missing')) {
+            errorMsg = 'AppID配置错误或小程序未激活，请联系开发者检查微信小程序配置'
+          } else if (err.errMsg.includes('需要重新登录')) {
+            errorMsg = '登录凭证已失效，请重新尝试登录'
+          } else if (err.errMsg.includes('invalid code')) {
+            errorMsg = '登录凭证无效，请重新尝试'
+          } else if (err.errMsg.includes('timeout')) {
+            errorMsg = '网络超时，请检查网络连接后重试'
+          }
+        }
+        
         // 根据错误码提供更具体的错误信息
         if (err.errCode) {
+          console.log('微信登录错误码:', err.errCode)
           switch (err.errCode) {
             case -1:
               errorMsg = '系统错误，请稍后重试'
@@ -170,8 +293,15 @@ export function request(options) {
   
   // 添加token到请求头
   if (token && token !== 'guest_token') {
-    config.header.Authorization = `Bearer ${token}`
-    config.header['x-token'] = token
+    // 确保token是有效的JWT格式
+    if (token.split('.').length === 3) {
+      config.header.Authorization = `Bearer ${token}`
+      config.header['x-token'] = token
+    } else {
+      console.warn('❌ 无效的token格式，跳过认证:', token)
+      // 清除无效token
+      clearUserInfo()
+    }
   }
   
   return new Promise((resolve, reject) => {
@@ -180,7 +310,11 @@ export function request(options) {
       success: (res) => {
         // 检查是否为认证错误
         if (res.statusCode === 401 || 
-            (res.data && res.data.code === 401)) {
+            (res.data && res.data.code === 401) ||
+            (res.data && res.data.code === 7 && res.data.msg?.includes('token'))) {
+          
+          console.error('🔒 认证失败，清除token并重新登录')
+          
           // token已过期或无效，清除并跳转登录
           clearUserInfo()
           uni.showToast({
@@ -199,6 +333,7 @@ export function request(options) {
         resolve(res)
       },
       fail: (err) => {
+        console.error('❌ API请求失败:', err.errMsg)
         reject(err)
       }
     })
@@ -218,7 +353,7 @@ export function formatApiUrl(path) {
 // 用户头像处理
 export function getAvatarUrl(avatarUrl) {
   if (!avatarUrl) {
-    return getImageUrl('default-avatar.png')  // 使用环境配置的图片URL
+    return null  // 返回null，让UI组件显示默认占位符（emoji等）
   }
   
   // 如果是微信头像URL，直接返回
@@ -284,4 +419,8 @@ export function throttle(func, limit) {
       setTimeout(() => inThrottle = false, limit)
     }
   }
-} 
+}
+
+// 移除调试函数，只保留基本功能
+
+ 

@@ -1,4 +1,23 @@
 "use strict";
+var __defProp = Object.defineProperty;
+var __defProps = Object.defineProperties;
+var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
+var __getOwnPropSymbols = Object.getOwnPropertySymbols;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __propIsEnum = Object.prototype.propertyIsEnumerable;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __spreadValues = (a, b) => {
+  for (var prop in b || (b = {}))
+    if (__hasOwnProp.call(b, prop))
+      __defNormalProp(a, prop, b[prop]);
+  if (__getOwnPropSymbols)
+    for (var prop of __getOwnPropSymbols(b)) {
+      if (__propIsEnum.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    }
+  return a;
+};
+var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 var __async = (__this, __arguments, generator) => {
   return new Promise((resolve, reject) => {
     var fulfilled = (value) => {
@@ -69,36 +88,64 @@ const _sfc_main = {
     };
     const checkLoginStatus = () => {
       isUserLoggedIn.value = utils_auth.isLoggedIn();
+      console.log("检查登录状态:", isUserLoggedIn.value);
       if (isUserLoggedIn.value) {
         const userInfo = utils_auth.getUserInfo();
+        console.log("本地存储的用户信息:", userInfo);
         if (userInfo) {
-          userProfile.value.nickname = userInfo.nickname || "";
+          userProfile.value.nickname = userInfo.nickname || "微信用户";
           userProfile.value.avatarUrl = utils_auth.getAvatarUrl(userInfo.avatarUrl);
+          console.log("设置用户资料:", {
+            nickname: userProfile.value.nickname,
+            avatarUrl: userProfile.value.avatarUrl
+          });
         }
       }
     };
     const loadUserProfile = () => __async(this, null, function* () {
-      var _a, _b, _c;
+      var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k;
       if (!isUserLoggedIn.value) return;
       try {
         showLoading.value = true;
         loadingText.value = "加载个人资料...";
+        console.log("开始加载用户资料...");
         const res = yield utils_api.userApi.getProfile();
+        console.log("用户资料API响应:", res.data);
         if (res.data.code === 0) {
           const data = res.data.data;
-          userProfile.value = {
-            nickname: data.user.nickname || "用户",
-            avatarUrl: utils_auth.getAvatarUrl(data.user.avatarUrl),
-            level: data.user.level || 1,
-            levelTitle: data.user.levelTitle || "新手",
-            joinDays: ((_a = data.abstinenceRecord) == null ? void 0 : _a.totalDays) || 1,
-            currentStreak: ((_b = data.abstinenceRecord) == null ? void 0 : _b.currentStreak) || 0,
-            longestStreak: ((_c = data.abstinenceRecord) == null ? void 0 : _c.longestStreak) || 0,
-            experience: data.user.experience || 0,
-            achievementCount: data.user.achievementCount || 0,
-            helpCount: data.user.helpCount || 0
+          console.log("解析的用户数据:", data);
+          const updatedProfile = {
+            nickname: ((_a = data.user) == null ? void 0 : _a.nickname) || userProfile.value.nickname || "微信用户",
+            avatarUrl: utils_auth.getAvatarUrl((_b = data.user) == null ? void 0 : _b.avatarUrl) || userProfile.value.avatarUrl,
+            level: ((_c = data.user) == null ? void 0 : _c.level) || 1,
+            levelTitle: ((_d = data.user) == null ? void 0 : _d.levelTitle) || "新手",
+            joinDays: ((_e = data.abstinenceRecord) == null ? void 0 : _e.totalDays) || 1,
+            currentStreak: ((_f = data.abstinenceRecord) == null ? void 0 : _f.currentStreak) || 0,
+            longestStreak: ((_g = data.abstinenceRecord) == null ? void 0 : _g.longestStreak) || 0,
+            experience: ((_h = data.user) == null ? void 0 : _h.experience) || 0,
+            achievementCount: ((_i = data.user) == null ? void 0 : _i.achievementCount) || 0,
+            helpCount: ((_j = data.user) == null ? void 0 : _j.helpCount) || 0
           };
+          console.log("更新后的用户资料:", updatedProfile);
+          userProfile.value = updatedProfile;
+          const currentUser = utils_auth.getUserInfo();
+          if (currentUser) {
+            const updatedUser = __spreadProps(__spreadValues({}, currentUser), {
+              nickname: updatedProfile.nickname,
+              avatarUrl: ((_k = data.user) == null ? void 0 : _k.avatarUrl) || currentUser.avatarUrl,
+              level: updatedProfile.level,
+              experience: updatedProfile.experience
+            });
+            utils_auth.setUserInfo(updatedUser);
+            console.log("更新本地用户信息:", updatedUser);
+          }
           yield loadRecentAchievements();
+        } else {
+          console.error("API返回错误:", res.data.msg);
+          common_vendor.index.showToast({
+            title: res.data.msg || "加载失败",
+            icon: "error"
+          });
         }
         showLoading.value = false;
       } catch (error) {
@@ -141,6 +188,21 @@ const _sfc_main = {
           title: "登录成功",
           icon: "success"
         });
+        setTimeout(() => {
+          common_vendor.index.showModal({
+            title: "完善个人信息",
+            content: "是否要设置头像和昵称，获得更好的使用体验？",
+            confirmText: "去设置",
+            cancelText: "暂不",
+            success: (res) => {
+              if (res.confirm) {
+                common_vendor.index.navigateTo({
+                  url: "/pages/profile/auth"
+                });
+              }
+            }
+          });
+        }, 1500);
       } catch (error) {
         console.error("微信登录失败:", error);
         common_vendor.index.showToast({
@@ -237,7 +299,7 @@ const _sfc_main = {
     };
     const goToHelpCenter = () => {
       common_vendor.index.navigateTo({
-        url: "/pages/profile/help"
+        url: "/pages/learning/help"
       });
     };
     const handleAuth = () => {

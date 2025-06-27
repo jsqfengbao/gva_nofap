@@ -16,6 +16,7 @@ func (u *UserRouter) InitUserRouter(Router *gin.RouterGroup) {
 	{
 		// 用户相关的路由
 		userRouter.GET("profile", userApi.GetUserProfile)           // 获取用户详细资料
+		userRouter.GET("info", userApi.GetUserProfile)              // 获取用户信息（别名，兼容性）
 		userRouter.PUT("info", userApi.UpdateUserInfo)              // 更新用户信息
 		userRouter.PUT("privacy", userApi.UpdatePrivacyLevel)       // 更新隐私级别
 		userRouter.POST("upload-avatar", userApi.UploadAvatar)      // 上传用户头像

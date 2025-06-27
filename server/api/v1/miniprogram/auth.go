@@ -28,6 +28,7 @@ func (a *AuthApi) WxLogin(c *gin.Context) {
 	var loginReq miniprogramReq.WxLoginRequest
 	err := c.ShouldBindJSON(&loginReq)
 	if err != nil {
+		global.GVA_LOG.Error("微信登录请求参数解析失败", zap.Error(err))
 		response.FailWithMessage(err.Error(), c)
 		return
 	}

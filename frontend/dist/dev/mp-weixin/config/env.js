@@ -113,4 +113,5 @@ function getImageUrl(path) {
   return buildStaticUrl(path, "IMAGES");
 }
 exports.buildApiUrl = buildApiUrl;
+exports.getCurrentConfig = getCurrentConfig;
 exports.getImageUrl = getImageUrl;

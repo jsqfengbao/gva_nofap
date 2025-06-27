@@ -76,12 +76,6 @@ func MiniprogramJWTAuth() gin.HandlerFunc {
 			}
 		}
 
-		// 记录成功认证
-		global.GVA_LOG.Debug("JWT认证成功",
-			zap.Uint("user_id", userID),
-			zap.String("ip", clientIP),
-			zap.String("path", c.Request.URL.Path))
-
 		// 将用户ID和token存储到上下文
 		c.Set("userID", userID)
 		c.Set("token", token)

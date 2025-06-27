@@ -1,6 +1,7 @@
 package miniprogram
 
 import (
+	"database/sql"
 	"encoding/json"
 	"errors"
 	"time"
@@ -324,7 +325,7 @@ func (s *AchievementService) checkSpecialAchievement(userID uint, condition Achi
 		startOfMonth := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location())
 		endOfMonth := startOfMonth.AddDate(0, 1, -1)
 
-		var avgMood float64
+		var avgMood sql.NullFloat64
 		err := tx.Model(&miniprogram.DailyCheckin{}).
 			Where("user_id = ? AND checkin_date BETWEEN ? AND ?", userID, startOfMonth, endOfMonth).
 			Select("AVG(mood_level)").
@@ -333,7 +334,13 @@ func (s *AchievementService) checkSpecialAchievement(userID uint, condition Achi
 			return false, err
 		}
 
-		return avgMood >= condition.MonthlyMoodAvg, nil
+		// 处理NULL值
+		avgMoodValue := 0.0
+		if avgMood.Valid {
+			avgMoodValue = avgMood.Float64
+		}
+
+		return avgMoodValue >= condition.MonthlyMoodAvg, nil
 	}
 
 	return false, nil

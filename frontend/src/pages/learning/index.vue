@@ -44,7 +44,7 @@
         <view class="course-card">
           <image 
             class="course-image" 
-            :src="featuredCourse.thumbnail"
+            :src="featuredCourse.thumbnailUrl"
             mode="aspectFill"
           />
           <view class="course-info">
@@ -160,7 +160,7 @@
               <view class="video-meta">
                 <text class="meta-item">▶️ {{ formatNumber(video.viewCount) }}</text>
                 <text class="meta-item">👍 {{ video.likeCount }}</text>
-                <text class="meta-item">💬 {{ video.commentCount }}</text>
+                <text class="meta-item">💬 {{ video.commentCount || 0 }}</text>
               </view>
             </view>
           </view>
@@ -242,6 +242,13 @@
 <script>
 import { getCurrentTime, formatNumber } from '@/utils/format'
 import NfTabBar from '@/components/ui/navigation/NfTabBar.vue'
+import learningService from '@/apis/learning-service'
+import { 
+  featuredCourse,
+  mockArticles,
+  mockVideos,
+  mockAudios
+} from '@/data/learning-mock'
 
 export default {
   name: 'LearningIndex',
@@ -260,14 +267,7 @@ export default {
       ],
       
       // 精品课程
-      featuredCourse: {
-        id: 1,
-        title: '21天自控力训练营',
-        summary: '科学方法帮你建立持久的自控习惯',
-        thumbnail: 'https://images.unsplash.com/photo-1499336315816-097655dcfbda?w=160&h=160&fit=crop',
-        category: 2,
-        difficulty: 2
-      },
+      featuredCourse: featuredCourse,
       
       // 学习统计
       learningStats: {
@@ -332,144 +332,30 @@ export default {
       this.updateTime()
       this.loadMockData()
       
-      // 尝试加载真实数据（如果API可用）
-      try {
-        await this.loadLearningStats()
-      } catch (error) {
-        console.log('使用模拟数据')
-      }
+      // 加载学习统计（唯一可用的API）
+      await this.loadLearningStats()
     },
     
     // 加载模拟数据
     loadMockData() {
-      // 文章数据
-      this.articles = [
-        {
-          id: 1,
-          title: '如何建立健康的生活习惯',
-          summary: '从小习惯开始，逐步建立健康的生活方式...',
-          thumbnailUrl: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=160&h=120&fit=crop',
-          duration: 8,
-          likeCount: 234,
-          viewCount: 1200,
-          contentType: 1,
-          category: 2,
-          createdAt: '2024-06-20T10:00:00Z'
-        },
-        {
-          id: 2,
-          title: '理解大脑的奖励机制',
-          summary: '科学解释成瘾的神经学原理和应对方法...',
-          thumbnailUrl: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=160&h=120&fit=crop',
-          duration: 12,
-          likeCount: 189,
-          viewCount: 856,
-          contentType: 1,
-          category: 1,
-          createdAt: '2024-06-19T14:30:00Z'
-        },
-        {
-          id: 3,
-          title: '正念冥想入门指南',
-          summary: '学会用冥想管理情绪和冲动，建立内心平静...',
-          thumbnailUrl: 'https://images.unsplash.com/photo-1545389336-cf090694435e?w=160&h=120&fit=crop',
-          duration: 15,
-          likeCount: 156,
-          viewCount: 743,
-          contentType: 1,
-          category: 3,
-          createdAt: '2024-06-18T09:15:00Z'
-        }
-      ]
-      
-      // 视频数据
-      this.videos = [
-        {
-          id: 4,
-          title: '正念冥想入门指南',
-          summary: '学会用冥想管理情绪和冲动',
-          thumbnailUrl: 'https://images.unsplash.com/photo-1545389336-cf090694435e?w=300&h=200&fit=crop',
-          duration: 15,
-          likeCount: 127,
-          viewCount: 3200,
-          commentCount: 23,
-          contentType: 2,
-          category: 3,
-          createdAt: '2024-06-17T16:45:00Z',
-          videoUrl: 'https://example.com/video/meditation.mp4'
-        },
-        {
-          id: 5,
-          title: '呼吸练习技巧讲解',
-          summary: '通过正确的呼吸方法缓解压力和焦虑',
-          thumbnailUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop',
-          duration: 10,
-          likeCount: 89,
-          viewCount: 1800,
-          commentCount: 15,
-          contentType: 2,
-          category: 2,
-          createdAt: '2024-06-16T11:20:00Z',
-          videoUrl: 'https://example.com/video/breathing.mp4'
-        }
-      ]
-      
-      // 音频数据
-      this.audios = [
-        {
-          id: 6,
-          title: '睡前放松冥想',
-          summary: '帮助改善睡眠质量的引导冥想',
-          thumbnailUrl: 'https://images.unsplash.com/photo-1542662565-7e4b16f20bfb?w=160&h=120&fit=crop',
-          duration: 20,
-          likeCount: 67,
-          viewCount: 890,
-          contentType: 3,
-          category: 3,
-          createdAt: '2024-06-15T20:00:00Z',
-          audioUrl: 'https://example.com/audio/sleep-meditation.mp3',
-          isDownloaded: true
-        },
-        {
-          id: 7,
-          title: '专注力训练音频',
-          summary: '提升注意力和专注能力的训练课程',
-          thumbnailUrl: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=160&h=120&fit=crop',
-          duration: 25,
-          likeCount: 45,
-          viewCount: 612,
-          contentType: 3,
-          category: 2,
-          createdAt: '2024-06-14T08:30:00Z',
-          audioUrl: 'https://example.com/audio/focus-training.mp3',
-          isDownloaded: false
-        }
-      ]
+      // 使用导入的模拟数据
+      this.articles = [...mockArticles]
+      this.videos = [...mockVideos]
+      this.audios = [...mockAudios]
     },
     
     // 加载学习统计
     async loadLearningStats() {
-      try {
-        const res = await uni.request({
-          url: '/api/v1/miniprogram/learning/stats',
-          method: 'GET',
-          header: {
-            'Authorization': `Bearer ${uni.getStorageSync('token')}`
-          }
-        })
+      const result = await learningService.getStats()
+      
+      if (result.success) {
+        this.learningStats = learningService.transformStatsForDisplay(result.data)
         
-        if (res.data.code === 0) {
-          this.learningStats = {
-            weeklyHours: (res.data.data.totalLearningTime / 60).toFixed(1),
-            weeklyGoal: 5,
-            weeklyProgress: Math.min((res.data.data.totalLearningTime / 300) * 100, 100),
-            articlesRead: res.data.data.completedContents || 0,
-            videosWatched: res.data.data.likedContents || 0,
-            audiosListened: res.data.data.collectedContents || 0
-          }
+        if (result.isMock) {
+          console.log('使用模拟学习统计数据')
         }
-      } catch (error) {
-        console.error('加载学习统计失败:', error)
+      } else {
+        console.error('加载学习统计失败')
       }
     },
     
@@ -481,23 +367,18 @@ export default {
       
       try {
         const contentType = this.getContentType()
-        const res = await uni.request({
-          url: '/api/v1/miniprogram/learning/contents',
-          method: 'GET',
-          data: {
-            page: loadMore ? this.currentPage + 1 : 1,
-            pageSize: this.pageSize,
-            contentType: contentType || undefined,
-            sortBy: 'view_count',
-            order: 'desc'
-          },
-          header: {
-            'Authorization': `Bearer ${uni.getStorageSync('token')}`
-          }
+        const page = loadMore ? this.currentPage + 1 : 1
+        
+        const result = await learningService.getContents({
+          page,
+          pageSize: this.pageSize,
+          contentType: contentType || undefined,
+          sortBy: 'view_count',
+          order: 'desc'
         })
         
-        if (res.data.code === 0) {
-          const newContent = res.data.data.list || []
+        if (result.success) {
+          const newContent = result.data.list || []
           
           if (loadMore) {
             this.currentPage++
@@ -507,14 +388,14 @@ export default {
             this.setContent(newContent)
           }
           
-          this.hasMore = newContent.length === this.pageSize
+          this.hasMore = result.data.hasMore !== undefined ? result.data.hasMore : newContent.length === this.pageSize
+          
+          if (result.isMock) {
+            console.log('使用模拟内容数据')
+          }
         }
       } catch (error) {
         console.error('加载内容失败:', error)
-        uni.showToast({
-          title: '加载失败',
-          icon: 'error'
-        })
       } finally {
         this.loadingMore = false
       }
@@ -616,30 +497,17 @@ export default {
     
     // 播放音频
     async playAudio(audio) {
-      try {
-        // 开始学习记录
-        await uni.request({
-          url: '/api/v1/miniprogram/learning/start',
-          method: 'POST',
-          data: {
-            contentId: audio.id
-          },
-          header: {
-            'Authorization': `Bearer ${uni.getStorageSync('token')}`
-          }
-        })
-        
-        // 跳转到音频播放页面
-        uni.navigateTo({
-          url: `/pages/learning/audio?id=${audio.id}`
-        })
-      } catch (error) {
-        console.error('播放音频失败:', error)
-        uni.showToast({
-          title: '播放失败',
-          icon: 'error'
-        })
+      // 开始学习记录
+      const result = await learningService.startLearning(audio.id)
+      
+      if (result.isMock) {
+        console.log('学习记录使用模拟模式')
       }
+      
+      // 跳转到音频播放页面
+      uni.navigateTo({
+        url: `/pages/learning/audio?id=${audio.id}`
+      })
     },
     
     // 显示搜索
@@ -661,25 +529,21 @@ export default {
         return
       }
       
-      try {
-        const res = await uni.request({
-          url: '/api/v1/miniprogram/learning/contents',
-          method: 'GET',
-          data: {
-            page: 1,
-            pageSize: 10,
-            keyword: this.searchKeyword
-          },
-          header: {
-            'Authorization': `Bearer ${uni.getStorageSync('token')}`
-          }
-        })
+      const result = await learningService.searchContents({
+        page: 1,
+        pageSize: 10,
+        keyword: this.searchKeyword
+      })
+      
+      if (result.success) {
+        this.searchResults = result.data.list || []
         
-        if (res.data.code === 0) {
-          this.searchResults = res.data.data.list || []
+        if (result.isMock) {
+          console.log('搜索使用模拟数据')
         }
-      } catch (error) {
-        console.error('搜索失败:', error)
+      } else {
+        console.error('搜索失败')
+        this.searchResults = []
       }
     },
     

@@ -48,6 +48,7 @@ const _sfc_main = {
       avatarUrl: "",
       nickname: ""
     });
+    const isDev = common_vendor.ref(false);
     const canSave = common_vendor.computed(() => {
       return userInfo.value.nickname.trim().length > 0;
     });
@@ -57,11 +58,19 @@ const _sfc_main = {
         userInfo.value.nickname = existingUser.nickname || "";
         userInfo.value.avatarUrl = existingUser.avatarUrl || "";
       }
+      try {
+        const accountInfo = common_vendor.index.getAccountInfoSync();
+        isDev.value = accountInfo.miniProgram.envVersion === "develop";
+      } catch (e) {
+        isDev.value = true;
+      }
     });
     const onChooseAvatar = (e) => {
       console.log("用户选择头像:", e.detail);
       if (e.detail.avatarUrl) {
-        userInfo.value.avatarUrl = e.detail.avatarUrl;
+        const avatarUrl = e.detail.avatarUrl;
+        console.log("获取到头像URL:", avatarUrl);
+        userInfo.value.avatarUrl = avatarUrl;
         console.log("头像URL设置为:", userInfo.value.avatarUrl);
         common_vendor.index.showToast({
           title: "头像选择成功",
@@ -75,6 +84,40 @@ const _sfc_main = {
           icon: "error"
         });
       }
+    };
+    const onAvatarError = (e) => {
+      console.error("头像加载失败:", e);
+      common_vendor.index.showToast({
+        title: "头像显示异常，但不影响保存",
+        icon: "none",
+        duration: 2e3
+      });
+    };
+    const chooseImageFallback = () => {
+      common_vendor.index.chooseImage({
+        count: 1,
+        sizeType: ["compressed"],
+        sourceType: ["album", "camera"],
+        success: (res) => {
+          console.log("备用方案选择图片成功:", res);
+          if (res.tempFilePaths && res.tempFilePaths.length > 0) {
+            userInfo.value.avatarUrl = res.tempFilePaths[0];
+            console.log("备用头像URL设置为:", userInfo.value.avatarUrl);
+            common_vendor.index.showToast({
+              title: "图片选择成功",
+              icon: "success",
+              duration: 1500
+            });
+          }
+        },
+        fail: (err) => {
+          console.error("备用方案选择图片失败:", err);
+          common_vendor.index.showToast({
+            title: "图片选择失败",
+            icon: "error"
+          });
+        }
+      });
     };
     const onNicknameInput = (e) => {
       userInfo.value.nickname = e.detail.value;
@@ -97,20 +140,34 @@ const _sfc_main = {
         });
         console.log("准备保存用户信息:", userInfo.value);
         let finalAvatarUrl = userInfo.value.avatarUrl;
-        if (finalAvatarUrl && finalAvatarUrl.includes("wxfile://")) {
-          console.log("检测到微信临时头像，准备上传:", finalAvatarUrl);
+        if (finalAvatarUrl && (finalAvatarUrl.includes("wxfile://") || finalAvatarUrl.includes("tmp/"))) {
+          console.log("检测到临时头像文件，准备上传:", finalAvatarUrl);
           try {
-            const uploadResponse = yield utils_api.userApi.saveWxAvatar({
-              tempUrl: finalAvatarUrl
+            const fileExists = yield new Promise((resolve) => {
+              common_vendor.index.getFileInfo({
+                filePath: finalAvatarUrl,
+                success: () => resolve(true),
+                fail: () => resolve(false)
+              });
             });
-            if (uploadResponse.data.code === 0) {
-              finalAvatarUrl = uploadResponse.data.data.url;
-              console.log("头像上传成功，新URL:", finalAvatarUrl);
+            if (!fileExists) {
+              console.warn("头像文件不存在，可能是开发工具问题，跳过上传");
+              finalAvatarUrl = "";
             } else {
-              console.error("头像上传失败:", uploadResponse.data.msg);
+              const uploadResponse = yield utils_api.userApi.saveWxAvatar({
+                tempUrl: finalAvatarUrl
+              });
+              if (uploadResponse.data.code === 0) {
+                finalAvatarUrl = uploadResponse.data.data.url;
+                console.log("头像上传成功，新URL:", finalAvatarUrl);
+              } else {
+                console.error("头像上传失败:", uploadResponse.data.msg);
+                finalAvatarUrl = "";
+              }
             }
           } catch (uploadError) {
             console.error("头像上传异常:", uploadError);
+            finalAvatarUrl = "";
           }
         }
         console.log("调用API更新用户信息:", {
@@ -165,20 +222,27 @@ const _sfc_main = {
       return common_vendor.e({
         a: userInfo.value.avatarUrl
       }, userInfo.value.avatarUrl ? {
-        b: userInfo.value.avatarUrl
+        b: userInfo.value.avatarUrl,
+        c: common_vendor.o(onAvatarError)
       } : {}, {
-        c: common_vendor.o(onChooseAvatar),
-        d: common_vendor.o([($event) => userInfo.value.nickname = $event.detail.value, onNicknameInput]),
-        e: common_vendor.o(onNicknameBlur),
-        f: userInfo.value.nickname
-      }, {
-        g: common_vendor.t(userInfo.value.avatarUrl || "未设置"),
-        h: common_vendor.t(userInfo.value.nickname || "未设置"),
-        i: common_vendor.t(canSave.value ? "是" : "否")
-      }, {
-        j: !canSave.value,
-        k: common_vendor.o(saveUserInfo),
-        l: common_vendor.o(skipAuth)
+        d: common_vendor.o(onChooseAvatar),
+        e: isDev.value
+      }, isDev.value ? {
+        f: common_vendor.o(chooseImageFallback)
+      } : {}, {
+        g: common_vendor.o([($event) => userInfo.value.nickname = $event.detail.value, onNicknameInput]),
+        h: common_vendor.o(onNicknameBlur),
+        i: userInfo.value.nickname,
+        j: isDev.value
+      }, isDev.value ? {
+        k: common_vendor.t(isDev.value ? "开发环境" : "生产环境"),
+        l: common_vendor.t(userInfo.value.avatarUrl || "未设置"),
+        m: common_vendor.t(userInfo.value.nickname || "未设置"),
+        n: common_vendor.t(canSave.value ? "是" : "否")
+      } : {}, {
+        o: !canSave.value,
+        p: common_vendor.o(saveUserInfo),
+        q: common_vendor.o(skipAuth)
       });
     };
   }

@@ -21,6 +21,7 @@
             :src="userInfo.avatarUrl" 
             class="avatar-image"
             mode="aspectFill"
+            @error="onAvatarError"
           />
           <view v-else class="avatar-placeholder">
             <text class="camera-icon">📷</text>
@@ -29,6 +30,14 @@
         </button>
       </view>
       <text class="hint-text">点击上方按钮选择微信头像</text>
+      
+      <!-- 开发工具备用方案 -->
+      <view class="dev-fallback" v-if="isDev">
+        <text class="fallback-text">开发工具环境，可使用备用上传方式：</text>
+        <button class="fallback-btn" @click="chooseImageFallback">
+          从相册选择图片
+        </button>
+      </view>
     </view>
 
     <!-- 昵称输入区域 -->
@@ -50,8 +59,9 @@
     </view>
 
     <!-- 调试信息 -->
-    <view class="debug-section" v-if="true">
+    <view class="debug-section" v-if="isDev">
       <text class="debug-title">调试信息：</text>
+      <text class="debug-text">环境: {{ isDev ? '开发环境' : '生产环境' }}</text>
       <text class="debug-text">头像URL: {{ userInfo.avatarUrl || '未设置' }}</text>
       <text class="debug-text">昵称: {{ userInfo.nickname || '未设置' }}</text>
       <text class="debug-text">是否可保存: {{ canSave ? '是' : '否' }}</text>
@@ -96,6 +106,9 @@ const userInfo = ref({
   nickname: ''
 })
 
+// 检测是否为开发环境
+const isDev = ref(false)
+
 // 计算属性
 const canSave = computed(() => {
   return userInfo.value.nickname.trim().length > 0
@@ -109,14 +122,32 @@ onMounted(() => {
     userInfo.value.nickname = existingUser.nickname || ''
     userInfo.value.avatarUrl = existingUser.avatarUrl || ''
   }
+  
+  // 检测是否为开发环境
+  try {
+    const accountInfo = uni.getAccountInfoSync()
+    isDev.value = accountInfo.miniProgram.envVersion === 'develop'
+  } catch (e) {
+    // 如果获取失败，默认为开发环境
+    isDev.value = true
+  }
 })
 
 // 头像选择回调
 const onChooseAvatar = (e) => {
   console.log('用户选择头像:', e.detail)
+  
+  // 处理微信开发者工具的兼容性问题
   if (e.detail.avatarUrl) {
-    userInfo.value.avatarUrl = e.detail.avatarUrl
+    // 检查是否是开发环境中的无效路径
+    const avatarUrl = e.detail.avatarUrl
+    console.log('获取到头像URL:', avatarUrl)
+    
+    // 在开发工具中，可能会遇到文件路径不存在的问题
+    // 我们先设置URL，如果后续使用时出错再处理
+    userInfo.value.avatarUrl = avatarUrl
     console.log('头像URL设置为:', userInfo.value.avatarUrl)
+    
     uni.showToast({
       title: '头像选择成功',
       icon: 'success',
@@ -129,6 +160,45 @@ const onChooseAvatar = (e) => {
       icon: 'error'
     })
   }
+}
+
+// 添加头像加载错误处理
+const onAvatarError = (e) => {
+  console.error('头像加载失败:', e)
+  // 在开发工具中如果头像加载失败，可以提供备用方案
+  uni.showToast({
+    title: '头像显示异常，但不影响保存',
+    icon: 'none',
+    duration: 2000
+  })
+}
+
+// 备用图片选择方案（用于开发工具）
+const chooseImageFallback = () => {
+  uni.chooseImage({
+    count: 1,
+    sizeType: ['compressed'],
+    sourceType: ['album', 'camera'],
+    success: (res) => {
+      console.log('备用方案选择图片成功:', res)
+      if (res.tempFilePaths && res.tempFilePaths.length > 0) {
+        userInfo.value.avatarUrl = res.tempFilePaths[0]
+        console.log('备用头像URL设置为:', userInfo.value.avatarUrl)
+        uni.showToast({
+          title: '图片选择成功',
+          icon: 'success',
+          duration: 1500
+        })
+      }
+    },
+    fail: (err) => {
+      console.error('备用方案选择图片失败:', err)
+      uni.showToast({
+        title: '图片选择失败',
+        icon: 'error'
+      })
+    }
+  })
 }
 
 // 昵称输入处理
@@ -161,25 +231,42 @@ const saveUserInfo = async () => {
 
     // 处理头像上传
     let finalAvatarUrl = userInfo.value.avatarUrl
-    if (finalAvatarUrl && finalAvatarUrl.includes('wxfile://')) {
-      console.log('检测到微信临时头像，准备上传:', finalAvatarUrl)
+    if (finalAvatarUrl && (finalAvatarUrl.includes('wxfile://') || finalAvatarUrl.includes('tmp/'))) {
+      console.log('检测到临时头像文件，准备上传:', finalAvatarUrl)
       
       try {
-        // 微信临时头像需要上传到服务器
-        const uploadResponse = await userApi.saveWxAvatar({
-          tempUrl: finalAvatarUrl
+        // 检查文件是否存在（开发工具兼容性处理）
+        const fileExists = await new Promise((resolve) => {
+          uni.getFileInfo({
+            filePath: finalAvatarUrl,
+            success: () => resolve(true),
+            fail: () => resolve(false)
+          })
         })
         
-        if (uploadResponse.data.code === 0) {
-          finalAvatarUrl = uploadResponse.data.data.url
-          console.log('头像上传成功，新URL:', finalAvatarUrl)
+        if (!fileExists) {
+          console.warn('头像文件不存在，可能是开发工具问题，跳过上传')
+          // 在开发环境中，如果文件不存在，我们可以使用一个默认头像或跳过
+          finalAvatarUrl = '' // 清空无效的头像URL
         } else {
-          console.error('头像上传失败:', uploadResponse.data.msg)
-          // 如果上传失败，仍然使用临时URL
+          // 微信临时头像需要上传到服务器
+          const uploadResponse = await userApi.saveWxAvatar({
+            tempUrl: finalAvatarUrl
+          })
+          
+          if (uploadResponse.data.code === 0) {
+            finalAvatarUrl = uploadResponse.data.data.url
+            console.log('头像上传成功，新URL:', finalAvatarUrl)
+          } else {
+            console.error('头像上传失败:', uploadResponse.data.msg)
+            // 如果上传失败，清空头像URL
+            finalAvatarUrl = ''
+          }
         }
       } catch (uploadError) {
         console.error('头像上传异常:', uploadError)
-        // 上传失败不影响昵称保存
+        // 上传失败不影响昵称保存，但清空无效的头像URL
+        finalAvatarUrl = ''
       }
     }
 
@@ -355,6 +442,31 @@ const skipAuth = () => {
   font-size: 24rpx;
   opacity: 0.7;
   text-align: center;
+}
+
+.dev-fallback {
+  margin-top: 32rpx;
+  padding: 24rpx;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12rpx;
+  text-align: center;
+}
+
+.fallback-text {
+  display: block;
+  font-size: 24rpx;
+  opacity: 0.8;
+  margin-bottom: 16rpx;
+}
+
+.fallback-btn {
+  height: 64rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2rpx solid rgba(255, 255, 255, 0.3);
+  border-radius: 12rpx;
+  color: white;
+  font-size: 28rpx;
+  padding: 0 24rpx;
 }
 
 .debug-section {

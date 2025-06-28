@@ -7,6 +7,7 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/response"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/miniprogram/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/service"
+	"github.com/flipped-aurora/gin-vue-admin/server/utils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
@@ -94,7 +95,33 @@ func (l *LearningApi) DeleteLearningContent(c *gin.Context) {
 	response.OkWithMessage("删除成功", c)
 }
 
+// GetLearningStats
+// @Tags Learning
+// @Summary 获取学习统计
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Success 200 {object} response.Response{data=miniprogramRes.LearningStatsResponse,msg=string} "获取成功"
+// @Router /learning/stats [get]
+func (l *LearningApi) GetLearningStats(c *gin.Context) {
+	// 获取当前用户ID
+	userID := utils.GetUserID(c)
+	if userID == 0 {
+		response.FailWithMessage("获取用户信息失败", c)
+		return
+	}
+
+	stats, err := service.ServiceGroupApp.MiniprogramServiceGroup.LearningService.GetLearningStats(userID)
+	if err != nil {
+		global.GVA_LOG.Error("获取学习统计失败!", zap.Error(err))
+		response.FailWithMessage("获取学习统计失败: "+err.Error(), c)
+		return
+	}
+
+	response.OkWithData(stats, c)
+}
+
 // 注意：其他学习相关的API方法暂时移除，等待相关请求类型和服务方法定义完成后再添加
 // 这包括：GetLearningContent, GetLearningContents, StartLearning, UpdateLearningProgress,
 // ToggleLike, ToggleCollect, GetRecommendations, GetUserLearningRecords, RateLearningContent,
-// GetLearningStats, GetCategoryStats, GetLearningHomepage
+// GetCategoryStats, GetLearningHomepage

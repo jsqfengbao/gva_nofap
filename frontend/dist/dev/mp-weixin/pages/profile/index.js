@@ -40,7 +40,9 @@ var __async = (__this, __arguments, generator) => {
 };
 const common_vendor = require("../../common/vendor.js");
 const utils_auth = require("../../utils/auth.js");
-const utils_api = require("../../utils/api.js");
+const apis_user = require("../../apis/user.js");
+const apis_achievement = require("../../apis/achievement.js");
+require("../../data/learning-mock.js");
 const _sfc_main = {
   __name: "index",
   setup(__props) {
@@ -109,7 +111,7 @@ const _sfc_main = {
         showLoading.value = true;
         loadingText.value = "加载个人资料...";
         console.log("开始加载用户资料...");
-        const res = yield utils_api.userApi.getProfile();
+        const res = yield apis_user.userApi.getProfile();
         console.log("用户资料API响应:", res.data);
         if (res.data.code === 0) {
           const data = res.data.data;
@@ -159,7 +161,7 @@ const _sfc_main = {
     });
     const loadRecentAchievements = () => __async(this, null, function* () {
       try {
-        const res = yield utils_api.achievementApi.getUserAchievements({ limit: 3, recent: true });
+        const res = yield apis_achievement.achievementApi.getUserAchievements({ limit: 3, recent: true });
         if (res.data.code === 0) {
           recentAchievements.value = res.data.data.list || [];
         }
@@ -267,7 +269,7 @@ const _sfc_main = {
           dataTypes: exportDataTypes.value,
           dateRange: dateRangeIndex.value
         };
-        const res = yield utils_api.userApi.createDataExport(exportReq);
+        const res = yield apis_user.userApi.createDataExport(exportReq);
         if (res.data.code === 0) {
           closeExportModal();
           common_vendor.index.showToast({

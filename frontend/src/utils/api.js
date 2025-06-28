@@ -94,6 +94,14 @@ export const achievementApi = {
       method: 'GET',
       data: params
     })
+  },
+
+  // 获取游戏化统计数据（首页使用）
+  getGameStats: () => {
+    return request({
+      url: buildApiUrl('/achievement/game-stats'),
+      method: 'GET'
+    })
   }
 }
 
@@ -123,6 +131,22 @@ export const checkinApi = {
       url: buildApiUrl('/checkin/stats'),
       method: 'GET',
       data: params
+    })
+  },
+
+  // 获取打卡统计数据（首页使用）
+  getStatistics: () => {
+    return request({
+      url: buildApiUrl('/checkin/statistics'),
+      method: 'GET'
+    })
+  },
+
+  // 获取今日打卡状态（首页使用）
+  getTodayStatus: () => {
+    return request({
+      url: buildApiUrl('/checkin/today'),
+      method: 'GET'
     })
   }
 }
@@ -273,6 +297,51 @@ export const statsApi = {
   }
 }
 
+// 首页相关API
+export const homeApi = {
+  // 获取首页所有数据
+  getHomeData: async () => {
+    try {
+      const [statsRes, todayRes, gameRes] = await Promise.all([
+        checkinApi.getStatistics(),
+        checkinApi.getTodayStatus(),
+        achievementApi.getGameStats()
+      ])
+      
+      return {
+        code: 0,
+        data: {
+          userStats: statsRes.data || {},
+          todayStatus: todayRes.data || {},
+          gameStats: gameRes.data || {}
+        }
+      }
+    } catch (error) {
+      console.error('获取首页数据失败:', error)
+      return {
+        code: -1,
+        message: '获取首页数据失败',
+        error
+      }
+    }
+  },
+
+  // 获取打卡统计数据
+  getCheckinStats: () => {
+    return checkinApi.getStatistics()
+  },
+
+  // 获取今日打卡状态
+  getTodayCheckinStatus: () => {
+    return checkinApi.getTodayStatus()
+  },
+
+  // 获取游戏化统计数据
+  getGameStats: () => {
+    return achievementApi.getGameStats()
+  }
+}
+
 // 导出所有API
 export default {
   user: userApi,
@@ -282,5 +351,6 @@ export default {
   learning: learningApi,
   assessment: assessmentApi,
   emergency: emergencyApi,
-  stats: statsApi
+  stats: statsApi,
+  home: homeApi
 } 

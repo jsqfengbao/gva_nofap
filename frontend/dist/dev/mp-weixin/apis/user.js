@@ -1,5 +1,5 @@
 "use strict";
-const utils_auth = require("./auth.js");
+const utils_auth = require("../utils/auth.js");
 const config_env = require("../config/env.js");
 const userApi = {
   // 获取用户资料

@@ -228,8 +228,9 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { isLoggedIn as checkIsLoggedIn, getUserInfo, wxLogin, logout, getAvatarUrl, setUserInfo, debugAuthStatus, testAuth } from '@/utils/auth'
-import { userApi, achievementApi } from '@/utils/api'
+import { isLoggedIn as checkIsLoggedIn, getUserInfo, wxLogin, logout, getAvatarUrl, setUserInfo, getToken } from '@/utils/auth'
+import { userApi, achievementApi } from '@/apis'
+import { buildApiUrl } from '@/config/env.js'
 
 // 响应式数据
 const currentTime = ref('9:41')
@@ -648,7 +649,7 @@ const uploadAvatar = async (filePath) => {
 const uploadFile = async (filePath) => {
   return new Promise((resolve, reject) => {
     uni.uploadFile({
-      url: getApiUrl('/user/upload-avatar'),
+      url: buildApiUrl('/user/upload-avatar'),
       filePath: filePath,
       name: 'file',
       header: {
@@ -676,45 +677,6 @@ const updateUserAvatar = async (avatarUrl) => {
     avatarUrl: avatarUrl
   })
   return response
-}
-
-// 调试相关方法
-const handleDebugAuth = () => {
-  const debugInfo = debugAuthStatus()
-  
-  uni.showModal({
-    title: '认证调试信息',
-    content: `登录状态: ${debugInfo.isLoggedIn ? '已登录' : '未登录'}\n` +
-             `Token类型: ${debugInfo.tokenType}\n` +
-             `Token有效: ${debugInfo.tokenValid ? '是' : '否'}\n` +
-             `用户信息: ${debugInfo.hasUserInfo ? '存在' : '缺失'}`,
-    showCancel: false
-  })
-}
-
-const handleTestAuth = async () => {
-  showLoading.value = true
-  loadingText.value = '测试认证状态...'
-  
-  try {
-    const result = await testAuth()
-    
-    uni.showModal({
-      title: '认证测试结果',
-      content: result.success ? 
-        `✅ 认证成功\n服务器响应: ${JSON.stringify(result.data)}` :
-        `❌ 认证失败\n错误: ${result.error}`,
-      showCancel: false
-    })
-  } catch (error) {
-    uni.showModal({
-      title: '测试失败',
-      content: `网络错误: ${error.message}`,
-      showCancel: false
-    })
-  } finally {
-    showLoading.value = false
-  }
 }
 </script>
 

@@ -101,12 +101,6 @@ function logout() {
   });
 }
 function checkWechatConfig() {
-  const config = config_env.getCurrentConfig();
-  const appId = config.thirdParty.WECHAT_APP_ID;
-  console.log("当前微信小程序配置:", {
-    appId,
-    env: config.env
-  });
   return true;
 }
 function wxLogin(encryptedData = "", iv = "", retryCount = 0) {

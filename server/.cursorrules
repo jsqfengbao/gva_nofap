@@ -1,0 +1,17 @@
+# 回复标准
+所有请求尽量用中文回复我。 
+ 
+# 小程序架构格式标准
+所有的page 和js文件分开
+page 文件夹在frontend/src/pages 目录下
+js 文件在frontend/src/apis 目录下,每个页面对应一个单独的api文件
+api 格式要求,类似下面的格式
+```
+  saveWxAvatar: (data) => {
+    return request({
+      url: buildApiUrl('/user/save-wx-avatar'),
+      method: 'POST',
+      data
+    })
+  },
+```

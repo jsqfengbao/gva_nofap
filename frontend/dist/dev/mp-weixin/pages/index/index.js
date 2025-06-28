@@ -20,6 +20,7 @@ var __async = (__this, __arguments, generator) => {
   });
 };
 const common_vendor = require("../../common/vendor.js");
+const apis_home = require("../../apis/home.js");
 const _sfc_main = {
   __name: "index",
   setup(__props) {
@@ -109,49 +110,37 @@ const _sfc_main = {
           console.log("用户未登录");
           return;
         }
-        const statsRes = yield common_vendor.index.request({
-          url: "http://localhost:8888/api/v1/miniprogram/checkin/statistics",
-          method: "GET",
-          header: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
+        const result = yield apis_home.homeApi.getHomeData();
+        if (result.code === 0) {
+          const { userStats: stats, todayStatus, gameStats: game } = result.data;
+          if (stats) {
+            Object.assign(userStats, stats);
+            streakDays.value = stats.currentStreak || 0;
+            userLevel.value = stats.level || 1;
           }
-        });
-        if (statsRes.data.code === 0) {
-          const data = statsRes.data.data;
-          Object.assign(userStats, data);
-          streakDays.value = data.currentStreak || 0;
-          userLevel.value = data.level || 1;
-        }
-        const todayRes = yield common_vendor.index.request({
-          url: "http://localhost:8888/api/v1/miniprogram/checkin/today",
-          method: "GET",
-          header: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
+          if (todayStatus) {
+            hasCheckedToday.value = todayStatus.hasChecked || false;
           }
-        });
-        if (todayRes.data.code === 0) {
-          hasCheckedToday.value = todayRes.data.data.hasChecked || false;
-        }
-        const gameRes = yield common_vendor.index.request({
-          url: "http://localhost:8888/api/v1/miniprogram/achievement/game-stats",
-          method: "GET",
-          header: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
+          if (game) {
+            Object.assign(gameStats, game);
+            userLevel.value = game.currentLevel || 1;
+            currentExp.value = game.currentExp || 0;
+            nextLevelExp.value = game.nextLevelExp || 100;
+            recentAchievements.value = game.recentAchievements || [];
           }
-        });
-        if (gameRes.data.code === 0) {
-          const data = gameRes.data.data;
-          Object.assign(gameStats, data);
-          userLevel.value = data.currentLevel || 1;
-          currentExp.value = data.currentExp || 0;
-          nextLevelExp.value = data.nextLevelExp || 100;
-          recentAchievements.value = data.recentAchievements || [];
+        } else {
+          console.error("获取首页数据失败:", result.message);
+          common_vendor.index.showToast({
+            title: "数据加载失败",
+            icon: "none"
+          });
         }
       } catch (error) {
         console.error("加载用户数据失败:", error);
+        common_vendor.index.showToast({
+          title: "网络错误，请重试",
+          icon: "none"
+        });
       }
     });
     const formatTime = (dateStr) => {

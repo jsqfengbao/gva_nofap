@@ -1,8 +1,7 @@
 {
   "description": "项目配置文件。",
   "packOptions": {
-    "ignore": [],
-    "include": []
+    "ignore": []
   },
   "setting": {
     "urlCheck": false,
@@ -41,15 +40,10 @@
     "disableUseStrict": false,
     "minifyWXML": true,
     "showES6CompileOption": false,
-    "useCompilerPlugins": false,
-    "compileWorklet": false,
-    "localPlugins": false,
-    "condition": false,
-    "swc": false,
-    "disableSWC": true
+    "useCompilerPlugins": false
   },
   "compileType": "miniprogram",
-  "libVersion": "3.8.9",
+  "libVersion": "",
   "appid": "wx07c9e8e4f105260b",
   "projectname": "戒色助手",
   "condition": {
@@ -75,7 +69,5 @@
         }
       ]
     }
-  },
-  "simulatorPluginLibVersion": {},
-  "editorSetting": {}
+  }
 }

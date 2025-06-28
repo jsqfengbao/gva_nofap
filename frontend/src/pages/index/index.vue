@@ -141,6 +141,7 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
+import { homeApi } from '@/apis/home'
 
 // 响应式数据
 const currentTime = ref('')
@@ -235,6 +236,10 @@ const updateTime = () => {
   currentTime.value = `${hours}:${minutes}`
 }
 
+/**
+ * 加载用户数据
+ * 使用统一的 API 模块获取数据，避免硬编码域名
+ */
 const loadUserData = async () => {
   try {
     const token = uni.getStorageSync('token')
@@ -249,58 +254,46 @@ const loadUserData = async () => {
       return
     }
 
-    // 加载打卡统计数据
-    const statsRes = await uni.request({
-      url: 'http://localhost:8888/api/v1/miniprogram/checkin/statistics',
-      method: 'GET',
-      header: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+    // 使用优化的并发请求获取所有首页数据
+    const result = await homeApi.getHomeData()
+    
+    if (result.code === 0) {
+      const { userStats: stats, todayStatus, gameStats: game } = result.data
+      
+      // 更新用户统计数据
+      if (stats) {
+        Object.assign(userStats, stats)
+        streakDays.value = stats.currentStreak || 0
+        userLevel.value = stats.level || 1
       }
-    })
-
-    if (statsRes.data.code === 0) {
-      const data = statsRes.data.data
-      Object.assign(userStats, data)
-      streakDays.value = data.currentStreak || 0
-      userLevel.value = data.level || 1
-    }
-
-    // 加载今日打卡状态
-    const todayRes = await uni.request({
-      url: 'http://localhost:8888/api/v1/miniprogram/checkin/today',
-      method: 'GET',
-      header: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+      
+      // 更新今日打卡状态
+      if (todayStatus) {
+        hasCheckedToday.value = todayStatus.hasChecked || false
       }
-    })
-
-    if (todayRes.data.code === 0) {
-      hasCheckedToday.value = todayRes.data.data.hasChecked || false
-    }
-
-    // 加载游戏化统计数据
-    const gameRes = await uni.request({
-      url: 'http://localhost:8888/api/v1/miniprogram/achievement/game-stats',
-      method: 'GET',
-      header: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+      
+      // 更新游戏化数据
+      if (game) {
+        Object.assign(gameStats, game)
+        userLevel.value = game.currentLevel || 1
+        currentExp.value = game.currentExp || 0
+        nextLevelExp.value = game.nextLevelExp || 100
+        recentAchievements.value = game.recentAchievements || []
       }
-    })
-
-    if (gameRes.data.code === 0) {
-      const data = gameRes.data.data
-      Object.assign(gameStats, data)
-      userLevel.value = data.currentLevel || 1
-      currentExp.value = data.currentExp || 0
-      nextLevelExp.value = data.nextLevelExp || 100
-      recentAchievements.value = data.recentAchievements || []
+    } else {
+      console.error('获取首页数据失败:', result.message)
+      uni.showToast({
+        title: '数据加载失败',
+        icon: 'none'
+      })
     }
 
   } catch (error) {
     console.error('加载用户数据失败:', error)
+    uni.showToast({
+      title: '网络错误，请重试',
+      icon: 'none'
+    })
   }
 }
 

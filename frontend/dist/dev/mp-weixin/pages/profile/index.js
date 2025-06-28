@@ -42,7 +42,6 @@ const common_vendor = require("../../common/vendor.js");
 const utils_auth = require("../../utils/auth.js");
 const apis_user = require("../../apis/user.js");
 const apis_achievement = require("../../apis/achievement.js");
-require("../../data/learning-mock.js");
 const _sfc_main = {
   __name: "index",
   setup(__props) {

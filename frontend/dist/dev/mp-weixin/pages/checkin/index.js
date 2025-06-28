@@ -20,6 +20,7 @@ var __async = (__this, __arguments, generator) => {
   });
 };
 const common_vendor = require("../../common/vendor.js");
+const apis_checkin = require("../../apis/checkin.js");
 const _sfc_main = {
   name: "CheckinIndex",
   setup() {
@@ -84,19 +85,7 @@ const _sfc_main = {
     };
     const loadTodayStatus = () => __async(this, null, function* () {
       try {
-        const token = common_vendor.index.getStorageSync("token");
-        if (!token) {
-          console.log("用户未登录");
-          return;
-        }
-        const res = yield common_vendor.index.request({
-          url: "http://localhost:8888/api/v1/miniprogram/checkin/today",
-          method: "GET",
-          header: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
-        });
+        const res = yield apis_checkin.checkinApi.getTodayStatus();
         if (res.data.code === 0) {
           const data = res.data.data;
           hasCheckedToday.value = data.hasChecked;
@@ -116,15 +105,7 @@ const _sfc_main = {
     });
     const loadStatistics = () => __async(this, null, function* () {
       try {
-        const token = common_vendor.index.getStorageSync("token");
-        const res = yield common_vendor.index.request({
-          url: "http://localhost:8888/api/v1/miniprogram/checkin/statistics",
-          method: "GET",
-          header: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
-        });
+        const res = yield apis_checkin.checkinApi.getStatistics();
         if (res.data.code === 0) {
           const data = res.data.data;
           Object.assign(statistics, data);
@@ -137,18 +118,9 @@ const _sfc_main = {
       if (!selectedMood.value || isSubmitting.value) return;
       isSubmitting.value = true;
       try {
-        const token = common_vendor.index.getStorageSync("token");
-        const res = yield common_vendor.index.request({
-          url: "http://localhost:8888/api/v1/miniprogram/checkin/daily",
-          method: "POST",
-          header: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-          },
-          data: {
-            moodLevel: selectedMood.value,
-            notes: checkinNotes.value
-          }
+        const res = yield apis_checkin.checkinApi.dailyCheckin({
+          moodLevel: selectedMood.value,
+          notes: checkinNotes.value
         });
         if (res.data.code === 0) {
           const data = res.data.data;
@@ -161,18 +133,9 @@ const _sfc_main = {
           showSuccessModal.value = true;
           yield loadTodayStatus();
           yield loadStatistics();
-        } else {
-          common_vendor.index.showToast({
-            title: res.data.msg || "打卡失败",
-            icon: "none"
-          });
         }
       } catch (error) {
         console.error("打卡失败:", error);
-        common_vendor.index.showToast({
-          title: "网络错误，请重试",
-          icon: "none"
-        });
       } finally {
         isSubmitting.value = false;
       }

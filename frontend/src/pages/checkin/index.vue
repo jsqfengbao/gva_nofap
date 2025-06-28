@@ -170,6 +170,7 @@
 <script>
 import { ref, reactive, onMounted, computed } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
+import { checkinApi } from '@/apis/index.js'
 
 export default {
   name: 'CheckinIndex',
@@ -250,20 +251,8 @@ export default {
 
     const loadTodayStatus = async () => {
       try {
-        const token = uni.getStorageSync('token')
-        if (!token) {
-          console.log('用户未登录')
-          return
-        }
-
-        const res = await uni.request({
-          url: 'http://localhost:8888/api/v1/miniprogram/checkin/today',
-          method: 'GET',
-          header: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        })
+        // 使用新的API接口，自动处理认证和错误
+        const res = await checkinApi.getTodayStatus()
 
         if (res.data.code === 0) {
           const data = res.data.data
@@ -282,20 +271,14 @@ export default {
         }
       } catch (error) {
         console.error('获取今日状态失败:', error)
+        // 错误已由拦截器处理，这里只需要记录日志
       }
     }
 
     const loadStatistics = async () => {
       try {
-        const token = uni.getStorageSync('token')
-        const res = await uni.request({
-          url: 'http://localhost:8888/api/v1/miniprogram/checkin/statistics',
-          method: 'GET',
-          header: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        })
+        // 使用新的API接口
+        const res = await checkinApi.getStatistics()
 
         if (res.data.code === 0) {
           const data = res.data.data
@@ -303,6 +286,7 @@ export default {
         }
       } catch (error) {
         console.error('获取统计数据失败:', error)
+        // 错误已由拦截器处理
       }
     }
 
@@ -312,18 +296,10 @@ export default {
       isSubmitting.value = true
       
       try {
-        const token = uni.getStorageSync('token')
-        const res = await uni.request({
-          url: 'http://localhost:8888/api/v1/miniprogram/checkin/daily',
-          method: 'POST',
-          header: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          data: {
-            moodLevel: selectedMood.value,
-            notes: checkinNotes.value
-          }
+        // 使用新的API接口
+        const res = await checkinApi.dailyCheckin({
+          moodLevel: selectedMood.value,
+          notes: checkinNotes.value
         })
 
         if (res.data.code === 0) {
@@ -344,18 +320,10 @@ export default {
           await loadTodayStatus()
           await loadStatistics()
           
-        } else {
-          uni.showToast({
-            title: res.data.msg || '打卡失败',
-            icon: 'none'
-          })
         }
       } catch (error) {
         console.error('打卡失败:', error)
-        uni.showToast({
-          title: '网络错误，请重试',
-          icon: 'none'
-        })
+        // 错误提示已由拦截器处理，这里可以添加额外的处理逻辑
       } finally {
         isSubmitting.value = false
       }

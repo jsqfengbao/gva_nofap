@@ -21,9 +21,9 @@ var __async = (__this, __arguments, generator) => {
 };
 const apis_checkin = require("./checkin.js");
 const apis_achievement = require("./achievement.js");
-const homeApi = {
-  // 获取首页所有数据
-  getHomeData: () => __async(exports, null, function* () {
+function getHomeData() {
+  return __async(this, null, function* () {
+    var _a, _b, _c;
     try {
       const [statsRes, todayRes, gameRes] = yield Promise.all([
         apis_checkin.checkinApi.getStatistics(),
@@ -33,9 +33,9 @@ const homeApi = {
       return {
         code: 0,
         data: {
-          userStats: statsRes.data || {},
-          todayStatus: todayRes.data || {},
-          gameStats: gameRes.data || {}
+          userStats: ((_a = statsRes.data) == null ? void 0 : _a.data) || {},
+          todayStatus: ((_b = todayRes.data) == null ? void 0 : _b.data) || {},
+          gameStats: ((_c = gameRes.data) == null ? void 0 : _c.data) || {}
         }
       };
     } catch (error) {
@@ -46,18 +46,21 @@ const homeApi = {
         error
       };
     }
-  }),
-  // 获取打卡统计数据
-  getCheckinStats: () => {
-    return apis_checkin.checkinApi.getStatistics();
-  },
-  // 获取今日打卡状态
-  getTodayCheckinStatus: () => {
-    return apis_checkin.checkinApi.getTodayStatus();
-  },
-  // 获取游戏化统计数据
-  getGameStats: () => {
-    return apis_achievement.achievementApi.getGameStats();
-  }
+  });
+}
+function getCheckinStats() {
+  return apis_checkin.checkinApi.getStatistics();
+}
+function getTodayCheckinStatus() {
+  return apis_checkin.checkinApi.getTodayStatus();
+}
+function getGameStats() {
+  return apis_achievement.achievementApi.getGameStats();
+}
+const homeApi = {
+  getHomeData,
+  getCheckinStats,
+  getTodayCheckinStatus,
+  getGameStats
 };
 exports.homeApi = homeApi;

@@ -141,7 +141,7 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
-import { homeApi } from '@/apis/home'
+import homeApi from '@/apis/home.js'
 
 // 响应式数据
 const currentTime = ref('')

@@ -1,106 +1,122 @@
 /**
- * 学习相关 API
+ * 学习相关API
  */
-import { request } from '@/utils/auth'
-import { buildApiUrl } from '@/config/env.js'
+import { authGet, authPost, guestGet } from '@/utils/request.js'
 
-export const learningApi = {
-  // 获取学习统计
-  getStats: () => {
-    return request({
-      url: buildApiUrl('/learning/stats'),      
-      method: 'GET'
-    })
-  },
+/**
+ * 获取学习内容列表
+ * @param {Object} params 查询参数
+ * @param {number} params.page 页码
+ * @param {number} params.pageSize 每页数量
+ * @param {string} params.category 分类
+ * @param {string} params.difficulty 难度
+ */
+export function getList(params = {}) {
+  return guestGet('/learning/list', params)
+}
 
-  // 获取学习内容列表
-  getContents: (params = {}) => {
-    return request({
-      url: buildApiUrl('/learning/contents'),
-      method: 'GET',
-      data: params
-    })
-  },
+/**
+ * 获取学习内容详情
+ * @param {string|number} id 内容ID
+ */
+export function getDetail(id) {
+  return guestGet(`/learning/${id}`)
+}
 
-  // 获取学习内容列表 (兼容旧接口)
-  getList: (params = {}) => {
-    return learningApi.getContents(params)
-  },
+/**
+ * 记录学习进度
+ * @param {string|number} id 内容ID
+ * @param {Object} data 进度数据
+ * @param {number} data.progress 进度百分比
+ * @param {number} data.duration 学习时长（秒）
+ */
+export function recordProgress(id, data) {
+  return authPost(`/learning/${id}/progress`, data)
+}
 
-  // 获取学习内容详情
-  getDetail: (id) => {
-    return request({
-      url: buildApiUrl(`/learning/${id}`),
-      method: 'GET'
-    })
-  },
+/**
+ * 获取学习记录
+ * @param {Object} params 查询参数
+ */
+export function getLearningRecord(params = {}) {
+  return authGet('/learning/record', params)
+}
 
-  // 开始学习记录
-  startLearning: (contentId) => {
-    return request({
-      url: buildApiUrl('/learning/start'),
-      method: 'POST',
-      data: { contentId }
-    })
-  },
+/**
+ * 收藏学习内容
+ * @param {string|number} id 内容ID
+ */
+export function collectContent(id) {
+  return authPost(`/learning/${id}/collect`)
+}
 
-  // 记录学习进度
-  recordProgress: (id, data) => {
-    return request({
-      url: buildApiUrl(`/learning/${id}/progress`),
-      method: 'POST',
-      data
-    })
-  },
+/**
+ * 取消收藏学习内容
+ * @param {string|number} id 内容ID
+ */
+export function uncollectContent(id) {
+  return authPost(`/learning/${id}/uncollect`)
+}
 
-  // 完成学习
-  completeLearning: (contentId, data = {}) => {
-    return request({
-      url: buildApiUrl('/learning/complete'),
-      method: 'POST',
-      data: { contentId, ...data }
-    })
-  },
+/**
+ * 获取我的收藏
+ * @param {Object} params 查询参数
+ */
+export function getMyCollections(params = {}) {
+  return authGet('/learning/my-collections', params)
+}
 
-  // 点赞内容
-  likeContent: (contentId) => {
-    return request({
-      url: buildApiUrl(`/learning/${contentId}/like`),
-      method: 'POST'
-    })
-  },
+/**
+ * 评分学习内容
+ * @param {string|number} id 内容ID
+ * @param {Object} data 评分数据
+ * @param {number} data.rating 评分 1-5
+ * @param {string} data.comment 评价内容（可选）
+ */
+export function rateContent(id, data) {
+  return authPost(`/learning/${id}/rate`, data)
+}
 
-  // 收藏内容
-  collectContent: (contentId) => {
-    return request({
-      url: buildApiUrl(`/learning/${contentId}/collect`),
-      method: 'POST'
-    })
-  },
+/**
+ * 获取推荐内容
+ * @param {Object} params 查询参数
+ * @param {string} params.contentId 基于某个内容推荐
+ * @param {string} params.type 推荐类型
+ */
+export function getRecommendations(params = {}) {
+  return guestGet('/learning/recommendations', params)
+}
 
-  // 搜索内容
-  searchContents: (params = {}) => {
-    return request({
-      url: buildApiUrl('/learning/search'),
-      method: 'GET',
-      data: params
-    })
-  },
+/**
+ * 获取学习分类
+ */
+export function getCategories() {
+  return guestGet('/learning/categories')
+}
 
-  // 获取推荐内容
-  getRecommendations: (params = {}) => {
-    return request({
-      url: buildApiUrl('/learning/recommendations'),
-      method: 'GET',
-      data: params
-    })
-  },
+/**
+ * 搜索学习内容
+ * @param {Object} params 搜索参数
+ * @param {string} params.keyword 关键词
+ * @param {string} params.category 分类
+ */
+export function searchContent(params = {}) {
+  return guestGet('/learning/search', params)
+}
 
-  // 获取分类统计
-  getCategoryStats: () => {
-    return request({
-      url: buildApiUrl('/learning/category-stats'),
-      method: 'GET'
-    })
-  }
-} 
+// 导出学习API对象
+const learningApi = {
+  getList,
+  getDetail,
+  recordProgress,
+  getLearningRecord,
+  collectContent,
+  uncollectContent,
+  getMyCollections,
+  rateContent,
+  getRecommendations,
+  getCategories,
+  searchContent
+}
+
+export default learningApi 

@@ -2,7 +2,7 @@
  * 学习内容服务层
  * 提供学习相关功能的统一接口，包含API调用和模拟数据回退机制
  */
-import { learningApi } from './learning'
+import learningApi from './learning.js'
 import { 
   mockLearningStats,
   mockArticles,

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const common_vendor = require("./common/vendor.js");
 const components_ui_index = require("./components/ui/index.js");
+const interceptors_index = require("./interceptors/index.js");
 if (!Math) {
   "./pages/index/index.js";
   "./pages/welcome/welcome.js";
@@ -61,6 +62,9 @@ function createApp() {
   const pinia = common_vendor.createPinia();
   app.use(pinia);
   app.use(components_ui_index.UIComponents);
+  interceptors_index.installInterceptors().catch((error) => {
+    console.error("拦截器安装失败:", error);
+  });
   return {
     app
   };

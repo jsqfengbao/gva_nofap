@@ -273,6 +273,7 @@ function getAvatarUrl(avatarUrl) {
   }
   return config_env.getImageUrl(avatarUrl);
 }
+exports.clearUserInfo = clearUserInfo;
 exports.getAvatarUrl = getAvatarUrl;
 exports.getToken = getToken;
 exports.getUserInfo = getUserInfo;

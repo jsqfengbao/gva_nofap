@@ -1,0 +1,1 @@
+"use strict";function r(t){return t?t>=1e6?(t/1e6).toFixed(1)+"M":t>=1e3?(t/1e3).toFixed(1)+"k":t.toString():"0"}function e(){const t=new Date;return`${t.getHours()}:${t.getMinutes().toString().padStart(2,"0")}`}exports.formatNumber=r;exports.getCurrentTime=e;

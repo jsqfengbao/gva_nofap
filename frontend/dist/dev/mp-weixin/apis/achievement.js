@@ -1,29 +1,41 @@
 "use strict";
-const utils_auth = require("../utils/auth.js");
-const config_env = require("../config/env.js");
+const utils_request = require("../utils/request.js");
+function getList(params = {}) {
+  return utils_request.guestGet("/achievement/list", params);
+}
+function getUserAchievements(params = {}) {
+  return utils_request.authGet("/achievement/user", params);
+}
+function getAchievementDetail(id) {
+  return utils_request.guestGet(`/achievement/${id}`);
+}
+function getAchievementProgress(id) {
+  return utils_request.authGet(`/achievement/${id}/progress`);
+}
+function getGameStats() {
+  return utils_request.authGet("/achievement/game-stats");
+}
+function getLeaderboard(params = {}) {
+  return utils_request.guestGet("/achievement/leaderboard", params);
+}
+function getCategories() {
+  return utils_request.guestGet("/achievement/categories");
+}
+function getUserLevel() {
+  return utils_request.authGet("/achievement/user-level");
+}
+function getExpHistory(params = {}) {
+  return utils_request.authGet("/achievement/exp-history", params);
+}
 const achievementApi = {
-  // 获取成就列表
-  getList: (params = {}) => {
-    return utils_auth.request({
-      url: config_env.buildApiUrl("/achievement/list"),
-      method: "GET",
-      data: params
-    });
-  },
-  // 获取用户成就
-  getUserAchievements: (params = {}) => {
-    return utils_auth.request({
-      url: config_env.buildApiUrl("/achievement/user"),
-      method: "GET",
-      data: params
-    });
-  },
-  // 获取游戏化统计数据（首页使用）
-  getGameStats: () => {
-    return utils_auth.request({
-      url: config_env.buildApiUrl("/achievement/game-stats"),
-      method: "GET"
-    });
-  }
+  getList,
+  getUserAchievements,
+  getAchievementDetail,
+  getAchievementProgress,
+  getGameStats,
+  getLeaderboard,
+  getCategories,
+  getUserLevel,
+  getExpHistory
 };
 exports.achievementApi = achievementApi;

@@ -1,67 +1,41 @@
 "use strict";
-const utils_auth = require("../utils/auth.js");
-const config_env = require("../config/env.js");
+const utils_request = require("../utils/request.js");
+function getProfile() {
+  return utils_request.authGet("/user/profile");
+}
+function updateUserInfo(data) {
+  return utils_request.authPut("/user/info", data);
+}
+function saveWxAvatar(data) {
+  return utils_request.authPost("/user/save-wx-avatar", data);
+}
+function getStats() {
+  return utils_request.authGet("/user/stats");
+}
+function updatePrivacySettings(data) {
+  return utils_request.authPut("/user/privacy-settings", data);
+}
+function updateNotificationSettings(data) {
+  return utils_request.authPut("/user/notification-settings", data);
+}
+function createDataExport(data) {
+  return utils_request.authPost("/user/export", data);
+}
+function getUserSettings() {
+  return utils_request.authGet("/user/settings");
+}
+function uploadAvatar(filePath) {
+  return utils_request.uploadFile("/user/upload-avatar", filePath);
+}
 const userApi = {
-  // 获取用户资料
-  getProfile: () => {
-    return utils_auth.request({
-      url: config_env.buildApiUrl("/user/profile"),
-      method: "GET"
-    });
-  },
-  // 更新用户信息
-  updateUserInfo: (data) => {
-    return utils_auth.request({
-      url: config_env.buildApiUrl("/user/info"),
-      method: "PUT",
-      data
-    });
-  },
-  // 保存微信头像
-  saveWxAvatar: (data) => {
-    return utils_auth.request({
-      url: config_env.buildApiUrl("/user/save-wx-avatar"),
-      method: "POST",
-      data
-    });
-  },
-  // 获取用户统计数据
-  getStats: () => {
-    return utils_auth.request({
-      url: config_env.buildApiUrl("/user/stats"),
-      method: "GET"
-    });
-  },
-  // 更新隐私设置
-  updatePrivacySettings: (data) => {
-    return utils_auth.request({
-      url: config_env.buildApiUrl("/user/privacy-settings"),
-      method: "PUT",
-      data
-    });
-  },
-  // 更新通知设置
-  updateNotificationSettings: (data) => {
-    return utils_auth.request({
-      url: config_env.buildApiUrl("/user/notification-settings"),
-      method: "PUT",
-      data
-    });
-  },
-  // 创建数据导出
-  createDataExport: (data) => {
-    return utils_auth.request({
-      url: config_env.buildApiUrl("/user/export"),
-      method: "POST",
-      data
-    });
-  },
-  // 获取用户设置
-  getUserSettings: () => {
-    return utils_auth.request({
-      url: config_env.buildApiUrl("/user/settings"),
-      method: "GET"
-    });
-  }
+  getProfile,
+  updateUserInfo,
+  saveWxAvatar,
+  getStats,
+  updatePrivacySettings,
+  updateNotificationSettings,
+  createDataExport,
+  getUserSettings,
+  uploadAvatar
 };
 exports.userApi = userApi;

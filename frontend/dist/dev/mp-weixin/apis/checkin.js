@@ -1,44 +1,44 @@
 "use strict";
-const utils_auth = require("../utils/auth.js");
-const config_env = require("../config/env.js");
+const utils_request = require("../utils/request.js");
+function dailyCheckin(data) {
+  return utils_request.authPost("/checkin/daily", data);
+}
+function getTodayStatus() {
+  return utils_request.authGet("/checkin/today");
+}
+function getHistory(params = {}) {
+  return utils_request.authGet("/checkin/history", params);
+}
+function getStatistics(params = {}) {
+  return utils_request.authGet("/checkin/statistics", params);
+}
+function getWeeklyProgress() {
+  return utils_request.authGet("/checkin/weekly-progress");
+}
+function getCalendarData(params = {}) {
+  return utils_request.authGet("/checkin/calendar", params);
+}
+function getStreakRecord() {
+  return utils_request.authGet("/checkin/streak");
+}
+function makeupCheckin(data) {
+  return utils_request.authPost("/checkin/makeup", data);
+}
+function getLeaderboard(params = {}) {
+  return utils_request.guestGet("/checkin/leaderboard", params);
+}
 const checkinApi = {
-  // 今日打卡
-  checkin: (data) => {
-    return utils_auth.request({
-      url: config_env.buildApiUrl("/checkin"),
-      method: "POST",
-      data
-    });
-  },
-  // 获取打卡历史
-  getHistory: (params = {}) => {
-    return utils_auth.request({
-      url: config_env.buildApiUrl("/checkin/history"),
-      method: "GET",
-      data: params
-    });
-  },
-  // 获取打卡统计
-  getStats: (params = {}) => {
-    return utils_auth.request({
-      url: config_env.buildApiUrl("/checkin/stats"),
-      method: "GET",
-      data: params
-    });
-  },
-  // 获取打卡统计数据（首页使用）
-  getStatistics: () => {
-    return utils_auth.request({
-      url: config_env.buildApiUrl("/checkin/statistics"),
-      method: "GET"
-    });
-  },
-  // 获取今日打卡状态（首页使用）
-  getTodayStatus: () => {
-    return utils_auth.request({
-      url: config_env.buildApiUrl("/checkin/today"),
-      method: "GET"
-    });
-  }
+  dailyCheckin,
+  getTodayStatus,
+  getHistory,
+  getStatistics,
+  getWeeklyProgress,
+  getCalendarData,
+  getStreakRecord,
+  makeupCheckin,
+  getLeaderboard,
+  // 兼容旧的方法名
+  checkin: dailyCheckin,
+  getStats: getStatistics
 };
 exports.checkinApi = checkinApi;

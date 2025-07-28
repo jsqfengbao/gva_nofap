@@ -154,7 +154,131 @@ go run main.go
 - **Background Color**: #F8FAFC (Light gray-white, eye-friendly)
 - **Emergency Color**: #EF4444 (Vibrant red, only for emergency buttons)
 
-## 📊 Project Structure
+## 📱 Prototype Showcase
+
+### Welcome Page
+<div align=center>
+<img src="docs/images/prototypes/welcome.png" alt="Welcome Page Prototype" width="300" height="600"/>
+</div>
+
+**Key Features**:
+- Warm and friendly welcome interface
+- One-click assessment start button
+- Privacy protection explanation
+- Product value showcase
+
+[View Prototype](design/prototypes/welcome.html) | [Design Specs](design/specs/Design_Spec.md)
+
+### Addiction Index Assessment
+<div align=center>
+<img src="docs/images/prototypes/assessment.png" alt="Assessment Page Prototype" width="300" height="600"/>
+</div>
+
+**Key Features**:
+- 50-question scientific assessment
+- Progress bar display
+- User-friendly question presentation
+- Result interpretation and suggestions
+
+[View Prototype](design/prototypes/assessment.html) | [Design Specs](design/specs/Design_Spec.md)
+
+### Home Dashboard
+<div align=center>
+<img src="docs/images/prototypes/home.png" alt="Home Page Prototype" width="300" height="600"/>
+</div>
+
+**Key Features**:
+- Current recovery days display
+- Level and experience points showcase
+- Quick function access
+- Emergency help button
+
+[View Prototype](design/prototypes/home.html) | [Design Specs](design/specs/Design_Spec.md)
+
+### Daily Check-in
+<div align=center>
+<img src="docs/images/prototypes/index.png" alt="Check-in Page Prototype" width="300" height="600"/>
+</div>
+
+**Key Features**:
+- Daily check-in functionality
+- Emotional state recording
+- Consecutive days statistics
+- Check-in history viewing
+
+[View Prototype](design/prototypes/index.html) | [Design Specs](design/specs/Design_Spec.md)
+
+### Progress Tracking
+<div align=center>
+<img src="docs/images/prototypes/progress.png" alt="Progress Page Prototype" width="300" height="600"/>
+</div>
+
+**Key Features**:
+- Progress statistics visualization
+- Emotional change trends
+- Success rate analysis
+- Personal growth reports
+
+[View Prototype](design/prototypes/progress.html) | [Design Specs](design/specs/Design_Spec.md)
+
+### Community Support
+<div align=center>
+<img src="docs/images/prototypes/community.png" alt="Community Page Prototype" width="300" height="600"/>
+</div>
+
+**Key Features**:
+- Anonymous posting system
+- Content categorization management
+- Like and comment functionality
+- AI + manual content moderation
+
+[View Prototype](design/prototypes/community.html) | [Design Specs](design/specs/Design_Spec.md)
+
+### Emergency Help
+<div align=center>
+<img src="docs/images/prototypes/emergency.png" alt="Emergency Help Prototype" width="300" height="600"/>
+</div>
+
+**Key Features**:
+- One-click emergency assistance
+- Attention diversion activities
+- Community volunteer response
+- Professional resource recommendations
+
+[View Prototype](design/prototypes/emergency.html) | [Design Specs](design/specs/Design_Spec.md)
+
+### Learning and Growth
+<div align=center>
+<img src="docs/images/prototypes/learning.png" alt="Learning Page Prototype" width="300" height="600"/>
+</div>
+
+**Key Features**:
+- Personalized content recommendations
+- Articles/videos/audio content
+- Learning progress tracking
+- Content bookmarking functionality
+
+[View Prototype](design/prototypes/learning.html) | [Design Specs](design/specs/Design_Spec.md)
+
+### Profile Center
+<div align=center>
+<img src="docs/images/prototypes/profile.png" alt="Profile Center Prototype" width="300" height="600"/>
+</div>
+
+**Key Features**:
+- User information management
+- Privacy settings
+- Achievement showcase
+- Data export functionality
+
+[View Prototype](design/prototypes/profile.html) | [Design Specs](design/specs/Design_Spec.md)
+
+> 💡 **Tip**: 
+> - Click "View Prototype" links to see complete interactive prototype designs in your browser
+> - All prototype images have been automatically generated at 375x812 pixels (mobile screen ratio)
+> - To regenerate images, run `./scripts/generate_prototype_images.sh`
+
+## 📄 Project Structure
 
 ```
 gva_NoFap/

@@ -1,10 +1,6 @@
 # 戒色助手 (NoFap Helper)
 
 <div align=center>
-<img src="http://qmplusimg.henrongyi.top/gvalogo.jpg" width="300" height="300" />
-</div>
-
-<div align=center>
 <img src="https://img.shields.io/badge/golang-1.20-blue"/>
 <img src="https://img.shields.io/badge/gin-1.9.1-lightBlue"/>
 <img src="https://img.shields.io/badge/vue-3.3.4-brightgreen"/>
@@ -158,48 +154,125 @@ go run main.go
 
 ### 欢迎页面
 <div align=center>
-<img src="design/prototypes/welcome.html" alt="欢迎页面原型" width="300" height="600"/>
+<img src="docs/images/prototypes/welcome.png" alt="欢迎页面原型" width="300" height="600"/>
 </div>
+
+**功能特点**：
+- 温暖友好的欢迎界面
+- 一键开始评估按钮
+- 隐私保护说明
+- 产品价值展示
+
+[在线预览原型](design/prototypes/welcome.html) | [设计规范](design/specs/Design_Spec.md)
 
 ### 色隐指数评估
 <div align=center>
-<img src="design/prototypes/assessment.html" alt="评估页面原型" width="300" height="600"/>
+<img src="docs/images/prototypes/assessment.png" alt="评估页面原型" width="300" height="600"/>
 </div>
+
+**功能特点**：
+- 50题科学评估问卷
+- 进度条显示
+- 友好的问题展示
+- 结果解读和建议
+
+[在线预览原型](design/prototypes/assessment.html) | [设计规范](design/specs/Design_Spec.md)
 
 ### 首页Dashboard
 <div align=center>
-<img src="design/prototypes/home.html" alt="首页原型" width="300" height="600"/>
+<img src="docs/images/prototypes/home.png" alt="首页原型" width="300" height="600"/>
 </div>
+
+**功能特点**：
+- 当前戒色天数显示
+- 等级和经验值展示
+- 快速功能入口
+- 紧急求助按钮
+
+[在线预览原型](design/prototypes/home.html) | [设计规范](design/specs/Design_Spec.md)
 
 ### 每日打卡
 <div align=center>
-<img src="design/prototypes/index.html" alt="打卡页面原型" width="300" height="600"/>
+<img src="docs/images/prototypes/index.png" alt="打卡页面原型" width="300" height="600"/>
 </div>
+
+**功能特点**：
+- 每日签到功能
+- 情绪状态记录
+- 连续天数统计
+- 打卡历史查看
+
+[在线预览原型](design/prototypes/index.html) | [设计规范](design/specs/Design_Spec.md)
 
 ### 进度追踪
 <div align=center>
-<img src="design/prototypes/progress.html" alt="进度页面原型" width="300" height="600"/>
+<img src="docs/images/prototypes/progress.png" alt="进度页面原型" width="300" height="600"/>
 </div>
+
+**功能特点**：
+- 进度统计可视化
+- 情绪变化趋势
+- 成功率分析
+- 个人成长报告
+
+[在线预览原型](design/prototypes/progress.html) | [设计规范](design/specs/Design_Spec.md)
 
 ### 社区互助
 <div align=center>
-<img src="design/prototypes/community.html" alt="社区页面原型" width="300" height="600"/>
+<img src="docs/images/prototypes/community.png" alt="社区页面原型" width="300" height="600"/>
 </div>
+
+**功能特点**：
+- 匿名发帖系统
+- 内容分类管理
+- 点赞评论功能
+- AI+人工内容审核
+
+[在线预览原型](design/prototypes/community.html) | [设计规范](design/specs/Design_Spec.md)
 
 ### 紧急求助
 <div align=center>
-<img src="design/prototypes/emergency.html" alt="紧急求助原型" width="300" height="600"/>
+<img src="docs/images/prototypes/emergency.png" alt="紧急求助原型" width="300" height="600"/>
 </div>
+
+**功能特点**：
+- 一键紧急求助
+- 注意力转移活动
+- 社区志愿者响应
+- 专业资源推荐
+
+[在线预览原型](design/prototypes/emergency.html) | [设计规范](design/specs/Design_Spec.md)
 
 ### 学习成长
 <div align=center>
-<img src="design/prototypes/learning.html" alt="学习页面原型" width="300" height="600"/>
+<img src="docs/images/prototypes/learning.png" alt="学习页面原型" width="300" height="600"/>
 </div>
+
+**功能特点**：
+- 个性化内容推荐
+- 文章/视频/音频内容
+- 学习进度追踪
+- 内容收藏功能
+
+[在线预览原型](design/prototypes/learning.html) | [设计规范](design/specs/Design_Spec.md)
 
 ### 个人中心
 <div align=center>
-<img src="design/prototypes/profile.html" alt="个人中心原型" width="300" height="600"/>
+<img src="docs/images/prototypes/profile.png" alt="个人中心原型" width="300" height="600"/>
 </div>
+
+**功能特点**：
+- 用户信息管理
+- 隐私设置
+- 成就展示
+- 数据导出
+
+[在线预览原型](design/prototypes/profile.html) | [设计规范](design/specs/Design_Spec.md)
+
+> 💡 **提示**: 
+> - 点击"在线预览原型"链接可以在浏览器中查看完整的交互式原型设计
+> - 所有原型图已自动生成，尺寸为375x812像素（手机屏幕比例）
+> - 如需重新生成图片，请运行 `./scripts/generate_prototype_images.sh`
 
 ## 📊 项目结构
 

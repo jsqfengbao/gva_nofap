@@ -351,7 +351,7 @@ gva_NoFap/
 如果您对戒色助手项目感兴趣，欢迎加入我们的微信群进行交流讨论！
 
 <div align=center>
-<img src="wecom-temp-137667-342c98ddc8ea0ee5640c3c552b980725.jpg" alt="微信群二维码" width="300" height="400"/>
+<img src="docs/images/wecom-temp-137667-342c98ddc8ea0ee5640c3c552b980725.jpg" alt="微信群二维码" width="300" height="400"/>
 </div>
 
 **群聊: AI创业-引领智能时代**
@@ -364,9 +364,9 @@ gva_NoFap/
 
 ## 📞 联系我们
 
-- **项目主页**: [https://github.com/your-username/gva_NoFap](https://github.com/your-username/gva_NoFap)
-- **问题反馈**: [Issues](https://github.com/your-username/gva_NoFap/issues)
-- **功能建议**: [Discussions](https://github.com/your-username/gva_NoFap/discussions)
+- **项目主页**: [https://github.com/mobilesec110/gva_nofap](https://github.com/mobilesec110/gva_nofap)
+- **问题反馈**: [Issues](https://github.com/mobilesec110/gva_nofap/issues)
+- **功能建议**: [Discussions](https://github.com/mobilesec110/gva_nofap/discussions)
 
 ## 🙏 致谢
 

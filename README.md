@@ -440,6 +440,8 @@ gva_NoFap/
 - **项目主页**: [https://github.com/mobilesec110/gva_nofap](https://github.com/mobilesec110/gva_nofap)
 - **问题反馈**: [Issues](https://github.com/mobilesec110/gva_nofap/issues)
 - **功能建议**: [Discussions](https://github.com/mobilesec110/gva_nofap/discussions)
+- **添加微信** [wx](docs/images/wx.jpg)
+<img src="docs/images/wx.jpg" alt="微信群二维码" width="300" height="400"/>
 
 ## 🙏 致谢
 

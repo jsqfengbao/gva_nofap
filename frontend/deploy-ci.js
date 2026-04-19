@@ -7,7 +7,7 @@ const config = {
   appid: 'wx07c9e8e4f105260b',
   type: 'miniProgram',
   projectPath: path.resolve(__dirname, './dist/build/mp-weixin'),
-  privateKeyPath: path.resolve(__dirname, './private.key'),
+  privateKeyPath: path.resolve(__dirname, './private-key.key'),
   ignores: ['node_modules/**/*'],
 };
 

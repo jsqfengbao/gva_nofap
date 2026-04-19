@@ -26,4 +26,11 @@ node_modules/
 
 # Task files
 # tasks.json
-# tasks/ 
+# tasks/
+
+# WeChat mini-program CI private key
+private-key.key
+private.key
+
+# Compiled output
+dist/ 

@@ -213,30 +213,30 @@
     }
   },
   "tabBar": {
-    "color": "#6B7280",
-    "selectedColor": "#34D399",
+    "color": "#8B93A6",
+    "selectedColor": "#667eea",
     "borderStyle": "white",
-    "backgroundColor": "#FFFFFF",
+    "backgroundColor": "rgba(255, 255, 255, 0.95)",
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "🏠 首页"
+        "text": "首页"
       },
       {
-        "pagePath": "pages/checkin/index", 
-        "text": "✅ 打卡"
+        "pagePath": "pages/checkin/index",
+        "text": "打卡"
       },
       {
         "pagePath": "pages/community/index",
-        "text": "👥 社区"
+        "text": "社区"
       },
       {
         "pagePath": "pages/learning/index",
-        "text": "📚 学习"
+        "text": "学习"
       },
       {
         "pagePath": "pages/profile/index",
-        "text": "👤 我的"
+        "text": "我的"
       }
     ]
   },

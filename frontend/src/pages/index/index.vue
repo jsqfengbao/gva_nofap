@@ -1,48 +1,72 @@
 <template>
   <view class="home-page">
-    <!-- 状态栏 -->
-    <view class="status-bar">
-      <text class="status-time">{{ currentTime }}</text>
-      <view class="status-icons">
-        <text class="icon">📶</text>
-        <text class="icon">📶</text>
-        <view class="battery">
-          <view class="battery-fill"></view>
-        </view>
-      </view>
-    </view>
-
-    <!-- 头部问候区域 -->
+    <!-- 状态栏占位 -->
+    <view class="status-bar-spacer"></view>
+    
+    <!-- 头部问候区域 - 毛玻璃效果 -->
     <view class="header-section">
+      <view class="header-bg"></view>
       <view class="greeting-area">
         <view class="greeting-text">
-          <text class="greeting">{{ greeting }} 👋</text>
-          <text class="motto">坚持成就更好的自己</text>
+          <text class="greeting">{{ greeting }}, {{ userName }} 👋</text>
+          <text class="motto">「自律给你自由，坚持改变人生」</text>
         </view>
         <view class="header-actions">
           <view class="notification-btn" @click="goToNotifications">
             <text class="icon">🔔</text>
+            <view class="notification-dot" v-if="hasNotification"></view>
           </view>
-          <view class="level-avatar" @click="goToProfile">
-            <text class="level-text">L{{ userLevel }}</text>
+          <view class="avatar-circle" @click="goToProfile">
+            <image v-if="userAvatar" class="avatar-img" :src="userAvatar" mode="aspectFill"></image>
+            <text v-else class="level-text">L{{ userLevel }}</text>
           </view>
+        </view>
+      </view>
+      
+      <!-- 统计概览 -->
+      <view class="stats-overview">
+        <view class="stat-item">
+          <text class="stat-number">{{ totalDays }}</text>
+          <text class="stat-label">总天数</text>
+        </view>
+        <view class="stat-divider"></view>
+        <view class="stat-item">
+          <text class="stat-number">{{ successRate }}%</text>
+          <text class="stat-label">成功率</text>
+        </view>
+        <view class="stat-divider"></view>
+        <view class="stat-item">
+          <text class="stat-number">{{ longestStreak }}</text>
+          <text class="stat-label">最长纪录</text>
         </view>
       </view>
     </view>
 
     <!-- 主要内容区域 -->
     <view class="main-content">
-      <!-- 连续天数卡片 -->
+      <!-- 连续坚持卡片 - 主视觉 -->
       <view class="streak-card" @click="goToCheckin">
+        <view class="streak-card-bg"></view>
         <view class="streak-content">
-          <view class="streak-icon">🔥</view>
-          <text class="streak-number">{{ streakDays }}</text>
-          <text class="streak-label">连续坚持天数</text>
+          <view class="streak-header">
+            <view class="streak-title-wrap">
+              <text class="streak-icon">🔥</text>
+              <text class="streak-title">当前连续坚持</text>
+            </view>
+            <view class="streak-badge" v-if="streakDays > 0">
+              <text class="streak-badge-text">坚持中</text>
+            </view>
+          </view>
           
-          <view class="milestone-progress">
+          <view class="streak-main">
+            <text class="streak-number">{{ streakDays }}</text>
+            <text class="streak-unit">天</text>
+          </view>
+          
+          <view class="milestone-progress" v-if="daysToMilestone > 0">
             <view class="progress-info">
-              <text class="progress-label">距离下一个里程碑</text>
-              <text class="progress-days">{{ daysToMilestone }}天</text>
+              <text class="progress-label">距离 {{ nextMilestone }} 天里程碑</text>
+              <text class="progress-days">还需 {{ daysToMilestone }} 天</text>
             </view>
             <view class="progress-bar">
               <view class="progress-fill" :style="{ width: milestoneProgress + '%' }"></view>
@@ -50,90 +74,127 @@
           </view>
           
           <view class="checkin-button" :class="{ 'checked': hasCheckedToday }" @click.stop="handleCheckin">
-            <text class="checkin-text">{{ hasCheckedToday ? '今日已打卡 ✓' : '今日打卡 ✓' }}</text>
+            <text class="checkin-text">
+              {{ hasCheckedToday ? '✅ 今日已打卡' : '👉 点击今日打卡' }}
+            </text>
           </view>
+        </view>
+      </view>
+
+      <!-- 快捷功能网格 -->
+      <view class="quick-grid">
+        <view class="grid-item item-emerald" @click="goToCheckin">
+          <view class="grid-icon">✅</view>
+          <text class="grid-title">每日打卡</text>
+          <text class="grid-desc">记录坚持</text>
+        </view>
+        
+        <view class="grid-item item-blue" @click="goToEmergency">
+          <view class="grid-icon">🛑</view>
+          <text class="grid-title">紧急刹车</text>
+          <text class="grid-desc">立即止损</text>
+        </view>
+        
+        <view class="grid-item item-amber" @click="goToAchievement">
+          <view class="grid-icon">🏆</view>
+          <text class="grid-title">成就墙</text>
+          <text class="grid-desc">收集徽章</text>
+        </view>
+        
+        <view class="grid-item item-purple" @click="goToLearning">
+          <view class="grid-icon">📚</view>
+          <text class="grid-title">成长学院</text>
+          <text class="grid-desc">知识改变认知</text>
+        </view>
+        
+        <view class="grid-item item-orange" @click="goToAssessment">
+          <view class="grid-icon">📊</view>
+          <text class="grid-title">色隐测试</text>
+          <text class="grid-desc">评估上瘾程度</text>
+        </view>
+        
+        <view class="grid-item item-pink" @click="goToCommunity">
+          <view class="grid-icon">👥</view>
+          <text class="grid-title">互助社区</text>
+          <text class="grid-desc">同行不孤独</text>
         </view>
       </view>
 
       <!-- 等级进度卡片 -->
       <view class="level-card" @click="goToAchievement">
-        <view class="level-info">
-          <view class="level-icon">
-            <text class="icon">⭐</text>
+        <view class="level-header">
+          <view class="level-left">
+            <view class="level-icon">
+              <text class="icon">⭐</text>
+            </view>
+            <view class="level-info">
+              <text class="level-title">等级 {{ userLevel }} · {{ levelTitle }}</text>
+              <text class="exp-text">{{ currentExp }} / {{ nextLevelExp }} 经验值</text>
+            </view>
           </view>
-          <view class="level-details">
-            <text class="level-title">等级 {{ userLevel }} - {{ levelTitle }}</text>
-            <text class="exp-text">{{ currentExp }} / {{ nextLevelExp }} EXP</text>
+          <view class="level-badge">
+            <text class="level-badge-text">{{ levelProgress }}%</text>
           </view>
-          <text class="game-emoji">🎮</text>
         </view>
         <view class="level-progress-bar">
           <view class="level-progress-fill" :style="{ width: levelProgress + '%' }"></view>
         </view>
       </view>
 
-      <!-- 快捷操作区域 -->
-      <view class="quick-actions">
-        <view class="action-card emergency" @click="goToEmergency">
-          <view class="action-icon">
-            <text class="icon">⚠️</text>
-          </view>
-          <text class="action-title">紧急求助</text>
-          <text class="action-desc">需要帮助时点这里</text>
+      <!-- 每日格言 -->
+      <view class="quote-card">
+        <view class="quote-header">
+          <view class="quote-icon">💭</view>
+          <text class="quote-title">今日格言</text>
         </view>
-        
-        <view class="action-card community" @click="goToCommunity">
-          <view class="action-icon">
-            <text class="icon">👥</text>
-          </view>
-          <text class="action-title">社区</text>
-          <text class="action-desc">与伙伴们交流</text>
+        <text class="quote-content">{{ dailyQuote }}</text>
+        <view class="quote-footer">
+          <text class="quote-author">— 戒色修行路</text>
         </view>
       </view>
 
       <!-- 今日成就 -->
       <view class="achievements-card" v-if="todayAchievements.length > 0">
-        <text class="card-title">今日成就</text>
+        <view class="card-header">
+          <text class="card-title">🎯 今日解锁</text>
+          <text class="card-more" @click="goToAchievement">查看全部 &gt;</text>
+        </view>
         <view class="achievements-list">
           <view class="achievement-item" v-for="achievement in todayAchievements" :key="achievement.id">
             <view class="achievement-icon">
-              <text class="icon">✅</text>
+              <text class="icon">⭐</text>
             </view>
             <view class="achievement-details">
               <text class="achievement-name">{{ achievement.name }}</text>
-              <text class="achievement-reward">+{{ achievement.rewards }} 经验值</text>
+              <text class="achievement-reward">+{{ achievement.rewards }} EXP</text>
             </view>
-            <text class="reward-value">+{{ achievement.rewards }}</text>
+            <view class="achievement-plus">
+              <text class="plus-text">+{{ achievement.rewards }}</text>
+            </view>
           </view>
         </view>
-      </view>
-
-      <!-- 每日小贴士 -->
-      <view class="tips-card">
-        <view class="tips-header">
-          <view class="tips-icon">
-            <text class="icon">💡</text>
-          </view>
-          <text class="tips-title">今日小贴士</text>
-        </view>
-        <text class="tips-content">{{ dailyTip }}</text>
       </view>
 
       <!-- 最近成就 -->
-      <view class="recent-achievements" v-if="recentAchievements.length > 0">
-        <text class="card-title">最近成就</text>
+      <view class="recent-card" v-if="recentAchievements.length > 0">
+        <view class="card-header">
+          <text class="card-title">🏆 最近获得</text>
+        </view>
         <view class="recent-list">
           <view class="recent-item" v-for="achievement in recentAchievements" :key="achievement.id">
             <view class="recent-icon">
-              <text class="icon">🏆</text>
+              <text class="icon">🎖️</text>
             </view>
-            <view class="recent-details">
+            <view class="recent-info">
               <text class="recent-name">{{ achievement.name }}</text>
               <text class="recent-time">{{ formatTime(achievement.unlockedAt) }}</text>
             </view>
           </view>
         </view>
       </view>
+      
+      <!-- 底部安全间距 -->
+      <view class="bottom-spacer"></view>
     </view>
   </view>
 </template>

@@ -20,27 +20,32 @@ export const API_DOMAINS = {
     WS_URL: 'ws://192.168.1.140:8888'
   },
   [ENV_TYPES.PRODUCTION]: {
-    BASE_URL: 'https://api.nofap-app.com',  // 生产环境API域名
-    WS_URL: 'wss://api.nofap-app.com'
+    BASE_URL: 'https://nofap.srxiezuo.com',  // 生产环境API域名
+    WS_URL: 'wss://nofap.srxiezuo.com'
   },
   [ENV_TYPES.TESTING]: {
-    BASE_URL: 'https://test-api.nofap-app.com',  // 测试环境API域名
-    WS_URL: 'wss://test-api.nofap-app.com'
+    BASE_URL: 'https://nofap.srxiezuo.com',  // 测试环境API域名
+    WS_URL: 'wss://nofap.srxiezuo.com'
   }
 }
 
 // API路径前缀配置
 export const API_PREFIXES = {
   [ENV_TYPES.DEVELOPMENT]: '/api/v1/miniprogram',  // 本地环境也需要 /api 前缀
-  [ENV_TYPES.PRODUCTION]: '/api/v1/miniprogram',   // 生产环境保留 /api
-  [ENV_TYPES.TESTING]: '/api/v1/miniprogram'       // 测试环境保留 /api
+  [ENV_TYPES.PRODUCTION]: 'api/v1/miniprogram',    // 最终正确方案 (看Nginx配置后):
+  // → 小程序完整请求: https://nofap.srxiezuo.com/api/v1/miniprogram/... ✓
+  // → 匹配 Nginx location /api { ... } ✓
+  // → rewrite ^/api/(.*)$ /$1 → 去掉/api → /v1/miniprogram/... ✓
+  // → 传给Gin后端正好是 /v1/miniprogram/... ✓ 和路由完全匹配！
+  // → 看日志你后端收到的就是 /v1/miniprogram/...，这次绝对对了！
+  [ENV_TYPES.TESTING]: 'api/v1/miniprogram'          // 同上
 }
 
 // 静态资源域名配置
 export const STATIC_DOMAINS = {
   [ENV_TYPES.DEVELOPMENT]: 'http://192.168.1.140:8888',
-  [ENV_TYPES.PRODUCTION]: 'https://cdn.nofap-app.com',
-  [ENV_TYPES.TESTING]: 'https://test-cdn.nofap-app.com'
+  [ENV_TYPES.PRODUCTION]: 'https://nofap.srxiezuo.com',
+  [ENV_TYPES.TESTING]: 'https://nofap.srxiezuo.com'
 }
 
 // CDN配置
@@ -51,14 +56,14 @@ export const CDN_CONFIG = {
     DOCUMENTS: 'http://192.168.1.140:8888/static/documents'
   },
   [ENV_TYPES.PRODUCTION]: {
-    IMAGES: 'https://cdn.nofap-app.com/images',
-    VIDEOS: 'https://cdn.nofap-app.com/videos',
-    DOCUMENTS: 'https://cdn.nofap-app.com/documents'
+    IMAGES: 'https://nofap.srxiezuo.com/static/images',
+    VIDEOS: 'https://nofap.srxiezuo.com/static/videos',
+    DOCUMENTS: 'https://nofap.srxiezuo.com/static/documents'
   },
   [ENV_TYPES.TESTING]: {
-    IMAGES: 'https://test-cdn.nofap-app.com/images',
-    VIDEOS: 'https://test-cdn.nofap-app.com/videos',
-    DOCUMENTS: 'https://test-cdn.nofap-app.com/documents'
+    IMAGES: 'https://nofap.srxiezuo.com/static/images',
+    VIDEOS: 'https://nofap.srxiezuo.com/static/videos',
+    DOCUMENTS: 'https://nofap.srxiezuo.com/static/documents'
   }
 }
 
@@ -106,7 +111,11 @@ export function getCurrentConfig() {
 export function buildApiUrl(path = '') {
   const config = getCurrentConfig()
   const cleanPath = path.startsWith('/') ? path : `/${path}`
-  return `${config.domain.BASE_URL}${config.apiPrefix}${cleanPath}`
+  // 确保BASE_URL和apiPrefix之间有斜杠
+  const baseWithPrefix = config.domain.BASE_URL.endsWith('/') 
+    ? `${config.domain.BASE_URL}${config.apiPrefix}`
+    : `${config.domain.BASE_URL}/${config.apiPrefix}`
+  return `${baseWithPrefix}${cleanPath}`
 }
 
 // 获取WebSocket URL

@@ -9,4 +9,5 @@ type ApiGroup struct {
 	CommunityApi   CommunityApi
 	EmergencyApi   EmergencyApi
 	LearningApi    LearningApi
+	StatsApi       StatsApi
 }

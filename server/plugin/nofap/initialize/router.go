@@ -18,4 +18,5 @@ func InitializeRouter(publicGroup *gin.RouterGroup) {
 	rg.EmergencyRouter.InitEmergencyRouter(publicGroup)
 	rg.LearningRouter.InitLearningRouter(publicGroup)
 	rg.StatsRouter.InitStatsRouter(publicGroup)
+	rg.AdminRouter.InitAdminRouter(publicGroup)
 }

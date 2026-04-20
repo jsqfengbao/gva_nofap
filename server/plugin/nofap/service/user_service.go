@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
+	commonReq "github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/nofap/model"
 	miniprogramReq "github.com/flipped-aurora/gin-vue-admin/server/plugin/nofap/model/request"
 	miniprogramRes "github.com/flipped-aurora/gin-vue-admin/server/plugin/nofap/model/response"
@@ -534,4 +535,82 @@ func (s *UserService) CreateUser(req *miniprogramReq.RegisterRequest) (*model.Wx
 	}
 
 	return &user, nil
+}
+
+// GetAdminStatistics 获取管理端统计数据
+func (s *UserService) GetAdminStatistics() (model.AdminStatistics, error) {
+	var stats model.AdminStatistics
+
+	// 总用户数
+	global.GVA_DB.Model(&model.WxUser{}).Count(&stats.TotalUsers)
+
+	// 7天内活跃用户
+	sevenDaysAgo := time.Now().AddDate(0, 0, -7)
+	global.GVA_DB.Model(&model.WxUser{}).Where("last_login_at >= ?", sevenDaysAgo).Count(&stats.ActiveUsers)
+
+	// 总帖子数
+	global.GVA_DB.Model(&model.CommunityPost{}).Count(&stats.TotalPosts)
+
+	// 总打卡天数
+	var totalCheckins int64
+	global.GVA_DB.Model(&model.DailyCheckin{}).Count(&totalCheckins)
+	stats.TotalCheckins = totalCheckins
+
+	return stats, nil
+}
+
+// GetUserAdminList 获取管理端用户列表（分页）
+func (s *UserService) GetUserAdminList(pageInfo commonReq.PageInfo, nickname *string, status *int) ([]model.WxUser, int64, error) {
+	var users []model.WxUser
+	var total int64
+
+	db := global.GVA_DB.Model(&model.WxUser{})
+	if nickname != nil {
+		db = db.Where("nickname LIKE ?", "%"+*nickname+"%")
+	}
+	if status != nil {
+		db = db.Where("status = ?", *status)
+	}
+
+	db.Count(&total)
+
+	offset := (pageInfo.Page - 1) * pageInfo.PageSize
+	db = db.Offset(offset).Limit(pageInfo.PageSize).Order("id DESC")
+	err := db.Find(&users).Error
+
+	return users, total, err
+}
+
+// UpdateUserStatusByAdmin 更新用户状态
+func (s *UserService) UpdateUserStatusByAdmin(idStr string, status int) error {
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return err
+	}
+
+	err = global.GVA_DB.Model(&model.WxUser{}).Where("id = ?", id).Update("status", status).Error
+	return err
+}
+
+// GetUserDetailByAdmin 获取用户详情
+func (s *UserService) GetUserDetailByAdmin(idStr string) (*model.WxUser, error) {
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return nil, err
+	}
+
+	var user model.WxUser
+	err = global.GVA_DB.Where("id = ?", id).First(&user).Error
+	return &user, err
+}
+
+// DeleteUserByAdmin 删除用户
+func (s *UserService) DeleteUserByAdmin(idStr string) error {
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return err
+	}
+
+	err = global.GVA_DB.Delete(&model.WxUser{}, id).Error
+	return err
 }

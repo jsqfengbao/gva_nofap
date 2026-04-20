@@ -3,9 +3,11 @@ package service
 import (
 	"database/sql"
 	"errors"
+	"strconv"
 	"time"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
+	commonReq "github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/nofap/model"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/nofap/model/request"
 	miniprogramRes "github.com/flipped-aurora/gin-vue-admin/server/plugin/nofap/model/response"
@@ -514,7 +516,98 @@ func (e *EmergencyService) canUserRespond(userID uint, help model.EmergencyHelp)
 	}
 
 	// 检查是否是活跃志愿者
-	return e.isActiveVolunteer(userID)
+	var count int64
+	global.GVA_DB.Model(&model.EmergencyVolunteer{}).
+		Where("user_id = ? AND status = ? AND current_load < max_load", userID, 2).
+		Count(&count)
+	return count > 0
+}
+
+// GetResourceAdminList 获取管理端紧急资源列表（分页）
+func (e *EmergencyService) GetResourceAdminList(pageInfo commonReq.PageInfo, title *string, resourceType *int, isActive *bool) ([]model.EmergencyResource, int64, error) {
+	var resources []model.EmergencyResource
+	var total int64
+
+	db := global.GVA_DB.Model(&model.EmergencyResource{})
+	if title != nil {
+		db = db.Where("title LIKE ?", "%"+*title+"%")
+	}
+	if resourceType != nil {
+		db = db.Where("type = ?", *resourceType)
+	}
+	if isActive != nil {
+		db = db.Where("is_active = ?", *isActive)
+	}
+
+	db.Count(&total)
+
+	offset := (pageInfo.Page - 1) * pageInfo.PageSize
+	db = db.Offset(offset).Limit(pageInfo.PageSize).Order("id DESC")
+	err := db.Find(&resources).Error
+
+	return resources, total, err
+}
+
+// CreateResourceAdmin 管理端创建紧急资源
+func (e *EmergencyService) CreateResourceAdmin(resource *model.EmergencyResource) error {
+	return global.GVA_DB.Create(resource).Error
+}
+
+// UpdateResourceAdmin 管理端更新紧急资源
+func (e *EmergencyService) UpdateResourceAdmin(resource *model.EmergencyResource) error {
+	return global.GVA_DB.Save(resource).Error
+}
+
+// DeleteResourceAdmin 删除紧急资源
+func (e *EmergencyService) DeleteResourceAdmin(idStr string) error {
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return err
+	}
+	err = global.GVA_DB.Delete(&model.EmergencyResource{}, id).Error
+	return err
+}
+
+// GetHelpAdminList 获取管理端紧急求助列表（分页）
+func (e *EmergencyService) GetHelpAdminList(pageInfo commonReq.PageInfo, status *int, helpType *int) ([]model.EmergencyHelp, int64, error) {
+	var helps []model.EmergencyHelp
+	var total int64
+
+	db := global.GVA_DB.Model(&model.EmergencyHelp{}).Preload("User")
+	if status != nil {
+		db = db.Where("status = ?", *status)
+	}
+	if helpType != nil {
+		db = db.Where("type = ?", *helpType)
+	}
+
+	db.Count(&total)
+
+	offset := (pageInfo.Page - 1) * pageInfo.PageSize
+	db = db.Offset(offset).Limit(pageInfo.PageSize).Order("id DESC")
+	err := db.Find(&helps).Error
+
+	return helps, total, err
+}
+
+// UpdateHelpStatus 更新求助状态
+func (e *EmergencyService) UpdateHelpStatus(idStr string, status int) error {
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return err
+	}
+	err = global.GVA_DB.Model(&model.EmergencyHelp{}).Where("id = ?", id).Update("status", status).Error
+	return err
+}
+
+// DeleteHelpAdmin 删除求助
+func (e *EmergencyService) DeleteHelpAdmin(idStr string) error {
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return err
+	}
+	err = global.GVA_DB.Delete(&model.EmergencyHelp{}, id).Error
+	return err
 }
 
 // isActiveVolunteer 检查是否是活跃志愿者

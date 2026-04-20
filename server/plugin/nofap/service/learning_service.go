@@ -3,10 +3,12 @@ package service
 import (
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
+	commonReq "github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/nofap/model"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/nofap/model/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/nofap/model/response"
@@ -501,4 +503,52 @@ func (s *LearningService) GetLearningHomepage(userID uint) (response.LearningHom
 	homepage.PopularContents = popularContentResp
 
 	return homepage, nil
+}
+
+// GetLearningAdminList 获取管理端学习内容列表（分页）
+func (s *LearningService) GetLearningAdminList(pageInfo commonReq.PageInfo, title *string, contentType *string, category *string, status *int) ([]model.LearningContent, int64, error) {
+	var contents []model.LearningContent
+	var total int64
+
+	db := global.GVA_DB.Model(&model.LearningContent{})
+	if title != nil {
+		db = db.Where("title LIKE ?", "%"+*title+"%")
+	}
+	if contentType != nil {
+		db = db.Where("content_type = ?", *contentType)
+	}
+	if category != nil {
+		db = db.Where("category = ?", *category)
+	}
+	if status != nil {
+		db = db.Where("status = ?", *status)
+	}
+
+	db.Count(&total)
+
+	offset := (pageInfo.Page - 1) * pageInfo.PageSize
+	db = db.Offset(offset).Limit(pageInfo.PageSize).Order("id DESC")
+	err := db.Find(&contents).Error
+
+	return contents, total, err
+}
+
+// CreateLearningContentAdmin 管理端创建学习内容
+func (s *LearningService) CreateLearningContentAdmin(content *model.LearningContent) error {
+	return global.GVA_DB.Create(content).Error
+}
+
+// UpdateLearningContentAdmin 管理端更新学习内容
+func (s *LearningService) UpdateLearningContentAdmin(content *model.LearningContent) error {
+	return global.GVA_DB.Save(content).Error
+}
+
+// DeleteLearningContentAdmin 删除学习内容
+func (s *LearningService) DeleteLearningContentAdmin(idStr string) error {
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return err
+	}
+	err = global.GVA_DB.Delete(&model.LearningContent{}, id).Error
+	return err
 }

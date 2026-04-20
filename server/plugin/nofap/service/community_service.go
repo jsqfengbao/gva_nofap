@@ -3,10 +3,12 @@ package service
 import (
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
+	commonReq "github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/nofap/model"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/nofap/model/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/nofap/model/response"
@@ -740,4 +742,100 @@ func (s *CommunityService) GetUserPosts(userID uint, req request.GetPostsRequest
 		PageSize: req.PageSize,
 		HasMore:  int64(req.Page*req.PageSize) < total,
 	}, nil
+}
+
+// GetPostAdminList 获取管理端帖子列表（分页）
+func (s *CommunityService) GetPostAdminList(pageInfo commonReq.PageInfo, title *string, category *int, status *int) ([]model.CommunityPost, int64, error) {
+	var posts []model.CommunityPost
+	var total int64
+
+	db := global.GVA_DB.Model(&model.CommunityPost{}).Preload("User")
+	if title != nil {
+		db = db.Where("title LIKE ?", "%"+*title+"%")
+	}
+	if category != nil {
+		db = db.Where("category = ?", *category)
+	}
+	if status != nil {
+		db = db.Where("status = ?", *status)
+	}
+
+	db.Count(&total)
+
+	offset := (pageInfo.Page - 1) * pageInfo.PageSize
+	db = db.Offset(offset).Limit(pageInfo.PageSize).Order("id DESC")
+	err := db.Find(&posts).Error
+
+	return posts, total, err
+}
+
+// UpdatePostStatusByAdmin 更新帖子状态（通过/屏蔽）
+func (s *CommunityService) UpdatePostStatusByAdmin(idStr string, status int) error {
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return err
+	}
+	err = global.GVA_DB.Model(&model.CommunityPost{}).Where("id = ?", id).Update("status", status).Error
+	return err
+}
+
+// DeletePostByAdmin 删除帖子
+func (s *CommunityService) DeletePostByAdmin(idStr string) error {
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return err
+	}
+	// 删除帖子同时删除相关评论和点赞
+	err = global.GVA_DB.Where("post_id = ?", id).Delete(&model.CommunityComment{}).Error
+	if err != nil {
+		return err
+	}
+	err = global.GVA_DB.Where("target_id = ? AND type = 1", id).Delete(&model.CommunityLike{}).Error
+	if err != nil {
+		return err
+	}
+	err = global.GVA_DB.Delete(&model.CommunityPost{}, id).Error
+	return err
+}
+
+// GetCommentAdminList 获取管理端评论列表（分页）
+func (s *CommunityService) GetCommentAdminList(pageInfo commonReq.PageInfo, postId *uint, status *int) ([]model.CommunityComment, int64, error) {
+	var comments []model.CommunityComment
+	var total int64
+
+	db := global.GVA_DB.Model(&model.CommunityComment{}).Preload("User").Preload("Post")
+	if postId != nil {
+		db = db.Where("post_id = ?", *postId)
+	}
+	if status != nil {
+		db = db.Where("status = ?", *status)
+	}
+
+	db.Count(&total)
+
+	offset := (pageInfo.Page - 1) * pageInfo.PageSize
+	db = db.Offset(offset).Limit(pageInfo.PageSize).Order("id DESC")
+	err := db.Find(&comments).Error
+
+	return comments, total, err
+}
+
+// UpdateCommentStatusByAdmin 更新评论状态
+func (s *CommunityService) UpdateCommentStatusByAdmin(idStr string, status int) error {
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return err
+	}
+	err = global.GVA_DB.Model(&model.CommunityComment{}).Where("id = ?", id).Update("status", status).Error
+	return err
+}
+
+// DeleteCommentByAdmin 删除评论
+func (s *CommunityService) DeleteCommentByAdmin(idStr string) error {
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return err
+	}
+	err = global.GVA_DB.Delete(&model.CommunityComment{}, id).Error
+	return err
 }

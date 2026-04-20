@@ -33,4 +33,4 @@ private-key.key
 private.key
 
 # Compiled output
-dist/ 
+dist/ server/gva

@@ -11,6 +11,7 @@ type RouterGroup struct {
 	EmergencyRouter
 	LearningRouter
 	StatsRouter
+	AdminRouter
 }
 
 var RouterGroupApp = new(RouterGroup)

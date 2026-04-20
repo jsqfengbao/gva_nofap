@@ -4,9 +4,11 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"strconv"
 	"time"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
+	commonReq "github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/nofap/model"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/nofap/model/response"
 	"go.uber.org/zap"
@@ -867,4 +869,51 @@ func (s *AchievementService) GetUserAchievementsForProfile(userID uint, limit in
 	return &response.UserProfileAchievementsResponse{
 		List: achievements,
 	}, nil
+}
+
+// GetAchievementAdminList 获取管理端成就列表（分页）
+func (s *AchievementService) GetAchievementAdminList(pageInfo commonReq.PageInfo, name *string, category *string) ([]model.Achievement, int64, error) {
+	var achievements []model.Achievement
+	var total int64
+
+	db := global.GVA_DB.Model(&model.Achievement{})
+	if name != nil {
+		db = db.Where("name LIKE ?", "%"+*name+"%")
+	}
+	if category != nil {
+		db = db.Where("category = ?", *category)
+	}
+
+	db.Count(&total)
+
+	offset := (pageInfo.Page - 1) * pageInfo.PageSize
+	db = db.Offset(offset).Limit(pageInfo.PageSize).Order("category ASC, display_order ASC")
+	err := db.Find(&achievements).Error
+
+	return achievements, total, err
+}
+
+// CreateAchievement 创建成就
+func (s *AchievementService) CreateAchievement(achievement *model.Achievement) error {
+	return global.GVA_DB.Create(achievement).Error
+}
+
+// UpdateAchievement 更新成就
+func (s *AchievementService) UpdateAchievement(achievement *model.Achievement) error {
+	return global.GVA_DB.Save(achievement).Error
+}
+
+// DeleteAchievement 删除成就
+func (s *AchievementService) DeleteAchievement(idStr string) error {
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return err
+	}
+	// 删除成就同时删除用户解锁记录
+	err = global.GVA_DB.Where("achievement_id = ?", id).Delete(&model.UserAchievement{}).Error
+	if err != nil {
+		return err
+	}
+	err = global.GVA_DB.Delete(&model.Achievement{}, id).Error
+	return err
 }

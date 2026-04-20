@@ -92,7 +92,28 @@ export const updateAssessment = (data) => {
 export const deleteAssessment = (id) => {
   return service({
     url: `/api/v1/miniprogram/assessment/${id}`,
-    method: 'delete'
+    method: 'delete',
+  })
+}
+
+export const getAssessmentDetail = (id) => {
+  return service({
+    url: `/api/v1/nofap/admin/assessment/detail/${id}`,
+    method: 'get',
+  })
+}
+
+export const deleteAssessmentRecord = (id) => {
+  return service({
+    url: `/api/v1/nofap/admin/assessment/record/${id}`,
+    method: 'delete',
+  })
+}
+
+export const getAssessmentStatistics = () => {
+  return service({
+    url: '/api/v1/nofap/admin/assessment/statistics',
+    method: 'get',
   })
 }
 
@@ -113,10 +134,32 @@ export const auditCommunityPost = (data) => {
   })
 }
 
+export const getCommunityPostDetail = (id) => {
+  return service({
+    url: `/api/v1/nofap/admin/community/post/${id}`,
+    method: 'get'
+  })
+}
+
+export const updatePostStatus = (data) => {
+  return service({
+    url: '/api/v1/miniprogram/community/post/status',
+    method: 'put',
+    data
+  })
+}
+
 export const deleteCommunityPost = (id) => {
   return service({
     url: `/api/v1/miniprogram/community/posts/${id}`,
     method: 'delete'
+  })
+}
+
+export const getCommunityStatistics = () => {
+  return service({
+    url: '/api/v1/nofap/admin/community/statistics',
+    method: 'get'
   })
 }
 
@@ -152,6 +195,20 @@ export const deleteLearningContent = (id) => {
   })
 }
 
+export const getLearningContentDetail = (id) => {
+  return service({
+    url: `/api/v1/nofap/admin/learning/content/${id}`,
+    method: 'get'
+  })
+}
+
+export const getLearningStatistics = () => {
+  return service({
+    url: '/api/v1/nofap/admin/learning/statistics',
+    method: 'get'
+  })
+}
+
 // 成就管理
 export const getAchievementList = (params) => {
   return service({
@@ -180,7 +237,21 @@ export const updateAchievement = (data) => {
 export const deleteAchievement = (id) => {
   return service({
     url: `/api/v1/miniprogram/achievement/${id}`,
-    method: 'delete'
+    method: 'delete',
+  })
+}
+
+export const getAchievementDetail = (id) => {
+  return service({
+    url: `/api/v1/miniprogram/achievement/${id}`,
+    method: 'get',
+  })
+}
+
+export const getAchievementStatistics = () => {
+  return service({
+    url: '/api/v1/nofap/admin/statistics',
+    method: 'get',
   })
 }
 

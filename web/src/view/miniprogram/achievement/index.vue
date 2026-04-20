@@ -82,7 +82,7 @@
           <el-card class="stat-card">
             <div class="stat-content">
               <div class="stat-icon legendary-icon">
-                <el-icon><Crown /></el-icon>
+                <el-icon><Star /></el-icon>
               </div>
               <div class="stat-info">
                 <div class="stat-number">{{ statistics.legendaryCount }}</div>
@@ -301,8 +301,8 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Trophy, Check, Star, Crown } from '@element-plus/icons-vue'
-import { getAchievementList, getAchievementDetail, createAchievement, updateAchievement, deleteAchievement, getAchievementStatistics } from '@/api/miniprogram'
+import { Trophy, Check, Star } from '@element-plus/icons-vue'
+import { getAchievementList, getAchievementDetail, createAchievement, updateAchievement, deleteAchievement as deleteAchievementApi, getAchievementStatistics } from '@/api/miniprogram'
 import { formatTimeToStr } from '@/utils/date'
 
 defineOptions({
@@ -488,7 +488,7 @@ const deleteAchievement = (row) => {
       type: 'warning'
     }
   ).then(async() => {
-    const res = await deleteAchievement(row.ID)
+    const res = await deleteAchievementApi(row.ID)
     if (res.code === 0) {
       ElMessage.success('删除成功')
       getTableData()
@@ -632,7 +632,6 @@ onMounted(() => {
             background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
           }
         }
-        
         .stat-info {
           flex: 1;
           

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>学习内容</title>
+    <title>性教育内容</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -17,7 +17,8 @@
                         danger: '#EF4444',
                         success: '#10B981',
                         background: '#F8FAFC',
-                        surface: '#FFFFFF'
+                        surface: '#FFFFFF',
+                        'sexual-health': '#EC4899'
                     }
                 }
             }
@@ -40,7 +41,7 @@
     <!-- Header -->
     <div class="bg-surface px-6 pt-4 pb-4 border-b border-gray-100">
         <div class="flex items-center justify-between mb-4">
-            <h1 class="text-2xl font-bold text-gray-800">学习内容</h1>
+            <h1 class="text-2xl font-bold text-gray-800">性教育内容</h1>
             <button class="p-2 bg-gray-100 rounded-full">
                 <i class="fas fa-search text-gray-600"></i>
             </button>
@@ -49,27 +50,27 @@
         <!-- Category Tabs -->
         <div class="flex space-x-2 overflow-x-auto">
             <button class="flex-shrink-0 px-4 py-2 bg-primary text-white rounded-full text-sm font-medium">推荐</button>
-            <button class="flex-shrink-0 px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">文章</button>
-            <button class="flex-shrink-0 px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">视频</button>
-            <button class="flex-shrink-0 px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">音频</button>
+            <button class="flex-shrink-0 px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">生理健康</button>
+            <button class="flex-shrink-0 px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">心理健康</button>
+            <button class="flex-shrink-0 px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">关系沟通</button>
         </div>
     </div>
 
     <!-- Main Content -->
     <div class="px-6 py-6 pb-20">
         <!-- Featured Course -->
-        <div class="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-6 mb-6 border border-purple-100">
+        <div class="bg-gradient-to-r from-sexual-health/10 to-pink-50 rounded-2xl p-6 mb-6 border border-sexual-health/20">
             <div class="flex items-start space-x-4">
-                <!-- Image from Unsplash: Self-improvement/mindfulness concept -->
-                <img src="https://images.unsplash.com/photo-1499336315816-097655dcfbda?w=80&h=80&fit=crop&auto=format&q=80" 
-                     alt="Self improvement" 
+                <!-- Image from Unsplash: Couple/Relationship concept -->
+                <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=80&h=80&fit=crop&auto=format&q=80" 
+                     alt="Relationship" 
                      class="w-20 h-20 object-cover rounded-xl">
-                <!-- Source: https://unsplash.com/photo-1499336315816-097655dcfbda -->
+                <!-- Source: https://unsplash.com/photo-1516589178581-6cd7833ae3b2 -->
                 <div class="flex-1">
-                    <span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">精品课程</span>
-                    <h3 class="font-bold text-gray-800 mt-2 mb-1">21天自控力训练营</h3>
-                    <p class="text-sm text-gray-600 mb-3">科学方法帮你建立持久的自控习惯</p>
-                    <button class="bg-purple-600 text-white px-4 py-2 rounded-xl text-sm font-medium">
+                    <span class="px-2 py-1 bg-sexual-health/20 text-sexual-health text-xs rounded-full">精品课程</span>
+                    <h3 class="font-bold text-gray-800 mt-2 mb-1">健康性观念建立</h3>
+                    <p class="text-sm text-gray-600 mb-3">科学认识性健康，建立正确的性观念</p>
+                    <button class="bg-sexual-health text-white px-4 py-2 rounded-xl text-sm font-medium">
                         开始学习
                     </button>
                 </div>
@@ -84,25 +85,25 @@
                 <div>
                     <div class="flex justify-between items-center mb-2">
                         <span class="font-medium text-gray-800">本周学习时长</span>
-                        <span class="text-primary font-semibold">3.5小时</span>
+                        <span class="text-primary font-semibold">2.5小时</span>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-primary h-2 rounded-full" style="width: 70%"></div>
+                        <div class="bg-primary h-2 rounded-full" style="width: 50%"></div>
                     </div>
                     <p class="text-xs text-gray-600 mt-1">目标: 5小时/周</p>
                 </div>
                 
                 <div class="grid grid-cols-3 gap-4 text-center pt-4 border-t border-gray-100">
                     <div>
-                        <div class="text-xl font-bold text-green-600">12</div>
+                        <div class="text-xl font-bold text-green-600">8</div>
                         <div class="text-xs text-gray-600">文章已读</div>
                     </div>
                     <div>
-                        <div class="text-xl font-bold text-blue-600">5</div>
+                        <div class="text-xl font-bold text-blue-600">3</div>
                         <div class="text-xs text-gray-600">视频已看</div>
                     </div>
                     <div>
-                        <div class="text-xl font-bold text-purple-600">8</div>
+                        <div class="text-xl font-bold text-purple-600">5</div>
                         <div class="text-xs text-gray-600">音频已听</div>
                     </div>
                 </div>
@@ -119,18 +120,18 @@
             <div class="space-y-4">
                 <div class="bg-surface rounded-2xl p-4 shadow-sm">
                     <div class="flex space-x-4">
-                        <!-- Image from Unsplash: Books/Reading concept -->
-                        <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=80&h=60&fit=crop&auto=format&q=80" 
-                             alt="Reading" 
+                        <!-- Image from Unsplash: Health/Wellness concept -->
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=80&h=60&fit=crop&auto=format&q=80" 
+                             alt="Health" 
                              class="w-20 h-15 object-cover rounded-xl">
-                        <!-- Source: https://unsplash.com/photo-1481627834876-b7833e8f5570 -->
+                        <!-- Source: https://unsplash.com/photo-1571019613454-1cb2f99b2d8b -->
                         <div class="flex-1">
-                            <h4 class="font-semibold text-gray-800 mb-1">如何建立健康的生活习惯</h4>
-                            <p class="text-sm text-gray-600 mb-2">从小习惯开始，逐步建立健康的生活方式...</p>
+                            <h4 class="font-semibold text-gray-800 mb-1">性健康基础知识</h4>
+                            <p class="text-sm text-gray-600 mb-2">了解性健康的基本概念和重要性...</p>
                             <div class="flex items-center space-x-4 text-xs text-gray-500">
-                                <span><i class="fas fa-clock mr-1"></i>8分钟</span>
-                                <span><i class="fas fa-heart mr-1"></i>234</span>
-                                <span><i class="fas fa-eye mr-1"></i>1.2k</span>
+                                <span><i class="fas fa-clock mr-1"></i>10分钟</span>
+                                <span><i class="fas fa-heart mr-1"></i>156</span>
+                                <span><i class="fas fa-eye mr-1"></i>892</span>
                             </div>
                         </div>
                     </div>
@@ -138,18 +139,18 @@
 
                 <div class="bg-surface rounded-2xl p-4 shadow-sm">
                     <div class="flex space-x-4">
-                        <!-- Image from Unsplash: Psychology/Brain concept -->
-                        <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=80&h=60&fit=crop&auto=format&q=80" 
-                             alt="Psychology" 
+                        <!-- Image from Unsplash: Communication concept -->
+                        <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=80&h=60&fit=crop&auto=format&q=80" 
+                             alt="Communication" 
                              class="w-20 h-15 object-cover rounded-xl">
-                        <!-- Source: https://unsplash.com/photo-1559757148-5c350d0d3c56 -->
+                        <!-- Source: https://unsplash.com/photo-1551836022-d5d88e9218df -->
                         <div class="flex-1">
-                            <h4 class="font-semibold text-gray-800 mb-1">理解大脑的奖励机制</h4>
-                            <p class="text-sm text-gray-600 mb-2">科学解释成瘾的神经学原理和应对方法...</p>
+                            <h4 class="font-semibold text-gray-800 mb-1">伴侣间性沟通技巧</h4>
+                            <p class="text-sm text-gray-600 mb-2">学会与伴侣进行健康的性话题沟通...</p>
                             <div class="flex items-center space-x-4 text-xs text-gray-500">
-                                <span><i class="fas fa-clock mr-1"></i>12分钟</span>
-                                <span><i class="fas fa-heart mr-1"></i>189</span>
-                                <span><i class="fas fa-eye mr-1"></i>856</span>
+                                <span><i class="fas fa-clock mr-1"></i>15分钟</span>
+                                <span><i class="fas fa-heart mr-1"></i>203</span>
+                                <span><i class="fas fa-eye mr-1"></i>1.1k</span>
                             </div>
                         </div>
                     </div>
@@ -167,26 +168,26 @@
             <div class="space-y-4">
                 <div class="bg-surface rounded-2xl p-4 shadow-sm">
                     <div class="relative mb-3">
-                        <!-- Image from Unsplash: Meditation/Wellness concept -->
-                        <img src="https://images.unsplash.com/photo-1545389336-cf090694435e?w=300&h=160&fit=crop&auto=format&q=80" 
-                             alt="Meditation" 
+                        <!-- Image from Unsplash: Wellness/Health concept -->
+                        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=300&h=160&fit=crop&auto=format&q=80" 
+                             alt="Wellness" 
                              class="w-full h-40 object-cover rounded-xl">
-                        <!-- Source: https://unsplash.com/photo-1545389336-cf090694435e -->
+                        <!-- Source: https://unsplash.com/photo-1576091160399-112ba8d25d1f -->
                         <div class="absolute inset-0 bg-black/20 rounded-xl flex items-center justify-center">
                             <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center">
                                 <i class="fas fa-play text-gray-800 ml-1"></i>
                             </div>
                         </div>
                         <div class="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
-                            15:30
+                            18:45
                         </div>
                     </div>
-                    <h4 class="font-semibold text-gray-800 mb-1">正念冥想入门指南</h4>
-                    <p class="text-sm text-gray-600 mb-2">学会用冥想管理情绪和冲动</p>
+                    <h4 class="font-semibold text-gray-800 mb-1">性健康专家讲座</h4>
+                    <p class="text-sm text-gray-600 mb-2">专业医生讲解性健康的重要性和维护方法</p>
                     <div class="flex items-center space-x-4 text-xs text-gray-500">
-                        <span><i class="fas fa-play mr-1"></i>3.2k</span>
-                        <span><i class="fas fa-thumbs-up mr-1"></i>127</span>
-                        <span><i class="fas fa-comment mr-1"></i>23</span>
+                        <span><i class="fas fa-play mr-1"></i>2.8k</span>
+                        <span><i class="fas fa-thumbs-up mr-1"></i>145</span>
+                        <span><i class="fas fa-comment mr-1"></i>32</span>
                     </div>
                 </div>
             </div>
@@ -201,19 +202,19 @@
             
             <div class="bg-surface rounded-2xl p-4 shadow-sm">
                 <div class="flex items-center space-x-4">
-                    <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-blue-500 rounded-xl flex items-center justify-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-sexual-health to-pink-500 rounded-xl flex items-center justify-center">
                         <i class="fas fa-headphones text-white text-xl"></i>
                     </div>
                     <div class="flex-1">
-                        <h4 class="font-semibold text-gray-800 mb-1">睡前放松冥想</h4>
-                        <p class="text-sm text-gray-600 mb-2">帮助改善睡眠质量的引导冥想</p>
+                        <h4 class="font-semibold text-gray-800 mb-1">性健康冥想指导</h4>
+                        <p class="text-sm text-gray-600 mb-2">通过冥想提升性健康意识和自我认知</p>
                         <div class="flex items-center space-x-4 text-xs text-gray-500">
-                            <span><i class="fas fa-clock mr-1"></i>20分钟</span>
+                            <span><i class="fas fa-clock mr-1"></i>25分钟</span>
                             <span><i class="fas fa-download mr-1"></i>已下载</span>
                         </div>
                     </div>
-                    <button class="p-3 bg-primary/10 rounded-full">
-                        <i class="fas fa-play text-primary"></i>
+                    <button class="p-3 bg-sexual-health/10 rounded-full">
+                        <i class="fas fa-play text-sexual-health"></i>
                     </button>
                 </div>
             </div>
@@ -228,12 +229,12 @@
                 <span class="text-xs text-gray-400">主页</span>
             </button>
             <button class="flex flex-col items-center space-y-1">
-                <i class="fas fa-chart-line text-gray-400 text-lg"></i>
-                <span class="text-xs text-gray-400">进度</span>
+                <i class="fas fa-heart text-gray-400 text-lg"></i>
+                <span class="text-xs text-gray-400">性健康</span>
             </button>
             <button class="flex flex-col items-center space-y-1">
                 <i class="fas fa-users text-gray-400 text-lg"></i>
-                <span class="text-xs text-gray-400">社区</span>
+                <span class="text-xs text-gray-400">伴侣</span>
             </button>
             <button class="flex flex-col items-center space-y-1">
                 <i class="fas fa-book text-primary text-lg"></i>

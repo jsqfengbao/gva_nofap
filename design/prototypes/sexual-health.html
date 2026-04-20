@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>性健康管理</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sexual-health': '#EC4899',
+                        'sexual-light': '#FCE7F3'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow-sm border-b border-gray-200">
+        <div class="flex items-center justify-between px-4 py-3">
+            <div class="flex items-center">
+                <i class="fas fa-arrow-left text-gray-600 mr-3"></i>
+                <h1 class="text-lg font-semibold text-gray-900">性健康管理</h1>
+            </div>
+            <i class="fas fa-cog text-gray-600"></i>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="p-4 space-y-6">
+        <!-- Current Status Card -->
+        <div class="bg-gradient-to-r from-sexual-health to-pink-500 rounded-xl p-4 text-white">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-lg font-semibold">当前性健康状态</h2>
+                <i class="fas fa-heart text-xl"></i>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="text-center">
+                    <div class="text-2xl font-bold">78</div>
+                    <div class="text-sm opacity-90">综合评分</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold">良好</div>
+                    <div class="text-sm opacity-90">健康等级</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-2 gap-3">
+            <button class="bg-white rounded-lg p-4 shadow-sm border border-gray-200 text-center">
+                <i class="fas fa-plus-circle text-sexual-health text-2xl mb-2"></i>
+                <div class="text-sm font-medium text-gray-900">记录质量</div>
+            </button>
+            <button class="bg-white rounded-lg p-4 shadow-sm border border-gray-200 text-center">
+                <i class="fas fa-chart-line text-sexual-health text-2xl mb-2"></i>
+                <div class="text-sm font-medium text-gray-900">查看趋势</div>
+            </button>
+        </div>
+
+        <!-- Assessment Section -->
+        <div class="bg-white rounded-lg p-4 shadow-sm">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-semibold text-gray-900">性健康评估</h3>
+                <span class="text-xs text-gray-500">上次评估: 2周前</span>
+            </div>
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-600">生理健康</span>
+                    <div class="flex items-center">
+                        <div class="w-20 bg-gray-200 rounded-full h-2 mr-2">
+                            <div class="bg-sexual-health h-2 rounded-full" style="width: 85%"></div>
+                        </div>
+                        <span class="text-sm font-medium">85%</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-600">心理健康</span>
+                    <div class="flex items-center">
+                        <div class="w-20 bg-gray-200 rounded-full h-2 mr-2">
+                            <div class="bg-sexual-health h-2 rounded-full" style="width: 72%"></div>
+                        </div>
+                        <span class="text-sm font-medium">72%</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-600">关系质量</span>
+                    <div class="flex items-center">
+                        <div class="w-20 bg-gray-200 rounded-full h-2 mr-2">
+                            <div class="bg-sexual-health h-2 rounded-full" style="width: 90%"></div>
+                        </div>
+                        <span class="text-sm font-medium">90%</span>
+                    </div>
+                </div>
+            </div>
+            <button class="w-full mt-4 bg-sexual-health text-white rounded-lg py-2 text-sm font-medium">
+                重新评估
+            </button>
+        </div>
+
+        <!-- Recent Records -->
+        <div class="bg-white rounded-lg p-4 shadow-sm">
+            <h3 class="font-semibold text-gray-900 mb-3">最近记录</h3>
+            <div class="space-y-3">
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-sexual-light rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-heart text-sexual-health"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium text-gray-900">满意度: 8/10</div>
+                            <div class="text-xs text-gray-500">2天前</div>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-sexual-light rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-heart text-sexual-health"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium text-gray-900">满意度: 7/10</div>
+                            <div class="text-xs text-gray-500">5天前</div>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Improvement Suggestions -->
+        <div class="bg-white rounded-lg p-4 shadow-sm">
+            <h3 class="font-semibold text-gray-900 mb-3">改善建议</h3>
+            <div class="space-y-3">
+                <div class="flex items-start p-3 bg-sexual-light rounded-lg">
+                    <i class="fas fa-lightbulb text-sexual-health mt-1 mr-3"></i>
+                    <div>
+                        <div class="text-sm font-medium text-gray-900">增加沟通频率</div>
+                        <div class="text-xs text-gray-600 mt-1">建议与伴侣增加情感沟通，提升关系质量</div>
+                    </div>
+                </div>
+                <div class="flex items-start p-3 bg-sexual-light rounded-lg">
+                    <i class="fas fa-lightbulb text-sexual-health mt-1 mr-3"></i>
+                    <div>
+                        <div class="text-sm font-medium text-gray-900">学习放松技巧</div>
+                        <div class="text-xs text-gray-600 mt-1">尝试冥想和深呼吸，减少压力对性生活的影响</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+        <div class="flex justify-around py-2">
+            <div class="flex flex-col items-center">
+                <i class="fas fa-home text-gray-400 text-lg"></i>
+                <span class="text-xs text-gray-400 mt-1">首页</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <i class="fas fa-heart text-sexual-health text-lg"></i>
+                <span class="text-xs text-sexual-health mt-1">性健康</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <i class="fas fa-users text-gray-400 text-lg"></i>
+                <span class="text-xs text-gray-400 mt-1">伴侣</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <i class="fas fa-comments text-gray-400 text-lg"></i>
+                <span class="text-xs text-gray-400 mt-1">社区</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <i class="fas fa-user text-gray-400 text-lg"></i>
+                <span class="text-xs text-gray-400 mt-1">我的</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

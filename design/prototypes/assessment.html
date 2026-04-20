@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>色隐指数评估</title>
+    <title>双重评估系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -17,7 +17,8 @@
                         danger: '#EF4444',
                         success: '#10B981',
                         background: '#F8FAFC',
-                        surface: '#FFFFFF'
+                        surface: '#FFFFFF',
+                        'sexual-health': '#EC4899'
                     }
                 }
             }
@@ -29,6 +30,9 @@
         }
         .progress-bar {
             background: linear-gradient(90deg, #34D399 0%, #10B981 100%);
+        }
+        .progress-bar-sexual {
+            background: linear-gradient(90deg, #EC4899 0%, #F472B6 100%);
         }
     </style>
 </head>
@@ -57,8 +61,18 @@
             </button>
         </div>
         
-        <!-- Progress Bar -->
+        <!-- Assessment Type Selector -->
         <div class="px-4 pb-3">
+            <div class="flex space-x-2 mb-3">
+                <button class="flex-1 py-2 px-4 bg-primary text-white rounded-lg text-sm font-medium">
+                    色隐指数评估
+                </button>
+                <button class="flex-1 py-2 px-4 bg-gray-200 text-gray-600 rounded-lg text-sm font-medium">
+                    性健康评估
+                </button>
+            </div>
+            
+            <!-- Progress Bar -->
             <div class="flex items-center justify-between mb-2">
                 <span class="text-sm text-gray-600">问题 3 / 25</span>
                 <span class="text-sm text-gray-600">12%</span>
@@ -150,6 +164,27 @@
                     <p class="text-sm text-blue-700">
                         本评估基于国际认可的心理健康评估标准，结果仅供参考。如需专业帮助，建议咨询心理健康专家。
                     </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assessment Comparison -->
+        <div class="mt-6 p-4 bg-gray-50 rounded-xl">
+            <h4 class="font-medium text-gray-800 mb-3">评估类型对比</h4>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-white p-3 rounded-lg border border-gray-200">
+                    <div class="flex items-center mb-2">
+                        <i class="fas fa-brain text-secondary mr-2"></i>
+                        <span class="text-sm font-medium text-gray-800">色隐指数评估</span>
+                    </div>
+                    <p class="text-xs text-gray-600">评估色情内容依赖程度，帮助制定戒色计划</p>
+                </div>
+                <div class="bg-white p-3 rounded-lg border border-gray-200">
+                    <div class="flex items-center mb-2">
+                        <i class="fas fa-heart text-sexual-health mr-2"></i>
+                        <span class="text-sm font-medium text-gray-800">性健康评估</span>
+                    </div>
+                    <p class="text-xs text-gray-600">评估性生活质量，提供改善建议</p>
                 </div>
             </div>
         </div>

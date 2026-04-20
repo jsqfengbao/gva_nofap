@@ -1,7 +1,7 @@
 package router
 
 import (
-	v1 "github.com/flipped-aurora/gin-vue-admin/server/api/v1"
+	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/api"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/middleware"
 	"github.com/gin-gonic/gin"
 )
@@ -12,7 +12,7 @@ type ProfileRouter struct{}
 func (p *ProfileRouter) InitProfileRouter(Router *gin.RouterGroup) {
 	profileRouter := Router.Group("profile").Use(middleware.MiniprogramJWTAuth())
 	{
-		var userApi = v1.ApiGroupApp.MiniprogramApiGroup.UserApi
+		var userApi = api.ApiGroupApp.UserApi
 		profileRouter.GET("stats", userApi.GetProfileStats)                   // 获取个人中心统计数据
 		profileRouter.GET("settings", userApi.GetUserSettings)                // 获取用户设置
 		profileRouter.PUT("notification", userApi.UpdateNotificationSettings) // 更新通知设置

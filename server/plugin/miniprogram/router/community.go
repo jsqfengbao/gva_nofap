@@ -1,8 +1,9 @@
 package router
 
 import (
-	v1 "github.com/flipped-aurora/gin-vue-admin/server/api/v1"
-	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/middleware"
+	sys_mw "github.com/flipped-aurora/gin-vue-admin/server/middleware"
+	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/api"
+	miniprogram_mw "github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,9 +11,9 @@ type CommunityRouter struct{}
 
 // InitCommunityRouter 初始化社区路由
 func (s *CommunityRouter) InitCommunityRouter(Router *gin.RouterGroup) {
-	communityRouter := Router.Group("community").Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
-	communityRouterWithoutRecord := Router.Group("community").Use(middleware.JWTAuth())
-	var communityApi = v1.ApiGroupApp.MiniprogramApiGroup.CommunityApi
+	communityRouter := Router.Group("community").Use(miniprogram_mw.MiniprogramJWTAuth()).Use(sys_mw.CasbinHandler())
+	communityRouterWithoutRecord := Router.Group("community").Use(miniprogram_mw.MiniprogramJWTAuth())
+	var communityApi = api.ApiGroupApp.CommunityApi
 	{
 		// 需要记录操作日志的路由
 		communityRouter.POST("post", communityApi.CreatePost)             // 创建帖子

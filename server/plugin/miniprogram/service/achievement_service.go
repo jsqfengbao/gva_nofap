@@ -41,14 +41,14 @@ func (s *AchievementService) CheckAchievements(userID uint, tx *gorm.DB) ([]stri
 	var unlockedAchievements []string
 
 	// 获取所有启用的成就
-	var achievements []miniprogram.Achievement
+	var achievements []model.Achievement
 	err := tx.Where("is_active = ?", true).Find(&achievements).Error
 	if err != nil {
 		return nil, err
 	}
 
 	// 获取用户已解锁的成就
-	var userAchievements []miniprogram.UserAchievement
+	var userAchievements []model.UserAchievement
 	err = tx.Where("user_id = ?", userID).Find(&userAchievements).Error
 	if err != nil {
 		return nil, err
@@ -98,7 +98,7 @@ func (s *AchievementService) CheckAchievements(userID uint, tx *gorm.DB) ([]stri
 }
 
 // checkAchievementCondition 检查单个成就条件
-func (s *AchievementService) checkAchievementCondition(userID uint, achievement miniprogram.Achievement, tx *gorm.DB) (bool, error) {
+func (s *AchievementService) checkAchievementCondition(userID uint, achievement model.Achievement, tx *gorm.DB) (bool, error) {
 	var condition AchievementCondition
 	err := json.Unmarshal([]byte(achievement.Condition), &condition)
 	if err != nil {
@@ -124,7 +124,7 @@ func (s *AchievementService) checkAchievementCondition(userID uint, achievement 
 // checkCheckinAchievement 检查打卡类成就
 func (s *AchievementService) checkCheckinAchievement(userID uint, condition AchievementCondition, tx *gorm.DB) (bool, error) {
 	// 获取戒色记录
-	var record miniprogram.AbstinenceRecord
+	var record model.AbstinenceRecord
 	err := tx.Where("user_id = ? AND status = 1", userID).First(&record).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -148,7 +148,7 @@ func (s *AchievementService) checkCheckinAchievement(userID uint, condition Achi
 
 // checkLevelAchievement 检查等级类成就
 func (s *AchievementService) checkLevelAchievement(userID uint, condition AchievementCondition, tx *gorm.DB) (bool, error) {
-	var record miniprogram.AbstinenceRecord
+	var record model.AbstinenceRecord
 	err := tx.Where("user_id = ? AND status = 1", userID).First(&record).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -169,7 +169,7 @@ func (s *AchievementService) checkCommunityAchievement(userID uint, condition Ac
 	// 检查发帖数量
 	if condition.PostCount > 0 {
 		var count int64
-		err := tx.Model(&miniprogram.CommunityPost{}).Where("user_id = ?", userID).Count(&count).Error
+		err := tx.Model(&model.CommunityPost{}).Where("user_id = ?", userID).Count(&count).Error
 		if err != nil {
 			return false, err
 		}
@@ -179,7 +179,7 @@ func (s *AchievementService) checkCommunityAchievement(userID uint, condition Ac
 	// 检查单篇动态点赞数
 	if condition.PostLikes > 0 {
 		var maxLikes int64
-		err := tx.Model(&miniprogram.CommunityPost{}).
+		err := tx.Model(&model.CommunityPost{}).
 			Where("user_id = ?", userID).
 			Select("MAX(likes_count)").
 			Scan(&maxLikes).Error
@@ -192,7 +192,7 @@ func (s *AchievementService) checkCommunityAchievement(userID uint, condition Ac
 	// 检查累计点赞数
 	if condition.TotalLikes > 0 {
 		var totalLikes int64
-		err := tx.Model(&miniprogram.CommunityPost{}).
+		err := tx.Model(&model.CommunityPost{}).
 			Where("user_id = ?", userID).
 			Select("SUM(likes_count)").
 			Scan(&totalLikes).Error
@@ -210,7 +210,7 @@ func (s *AchievementService) checkLearningAchievement(userID uint, condition Ach
 	// 检查完成的学习内容数量
 	if condition.LearningCompleted > 0 {
 		var count int64
-		err := tx.Model(&miniprogram.UserLearningRecord{}).
+		err := tx.Model(&model.UserLearningRecord{}).
 			Where("user_id = ? AND is_completed = ?", userID, true).
 			Count(&count).Error
 		if err != nil {
@@ -222,7 +222,7 @@ func (s *AchievementService) checkLearningAchievement(userID uint, condition Ach
 	// 检查学习时长（小时）
 	if condition.LearningHours > 0 {
 		var totalDuration int64
-		err := tx.Model(&miniprogram.UserLearningRecord{}).
+		err := tx.Model(&model.UserLearningRecord{}).
 			Where("user_id = ?", userID).
 			Select("SUM(duration)").
 			Scan(&totalDuration).Error
@@ -237,7 +237,7 @@ func (s *AchievementService) checkLearningAchievement(userID uint, condition Ach
 	if condition.AllTypesCompleted {
 		// 获取所有学习内容类型
 		var allTypes []int
-		err := tx.Model(&miniprogram.LearningContent{}).
+		err := tx.Model(&model.LearningContent{}).
 			Distinct("content_type").
 			Pluck("content_type", &allTypes).Error
 		if err != nil {
@@ -270,7 +270,7 @@ func (s *AchievementService) checkSpecialAchievement(userID uint, condition Achi
 	// 检查帮助响应次数
 	if condition.HelpResponses > 0 {
 		var count int64
-		err := tx.Model(&miniprogram.HelpResponse{}).
+		err := tx.Model(&model.HelpResponse{}).
 			Where("user_id = ?", userID).
 			Count(&count).Error
 		if err != nil {
@@ -281,7 +281,7 @@ func (s *AchievementService) checkSpecialAchievement(userID uint, condition Achi
 
 	// 检查首次评估是否正常
 	if condition.FirstAssessmentNormal {
-		var firstAssessment miniprogram.AssessmentResult
+		var firstAssessment model.AssessmentResult
 		err := tx.Where("user_id = ?", userID).
 			Order("test_date ASC").
 			First(&firstAssessment).Error
@@ -297,7 +297,7 @@ func (s *AchievementService) checkSpecialAchievement(userID uint, condition Achi
 	// 检查风险等级改善
 	if condition.RiskLevelImprovement != "" {
 		// 获取第一次和最后一次评估
-		var firstAssessment, lastAssessment miniprogram.AssessmentResult
+		var firstAssessment, lastAssessment model.AssessmentResult
 
 		err := tx.Where("user_id = ?", userID).
 			Order("test_date ASC").
@@ -326,7 +326,7 @@ func (s *AchievementService) checkSpecialAchievement(userID uint, condition Achi
 		endOfMonth := startOfMonth.AddDate(0, 1, -1)
 
 		var avgMood sql.NullFloat64
-		err := tx.Model(&miniprogram.DailyCheckin{}).
+		err := tx.Model(&model.DailyCheckin{}).
 			Where("user_id = ? AND checkin_date BETWEEN ? AND ?", userID, startOfMonth, endOfMonth).
 			Select("AVG(mood_level)").
 			Scan(&avgMood).Error
@@ -348,7 +348,7 @@ func (s *AchievementService) checkSpecialAchievement(userID uint, condition Achi
 
 // unlockAchievement 解锁成就
 func (s *AchievementService) unlockAchievement(userID uint, achievementID uint, tx *gorm.DB) error {
-	userAchievement := miniprogram.UserAchievement{
+	userAchievement := model.UserAchievement{
 		UserID:        userID,
 		AchievementID: achievementID,
 		UnlockedAt:    time.Now(),
@@ -361,7 +361,7 @@ func (s *AchievementService) unlockAchievement(userID uint, achievementID uint, 
 
 // addExperienceReward 添加经验值奖励
 func (s *AchievementService) addExperienceReward(userID uint, rewards int, tx *gorm.DB) error {
-	var record miniprogram.AbstinenceRecord
+	var record model.AbstinenceRecord
 	err := tx.Where("user_id = ? AND status = 1", userID).First(&record).Error
 	if err != nil {
 		return err
@@ -374,7 +374,7 @@ func (s *AchievementService) addExperienceReward(userID uint, rewards int, tx *g
 // GetUserAchievements 获取用户成就列表
 func (s *AchievementService) GetUserAchievements(userID uint) (*response.UserAchievementsResponse, error) {
 	// 获取所有启用的成就
-	var allAchievements []miniprogram.Achievement
+	var allAchievements []model.Achievement
 	err := global.GVA_DB.Where("is_active = ?", true).
 		Order("category ASC, display_order ASC").
 		Find(&allAchievements).Error
@@ -383,7 +383,7 @@ func (s *AchievementService) GetUserAchievements(userID uint) (*response.UserAch
 	}
 
 	// 获取用户已解锁的成就
-	var userAchievements []miniprogram.UserAchievement
+	var userAchievements []model.UserAchievement
 	err = global.GVA_DB.Preload("Achievement").
 		Where("user_id = ?", userID).
 		Find(&userAchievements).Error
@@ -392,7 +392,7 @@ func (s *AchievementService) GetUserAchievements(userID uint) (*response.UserAch
 	}
 
 	// 创建已解锁成就映射
-	unlockedMap := make(map[uint]miniprogram.UserAchievement)
+	unlockedMap := make(map[uint]model.UserAchievement)
 	for _, ua := range userAchievements {
 		unlockedMap[ua.AchievementID] = ua
 	}
@@ -446,13 +446,13 @@ func (s *AchievementService) GetUserAchievements(userID uint) (*response.UserAch
 }
 
 // getRecentUnlocked 获取最近解锁的成就
-func (s *AchievementService) getRecentUnlocked(userAchievements []miniprogram.UserAchievement, limit int) []response.AchievementItem {
+func (s *AchievementService) getRecentUnlocked(userAchievements []model.UserAchievement, limit int) []response.AchievementItem {
 	if len(userAchievements) == 0 {
 		return []response.AchievementItem{}
 	}
 
 	// 按解锁时间倒序排序
-	achievements := make([]miniprogram.UserAchievement, len(userAchievements))
+	achievements := make([]model.UserAchievement, len(userAchievements))
 	copy(achievements, userAchievements)
 
 	// 简单排序：按解锁时间倒序
@@ -493,7 +493,7 @@ func (s *AchievementService) getRecentUnlocked(userAchievements []miniprogram.Us
 func (s *AchievementService) GetAchievementStats(userID uint) (*response.AchievementStatsResponse, error) {
 	// 获取总成就数
 	var totalAchievements int64
-	err := global.GVA_DB.Model(&miniprogram.Achievement{}).
+	err := global.GVA_DB.Model(&model.Achievement{}).
 		Where("is_active = ?", true).
 		Count(&totalAchievements).Error
 	if err != nil {
@@ -502,7 +502,7 @@ func (s *AchievementService) GetAchievementStats(userID uint) (*response.Achieve
 
 	// 获取用户解锁的成就数
 	var unlockedAchievements int64
-	err = global.GVA_DB.Model(&miniprogram.UserAchievement{}).
+	err = global.GVA_DB.Model(&model.UserAchievement{}).
 		Where("user_id = ?", userID).
 		Count(&unlockedAchievements).Error
 	if err != nil {
@@ -515,7 +515,7 @@ func (s *AchievementService) GetAchievementStats(userID uint) (*response.Achieve
 		var total, unlocked int64
 
 		// 获取该稀有度总数
-		err = global.GVA_DB.Model(&miniprogram.Achievement{}).
+		err = global.GVA_DB.Model(&model.Achievement{}).
 			Where("is_active = ? AND rarity = ?", true, rarity).
 			Count(&total).Error
 		if err != nil {
@@ -554,14 +554,14 @@ func (s *AchievementService) GetAchievementStats(userID uint) (*response.Achieve
 // GetAchievementProgress 获取成就进度信息
 func (s *AchievementService) GetAchievementProgress(userID uint) ([]response.AchievementProgressResponse, error) {
 	// 获取所有未完成的成就
-	var achievements []miniprogram.Achievement
+	var achievements []model.Achievement
 	err := global.GVA_DB.Where("is_active = ?", true).Find(&achievements).Error
 	if err != nil {
 		return nil, err
 	}
 
 	// 获取用户已解锁的成就
-	var userAchievements []miniprogram.UserAchievement
+	var userAchievements []model.UserAchievement
 	err = global.GVA_DB.Where("user_id = ?", userID).Find(&userAchievements).Error
 	if err != nil {
 		return nil, err
@@ -611,7 +611,7 @@ func (s *AchievementService) GetAchievementProgress(userID uint) ([]response.Ach
 }
 
 // calculateAchievementProgress 计算成就进度
-func (s *AchievementService) calculateAchievementProgress(userID uint, achievement miniprogram.Achievement) (int, int, error) {
+func (s *AchievementService) calculateAchievementProgress(userID uint, achievement model.Achievement) (int, int, error) {
 	var condition AchievementCondition
 	err := json.Unmarshal([]byte(achievement.Condition), &condition)
 	if err != nil {
@@ -637,7 +637,7 @@ func (s *AchievementService) calculateAchievementProgress(userID uint, achieveme
 // getCheckinProgress 获取打卡类成就进度
 func (s *AchievementService) getCheckinProgress(userID uint, condition AchievementCondition) (int, int, error) {
 	// 获取戒色记录
-	var record miniprogram.AbstinenceRecord
+	var record model.AbstinenceRecord
 	err := global.GVA_DB.Where("user_id = ? AND status = 1", userID).First(&record).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -661,7 +661,7 @@ func (s *AchievementService) getCheckinProgress(userID uint, condition Achieveme
 
 // getLevelProgress 获取等级类成就进度
 func (s *AchievementService) getLevelProgress(userID uint, condition AchievementCondition) (int, int, error) {
-	var record miniprogram.AbstinenceRecord
+	var record model.AbstinenceRecord
 	err := global.GVA_DB.Where("user_id = ? AND status = 1", userID).First(&record).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -682,7 +682,7 @@ func (s *AchievementService) getCommunityProgress(userID uint, condition Achieve
 	// 检查发帖数量进度
 	if condition.PostCount > 0 {
 		var count int64
-		err := global.GVA_DB.Model(&miniprogram.CommunityPost{}).Where("user_id = ?", userID).Count(&count).Error
+		err := global.GVA_DB.Model(&model.CommunityPost{}).Where("user_id = ?", userID).Count(&count).Error
 		if err != nil {
 			return 0, 0, err
 		}
@@ -692,7 +692,7 @@ func (s *AchievementService) getCommunityProgress(userID uint, condition Achieve
 	// 检查累计点赞数进度
 	if condition.TotalLikes > 0 {
 		var totalLikes int64
-		err := global.GVA_DB.Model(&miniprogram.CommunityPost{}).
+		err := global.GVA_DB.Model(&model.CommunityPost{}).
 			Where("user_id = ?", userID).
 			Select("SUM(likes_count)").
 			Scan(&totalLikes).Error
@@ -710,7 +710,7 @@ func (s *AchievementService) getLearningProgress(userID uint, condition Achievem
 	// 检查完成的学习内容数量进度
 	if condition.LearningCompleted > 0 {
 		var count int64
-		err := global.GVA_DB.Model(&miniprogram.UserLearningRecord{}).
+		err := global.GVA_DB.Model(&model.UserLearningRecord{}).
 			Where("user_id = ? AND is_completed = ?", userID, true).
 			Count(&count).Error
 		if err != nil {
@@ -722,7 +722,7 @@ func (s *AchievementService) getLearningProgress(userID uint, condition Achievem
 	// 检查学习时长进度
 	if condition.LearningHours > 0 {
 		var totalDuration int64
-		err := global.GVA_DB.Model(&miniprogram.UserLearningRecord{}).
+		err := global.GVA_DB.Model(&model.UserLearningRecord{}).
 			Where("user_id = ?", userID).
 			Select("SUM(duration)").
 			Scan(&totalDuration).Error
@@ -741,7 +741,7 @@ func (s *AchievementService) getSpecialProgress(userID uint, condition Achieveme
 	// 检查帮助响应次数进度
 	if condition.HelpResponses > 0 {
 		var count int64
-		err := global.GVA_DB.Model(&miniprogram.HelpResponse{}).
+		err := global.GVA_DB.Model(&model.HelpResponse{}).
 			Where("user_id = ?", userID).
 			Count(&count).Error
 		if err != nil {
@@ -793,7 +793,7 @@ func (s *AchievementService) GetUserAchievementsForProfile(userID uint, limit in
 
 	if recent {
 		// 获取最近解锁的成就
-		var userAchievements []miniprogram.UserAchievement
+		var userAchievements []model.UserAchievement
 		err := global.GVA_DB.Preload("Achievement").
 			Where("user_id = ?", userID).
 			Order("unlocked_at DESC").
@@ -820,7 +820,7 @@ func (s *AchievementService) GetUserAchievementsForProfile(userID uint, limit in
 		}
 	} else {
 		// 获取所有成就，包括未解锁的
-		var allAchievements []miniprogram.Achievement
+		var allAchievements []model.Achievement
 		err := global.GVA_DB.Where("is_active = ?", true).
 			Order("category ASC, display_order ASC").
 			Limit(limit).
@@ -830,14 +830,14 @@ func (s *AchievementService) GetUserAchievementsForProfile(userID uint, limit in
 		}
 
 		// 获取用户已解锁的成就
-		var userAchievements []miniprogram.UserAchievement
+		var userAchievements []model.UserAchievement
 		err = global.GVA_DB.Where("user_id = ?", userID).Find(&userAchievements).Error
 		if err != nil {
 			return nil, err
 		}
 
 		// 创建已解锁成就映射
-		unlockedMap := make(map[uint]miniprogram.UserAchievement)
+		unlockedMap := make(map[uint]model.UserAchievement)
 		for _, ua := range userAchievements {
 			unlockedMap[ua.AchievementID] = ua
 		}

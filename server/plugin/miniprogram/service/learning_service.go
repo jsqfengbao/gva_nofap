@@ -16,8 +16,8 @@ import (
 type LearningService struct{}
 
 // CreateLearningContent 创建学习内容
-func (s *LearningService) CreateLearningContent(req request.CreateLearningContentRequest) (miniprogram.LearningContent, error) {
-	content := miniprogram.LearningContent{
+func (s *LearningService) CreateLearningContent(req request.CreateLearningContentRequest) (model.LearningContent, error) {
+	content := model.LearningContent{
 		Title:        req.Title,
 		ContentType:  req.Type,
 		Category:     req.Category,
@@ -62,19 +62,19 @@ func (s *LearningService) UpdateLearningContent(req request.UpdateLearningConten
 		updates["tags"] = req.Tags
 	}
 
-	return global.GVA_DB.Model(&miniprogram.LearningContent{}).
+	return global.GVA_DB.Model(&model.LearningContent{}).
 		Where("id = ?", req.ID).
 		Updates(updates).Error
 }
 
 // DeleteLearningContent 删除学习内容
 func (s *LearningService) DeleteLearningContent(id uint) error {
-	return global.GVA_DB.Model(&miniprogram.LearningContent{}).Where("id = ?", id).Update("status", 0).Error
+	return global.GVA_DB.Model(&model.LearningContent{}).Where("id = ?", id).Update("status", 0).Error
 }
 
 // GetLearningContent 获取单个学习内容
 func (s *LearningService) GetLearningContent(id uint, userID uint) (response.LearningContentResponse, error) {
-	var content miniprogram.LearningContent
+	var content model.LearningContent
 	if err := global.GVA_DB.Where("id = ? AND status != 0", id).First(&content).Error; err != nil {
 		return response.LearningContentResponse{}, err
 	}
@@ -94,10 +94,10 @@ func (s *LearningService) GetLearningContent(id uint, userID uint) (response.Lea
 
 // GetLearningContents 获取学习内容列表
 func (s *LearningService) GetLearningContents(req request.GetLearningContentsRequest, userID uint) (response.LearningContentListResponse, error) {
-	var contents []miniprogram.LearningContent
+	var contents []model.LearningContent
 	var total int64
 
-	db := global.GVA_DB.Model(&miniprogram.LearningContent{}).Where("status != 0")
+	db := global.GVA_DB.Model(&model.LearningContent{}).Where("status != 0")
 
 	// 构建查询条件
 	if req.Category > 0 {
@@ -154,15 +154,15 @@ func (s *LearningService) GetLearningContents(req request.GetLearningContentsReq
 }
 
 // StartLearning 开始学习
-func (s *LearningService) StartLearning(userID uint, contentID uint) (miniprogram.UserLearningRecord, error) {
+func (s *LearningService) StartLearning(userID uint, contentID uint) (model.UserLearningRecord, error) {
 	// 检查内容是否存在
-	var content miniprogram.LearningContent
+	var content model.LearningContent
 	if err := global.GVA_DB.Where("id = ? AND status = 1", contentID).First(&content).Error; err != nil {
-		return miniprogram.UserLearningRecord{}, errors.New("学习内容不存在")
+		return model.UserLearningRecord{}, errors.New("学习内容不存在")
 	}
 
 	// 检查是否已存在学习记录
-	var existingRecord miniprogram.UserLearningRecord
+	var existingRecord model.UserLearningRecord
 	if err := global.GVA_DB.Where("user_id = ? AND content_id = ?", userID, contentID).First(&existingRecord).Error; err == nil {
 		// 已存在记录，更新开始时间
 		existingRecord.StartTime = time.Now()
@@ -173,7 +173,7 @@ func (s *LearningService) StartLearning(userID uint, contentID uint) (miniprogra
 	}
 
 	// 创建新的学习记录
-	record := miniprogram.UserLearningRecord{
+	record := model.UserLearningRecord{
 		UserID:    userID,
 		ContentID: contentID,
 		StartTime: time.Now(),
@@ -185,7 +185,7 @@ func (s *LearningService) StartLearning(userID uint, contentID uint) (miniprogra
 
 // UpdateLearningProgress 更新学习进度
 func (s *LearningService) UpdateLearningProgress(userID uint, contentID uint, progress int, duration int, isCompleted bool) error {
-	var record miniprogram.UserLearningRecord
+	var record model.UserLearningRecord
 	if err := global.GVA_DB.Where("user_id = ? AND content_id = ?", userID, contentID).First(&record).Error; err != nil {
 		return errors.New("学习记录不存在")
 	}
@@ -212,10 +212,10 @@ func (s *LearningService) UpdateLearningProgress(userID uint, contentID uint, pr
 
 // ToggleLike 切换点赞状态
 func (s *LearningService) ToggleLike(userID uint, contentID uint) (bool, error) {
-	var record miniprogram.UserLearningRecord
+	var record model.UserLearningRecord
 	if err := global.GVA_DB.Where("user_id = ? AND content_id = ?", userID, contentID).First(&record).Error; err != nil {
 		// 创建学习记录
-		record = miniprogram.UserLearningRecord{
+		record = model.UserLearningRecord{
 			UserID:    userID,
 			ContentID: contentID,
 			StartTime: time.Now(),
@@ -225,7 +225,7 @@ func (s *LearningService) ToggleLike(userID uint, contentID uint) (bool, error) 
 			return false, err
 		}
 		// 增加内容点赞数
-		global.GVA_DB.Model(&miniprogram.LearningContent{}).Where("id = ?", contentID).Update("like_count", gorm.Expr("like_count + 1"))
+		global.GVA_DB.Model(&model.LearningContent{}).Where("id = ?", contentID).Update("like_count", gorm.Expr("like_count + 1"))
 		return true, nil
 	}
 
@@ -236,9 +236,9 @@ func (s *LearningService) ToggleLike(userID uint, contentID uint) (bool, error) 
 
 	// 更新内容点赞数
 	if newLikedStatus {
-		global.GVA_DB.Model(&miniprogram.LearningContent{}).Where("id = ?", contentID).Update("like_count", gorm.Expr("like_count + 1"))
+		global.GVA_DB.Model(&model.LearningContent{}).Where("id = ?", contentID).Update("like_count", gorm.Expr("like_count + 1"))
 	} else {
-		global.GVA_DB.Model(&miniprogram.LearningContent{}).Where("id = ?", contentID).Update("like_count", gorm.Expr("like_count - 1"))
+		global.GVA_DB.Model(&model.LearningContent{}).Where("id = ?", contentID).Update("like_count", gorm.Expr("like_count - 1"))
 	}
 
 	return newLikedStatus, nil
@@ -246,10 +246,10 @@ func (s *LearningService) ToggleLike(userID uint, contentID uint) (bool, error) 
 
 // ToggleCollect 切换收藏状态
 func (s *LearningService) ToggleCollect(userID uint, contentID uint) (bool, error) {
-	var record miniprogram.UserLearningRecord
+	var record model.UserLearningRecord
 	if err := global.GVA_DB.Where("user_id = ? AND content_id = ?", userID, contentID).First(&record).Error; err != nil {
 		// 创建学习记录
-		record = miniprogram.UserLearningRecord{
+		record = model.UserLearningRecord{
 			UserID:      userID,
 			ContentID:   contentID,
 			StartTime:   time.Now(),
@@ -259,7 +259,7 @@ func (s *LearningService) ToggleCollect(userID uint, contentID uint) (bool, erro
 			return false, err
 		}
 		// 增加内容收藏数
-		global.GVA_DB.Model(&miniprogram.LearningContent{}).Where("id = ?", contentID).Update("collect_count", gorm.Expr("collect_count + 1"))
+		global.GVA_DB.Model(&model.LearningContent{}).Where("id = ?", contentID).Update("collect_count", gorm.Expr("collect_count + 1"))
 		return true, nil
 	}
 
@@ -270,9 +270,9 @@ func (s *LearningService) ToggleCollect(userID uint, contentID uint) (bool, erro
 
 	// 更新内容收藏数
 	if newCollectedStatus {
-		global.GVA_DB.Model(&miniprogram.LearningContent{}).Where("id = ?", contentID).Update("collect_count", gorm.Expr("collect_count + 1"))
+		global.GVA_DB.Model(&model.LearningContent{}).Where("id = ?", contentID).Update("collect_count", gorm.Expr("collect_count + 1"))
 	} else {
-		global.GVA_DB.Model(&miniprogram.LearningContent{}).Where("id = ?", contentID).Update("collect_count", gorm.Expr("collect_count - 1"))
+		global.GVA_DB.Model(&model.LearningContent{}).Where("id = ?", contentID).Update("collect_count", gorm.Expr("collect_count - 1"))
 	}
 
 	return newCollectedStatus, nil
@@ -282,7 +282,7 @@ func (s *LearningService) ToggleCollect(userID uint, contentID uint) (bool, erro
 // 此方法暂时移除，等待相关请求类型定义完成
 
 // convertToResponse 转换为响应格式
-func (s *LearningService) convertToResponse(content miniprogram.LearningContent) response.LearningContentResponse {
+func (s *LearningService) convertToResponse(content model.LearningContent) response.LearningContentResponse {
 	resp := response.LearningContentResponse{
 		ID:           content.ID,
 		CreatedAt:    content.CreatedAt,
@@ -319,7 +319,7 @@ func (s *LearningService) convertToResponse(content miniprogram.LearningContent)
 
 // setUserRelatedInfo 设置用户相关信息
 func (s *LearningService) setUserRelatedInfo(resp *response.LearningContentResponse, userID uint) {
-	var record miniprogram.UserLearningRecord
+	var record model.UserLearningRecord
 	if err := global.GVA_DB.Where("user_id = ? AND content_id = ?", userID, resp.ID).First(&record).Error; err == nil {
 		resp.IsLiked = record.IsLiked
 		resp.IsCollected = record.IsCollected
@@ -345,10 +345,10 @@ func (s *LearningService) setUserRelatedInfo(resp *response.LearningContentRespo
 
 // RateLearningContent 评分学习内容
 func (s *LearningService) RateLearningContent(userID uint, req request.RateLearningContentRequest) error {
-	var record miniprogram.UserLearningRecord
+	var record model.UserLearningRecord
 	if err := global.GVA_DB.Where("user_id = ? AND content_id = ?", userID, req.ContentID).First(&record).Error; err != nil {
 		// 创建学习记录
-		record = miniprogram.UserLearningRecord{
+		record = model.UserLearningRecord{
 			UserID:    userID,
 			ContentID: req.ContentID,
 			StartTime: time.Now(),
@@ -366,20 +366,20 @@ func (s *LearningService) GetLearningStats(userID uint) (response.LearningStatsR
 	var stats response.LearningStatsResponse
 
 	// 总内容数（用户有学习记录的）
-	global.GVA_DB.Model(&miniprogram.UserLearningRecord{}).Where("user_id = ?", userID).Count(&stats.TotalContents)
+	global.GVA_DB.Model(&model.UserLearningRecord{}).Where("user_id = ?", userID).Count(&stats.TotalContents)
 
 	// 已完成内容数
-	global.GVA_DB.Model(&miniprogram.UserLearningRecord{}).Where("user_id = ? AND is_completed = 1", userID).Count(&stats.CompletedContents)
+	global.GVA_DB.Model(&model.UserLearningRecord{}).Where("user_id = ? AND is_completed = 1", userID).Count(&stats.CompletedContents)
 
 	// 点赞内容数
-	global.GVA_DB.Model(&miniprogram.UserLearningRecord{}).Where("user_id = ? AND is_liked = 1", userID).Count(&stats.LikedContents)
+	global.GVA_DB.Model(&model.UserLearningRecord{}).Where("user_id = ? AND is_liked = 1", userID).Count(&stats.LikedContents)
 
 	// 收藏内容数
-	global.GVA_DB.Model(&miniprogram.UserLearningRecord{}).Where("user_id = ? AND is_collected = 1", userID).Count(&stats.CollectedContents)
+	global.GVA_DB.Model(&model.UserLearningRecord{}).Where("user_id = ? AND is_collected = 1", userID).Count(&stats.CollectedContents)
 
 	// 总学习时长
 	var totalDuration int
-	global.GVA_DB.Model(&miniprogram.UserLearningRecord{}).Where("user_id = ?", userID).Select("COALESCE(SUM(duration), 0)").Scan(&totalDuration)
+	global.GVA_DB.Model(&model.UserLearningRecord{}).Where("user_id = ?", userID).Select("COALESCE(SUM(duration), 0)").Scan(&totalDuration)
 	stats.TotalLearningTime = totalDuration / 60 // 转换为分钟
 
 	// 平均学习时长
@@ -393,7 +393,7 @@ func (s *LearningService) GetLearningStats(userID uint) (response.LearningStatsR
 	}
 
 	// 连续学习天数（简化计算，基于最近的学习记录）
-	var recentRecords []miniprogram.UserLearningRecord
+	var recentRecords []model.UserLearningRecord
 	global.GVA_DB.Where("user_id = ?", userID).Order("start_time desc").Limit(30).Find(&recentRecords)
 
 	continuous := 0
@@ -409,7 +409,7 @@ func (s *LearningService) GetLearningStats(userID uint) (response.LearningStatsR
 	stats.ContinuousLearning = continuous
 
 	// 最后学习时间
-	var lastRecord miniprogram.UserLearningRecord
+	var lastRecord model.UserLearningRecord
 	if err := global.GVA_DB.Where("user_id = ?", userID).Order("start_time desc").First(&lastRecord).Error; err == nil {
 		stats.LastLearningTime = &lastRecord.StartTime
 	}
@@ -434,13 +434,13 @@ func (s *LearningService) GetCategoryStats(userID uint) ([]response.CategoryStat
 		stat.CategoryName = name
 
 		// 总内容数
-		global.GVA_DB.Model(&miniprogram.UserLearningRecord{}).
+		global.GVA_DB.Model(&model.UserLearningRecord{}).
 			Joins("JOIN nofap_learning_contents ON nofap_user_learning_records.content_id = nofap_learning_contents.id").
 			Where("nofap_user_learning_records.user_id = ? AND nofap_learning_contents.category = ?", userID, category).
 			Count(&stat.TotalContents)
 
 		// 已完成内容数
-		global.GVA_DB.Model(&miniprogram.UserLearningRecord{}).
+		global.GVA_DB.Model(&model.UserLearningRecord{}).
 			Joins("JOIN nofap_learning_contents ON nofap_user_learning_records.content_id = nofap_learning_contents.id").
 			Where("nofap_user_learning_records.user_id = ? AND nofap_learning_contents.category = ? AND nofap_user_learning_records.is_completed = 1", userID, category).
 			Count(&stat.CompletedContents)
@@ -475,7 +475,7 @@ func (s *LearningService) GetLearningHomepage(userID uint) (response.LearningHom
 	homepage.CategoryStats = categoryStats
 
 	// 获取最近学习的内容
-	var recentRecords []miniprogram.UserLearningRecord
+	var recentRecords []model.UserLearningRecord
 	global.GVA_DB.Where("user_id = ?", userID).Preload("Content").Order("start_time desc").Limit(5).Find(&recentRecords)
 
 	var recentContents []response.LearningContentResponse
@@ -489,7 +489,7 @@ func (s *LearningService) GetLearningHomepage(userID uint) (response.LearningHom
 	homepage.RecentContents = recentContents
 
 	// 获取热门内容
-	var popularContents []miniprogram.LearningContent
+	var popularContents []model.LearningContent
 	global.GVA_DB.Where("status = 1").Order("(view_count * 0.3 + like_count * 0.5 + collect_count * 0.2) desc").Limit(5).Find(&popularContents)
 
 	var popularContentResp []response.LearningContentResponse

@@ -19,12 +19,12 @@ const (
 // GetGameStats 获取游戏化统计数据
 func (s *GamificationService) GetGameStats(userID uint) (*response.GameStatsResponse, error) {
 	// 获取戒色记录
-	var record miniprogram.AbstinenceRecord
+	var record model.AbstinenceRecord
 	err := global.GVA_DB.Where("user_id = ? AND status = 1", userID).First(&record).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			// 创建默认记录
-			record = miniprogram.AbstinenceRecord{
+			record = model.AbstinenceRecord{
 				Level:      1,
 				Experience: 0,
 			}
@@ -75,12 +75,12 @@ func (s *GamificationService) GetGameStats(userID uint) (*response.GameStatsResp
 // GetLevelProgress 获取等级进度信息
 func (s *GamificationService) GetLevelProgress(userID uint) (*response.LevelProgressResponse, error) {
 	// 获取戒色记录
-	var record miniprogram.AbstinenceRecord
+	var record model.AbstinenceRecord
 	err := global.GVA_DB.Where("user_id = ? AND status = 1", userID).First(&record).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			// 创建默认记录
-			record = miniprogram.AbstinenceRecord{
+			record = model.AbstinenceRecord{
 				Level:      1,
 				Experience: 0,
 			}
@@ -111,7 +111,7 @@ func (s *GamificationService) AddExperience(userID uint, exp int, tx *gorm.DB) (
 	}
 
 	// 获取戒色记录
-	var record miniprogram.AbstinenceRecord
+	var record model.AbstinenceRecord
 	err := tx.Where("user_id = ? AND status = 1", userID).First(&record).Error
 	if err != nil {
 		return nil, err

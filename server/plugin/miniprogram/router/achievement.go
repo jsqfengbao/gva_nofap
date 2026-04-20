@@ -1,7 +1,7 @@
 package router
 
 import (
-	v1 "github.com/flipped-aurora/gin-vue-admin/server/api/v1"
+	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/api"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/middleware"
 	"github.com/gin-gonic/gin"
 )
@@ -11,7 +11,7 @@ type AchievementRouter struct{}
 // InitAchievementRouter 初始化成就系统路由
 func (s *AchievementRouter) InitAchievementRouter(Router *gin.RouterGroup) {
 	achievementRouter := Router.Group("achievement").Use(middleware.MiniprogramJWTAuth())
-	achievementApi := v1.ApiGroupApp.MiniprogramApiGroup.AchievementApi
+	achievementApi := api.ApiGroupApp.AchievementApi
 
 	{
 		achievementRouter.GET("list", achievementApi.GetUserAchievements)           // 获取用户成就列表

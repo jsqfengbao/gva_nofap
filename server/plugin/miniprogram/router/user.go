@@ -1,7 +1,7 @@
 package router
 
 import (
-	v1 "github.com/flipped-aurora/gin-vue-admin/server/api/v1"
+	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/api"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/middleware"
 	"github.com/gin-gonic/gin"
 )
@@ -11,7 +11,7 @@ type UserRouter struct{}
 // InitUserRouter 初始化用户路由
 func (u *UserRouter) InitUserRouter(Router *gin.RouterGroup) {
 	userRouter := Router.Group("user").Use(middleware.MiniprogramJWTAuth())
-	userApi := v1.ApiGroupApp.MiniprogramApiGroup.UserApi
+	userApi := api.ApiGroupApp.UserApi
 
 	{
 		// 用户相关的路由

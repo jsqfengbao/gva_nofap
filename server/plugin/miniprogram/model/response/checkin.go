@@ -33,7 +33,7 @@ type TodayCheckinResponse struct {
 
 // CheckinHistoryResponse 打卡历史响应
 type CheckinHistoryResponse struct {
-	List     []miniprogram.DailyCheckin `json:"list"`
+	List     []model.DailyCheckin `json:"list"`
 	Total    int64                      `json:"total"`
 	Page     int                        `json:"page"`
 	PageSize int                        `json:"pageSize"`

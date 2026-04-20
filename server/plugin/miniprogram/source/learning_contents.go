@@ -11,13 +11,13 @@ import (
 func InitLearningContents() {
 	// 检查是否已经存在数据，避免重复插入
 	var count int64
-	global.GVA_DB.Model(&miniprogram.LearningContent{}).Count(&count)
+	global.GVA_DB.Model(&model.LearningContent{}).Count(&count)
 	if count > 0 {
 		return
 	}
 
 	now := time.Now()
-	learningContents := []miniprogram.LearningContent{
+	learningContents := []model.LearningContent{
 		// 科普知识类内容
 		{
 			Title:        "认识色情成瘾的本质",

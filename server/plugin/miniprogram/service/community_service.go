@@ -38,7 +38,7 @@ func (s *CommunityService) CreatePost(userID uint, req request.CreatePostRequest
 	}
 
 	// 创建帖子
-	post := miniprogram.CommunityPost{
+	post := model.CommunityPost{
 		UserID:      userID,
 		Title:       strings.TrimSpace(req.Title),
 		Content:     strings.TrimSpace(req.Content),
@@ -64,7 +64,7 @@ func (s *CommunityService) CreatePost(userID uint, req request.CreatePostRequest
 // UpdatePost 更新帖子
 func (s *CommunityService) UpdatePost(userID uint, postID uint, req request.UpdatePostRequest) error {
 	// 查找帖子
-	var post miniprogram.CommunityPost
+	var post model.CommunityPost
 	err := global.GVA_DB.Where("id = ? AND user_id = ?", postID, userID).First(&post).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -95,7 +95,7 @@ func (s *CommunityService) UpdatePost(userID uint, postID uint, req request.Upda
 // DeletePost 删除帖子
 func (s *CommunityService) DeletePost(userID uint, postID uint) error {
 	// 查找帖子
-	var post miniprogram.CommunityPost
+	var post model.CommunityPost
 	err := global.GVA_DB.Where("id = ? AND user_id = ?", postID, userID).First(&post).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -113,14 +113,14 @@ func (s *CommunityService) DeletePost(userID uint, postID uint) error {
 	}()
 
 	// 删除相关评论
-	err = tx.Where("post_id = ?", postID).Delete(&miniprogram.CommunityComment{}).Error
+	err = tx.Where("post_id = ?", postID).Delete(&model.CommunityComment{}).Error
 	if err != nil {
 		tx.Rollback()
 		return fmt.Errorf("删除评论失败: %w", err)
 	}
 
 	// 删除相关点赞
-	err = tx.Where("post_id = ?", postID).Delete(&miniprogram.CommunityLike{}).Error
+	err = tx.Where("post_id = ?", postID).Delete(&model.CommunityLike{}).Error
 	if err != nil {
 		tx.Rollback()
 		return fmt.Errorf("删除点赞失败: %w", err)
@@ -139,7 +139,7 @@ func (s *CommunityService) DeletePost(userID uint, postID uint) error {
 
 // GetPosts 获取帖子列表
 func (s *CommunityService) GetPosts(userID uint, req request.GetPostsRequest) (*response.PostListResponse, error) {
-	query := global.GVA_DB.Model(&miniprogram.CommunityPost{}).
+	query := global.GVA_DB.Model(&model.CommunityPost{}).
 		Preload("User").
 		Where("status = 1") // 只显示正常状态的帖子
 
@@ -163,7 +163,7 @@ func (s *CommunityService) GetPosts(userID uint, req request.GetPostsRequest) (*
 	offset := (req.Page - 1) * req.PageSize
 	query = query.Offset(offset).Limit(req.PageSize)
 
-	var posts []miniprogram.CommunityPost
+	var posts []model.CommunityPost
 	err = query.Find(&posts).Error
 	if err != nil {
 		return nil, fmt.Errorf("获取帖子列表失败: %w", err)
@@ -172,7 +172,7 @@ func (s *CommunityService) GetPosts(userID uint, req request.GetPostsRequest) (*
 	// 获取用户点赞状态
 	likedPosts := make(map[uint]bool)
 	if userID > 0 {
-		var likes []miniprogram.CommunityLike
+		var likes []model.CommunityLike
 		postIDs := make([]uint, len(posts))
 		for i, post := range posts {
 			postIDs[i] = post.ID
@@ -229,7 +229,7 @@ func (s *CommunityService) GetPosts(userID uint, req request.GetPostsRequest) (*
 // GetPostDetail 获取帖子详情
 func (s *CommunityService) GetPostDetail(userID uint, postID uint) (*response.PostDetailResponse, error) {
 	// 查找帖子
-	var post miniprogram.CommunityPost
+	var post model.CommunityPost
 	err := global.GVA_DB.Preload("User").Where("id = ? AND status = 1", postID).First(&post).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -245,7 +245,7 @@ func (s *CommunityService) GetPostDetail(userID uint, postID uint) (*response.Po
 	var isLiked bool
 	if userID > 0 {
 		var count int64
-		global.GVA_DB.Model(&miniprogram.CommunityLike{}).
+		global.GVA_DB.Model(&model.CommunityLike{}).
 			Where("user_id = ? AND like_type = 1 AND target_id = ?", userID, postID).
 			Count(&count)
 		isLiked = count > 0
@@ -296,7 +296,7 @@ func (s *CommunityService) GetPostDetail(userID uint, postID uint) (*response.Po
 // CreateComment 创建评论
 func (s *CommunityService) CreateComment(userID uint, req request.CreateCommentRequest) (*response.CreateCommentResponse, error) {
 	// 检查帖子是否存在
-	var post miniprogram.CommunityPost
+	var post model.CommunityPost
 	err := global.GVA_DB.Where("id = ? AND status = 1", req.PostID).First(&post).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -307,7 +307,7 @@ func (s *CommunityService) CreateComment(userID uint, req request.CreateCommentR
 
 	// 如果是回复评论，检查父评论是否存在
 	if req.ParentID > 0 {
-		var parentComment miniprogram.CommunityComment
+		var parentComment model.CommunityComment
 		err = global.GVA_DB.Where("id = ? AND post_id = ? AND status = 1", req.ParentID, req.PostID).First(&parentComment).Error
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -326,7 +326,7 @@ func (s *CommunityService) CreateComment(userID uint, req request.CreateCommentR
 	tx := global.GVA_DB.Begin()
 
 	// 创建评论
-	comment := miniprogram.CommunityComment{
+	comment := model.CommunityComment{
 		PostID:      req.PostID,
 		UserID:      userID,
 		Content:     strings.TrimSpace(req.Content),
@@ -363,7 +363,7 @@ func (s *CommunityService) CreateComment(userID uint, req request.CreateCommentR
 // DeleteComment 删除评论
 func (s *CommunityService) DeleteComment(userID uint, commentID uint) error {
 	// 查找评论
-	var comment miniprogram.CommunityComment
+	var comment model.CommunityComment
 	err := global.GVA_DB.Where("id = ? AND user_id = ?", commentID, userID).First(&comment).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -376,7 +376,7 @@ func (s *CommunityService) DeleteComment(userID uint, commentID uint) error {
 	tx := global.GVA_DB.Begin()
 
 	// 删除评论及其所有子评论
-	err = tx.Where("id = ? OR parent_id = ?", commentID, commentID).Delete(&miniprogram.CommunityComment{}).Error
+	err = tx.Where("id = ? OR parent_id = ?", commentID, commentID).Delete(&model.CommunityComment{}).Error
 	if err != nil {
 		tx.Rollback()
 		return fmt.Errorf("删除评论失败: %w", err)
@@ -384,8 +384,8 @@ func (s *CommunityService) DeleteComment(userID uint, commentID uint) error {
 
 	// 更新帖子评论数
 	var remainingCount int64
-	tx.Model(&miniprogram.CommunityComment{}).Where("post_id = ? AND status = 1", comment.PostID).Count(&remainingCount)
-	tx.Model(&miniprogram.CommunityPost{}).Where("id = ?", comment.PostID).UpdateColumn("comment_count", remainingCount)
+	tx.Model(&model.CommunityComment{}).Where("post_id = ? AND status = 1", comment.PostID).Count(&remainingCount)
+	tx.Model(&model.CommunityPost{}).Where("id = ?", comment.PostID).UpdateColumn("comment_count", remainingCount)
 
 	tx.Commit()
 	return nil
@@ -399,7 +399,7 @@ func (s *CommunityService) ToggleLike(userID uint, req request.LikeRequest) (*re
 	}
 
 	// 查找现有点赞记录
-	var existingLike miniprogram.CommunityLike
+	var existingLike model.CommunityLike
 	err := global.GVA_DB.Where("user_id = ? AND like_type = ? AND target_id = ?", userID, req.LikeType, req.TargetID).First(&existingLike).Error
 
 	tx := global.GVA_DB.Begin()
@@ -408,7 +408,7 @@ func (s *CommunityService) ToggleLike(userID uint, req request.LikeRequest) (*re
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		// 创建点赞记录
-		like := miniprogram.CommunityLike{
+		like := model.CommunityLike{
 			UserID:   userID,
 			LikeType: req.LikeType,
 			TargetID: req.TargetID,
@@ -419,7 +419,7 @@ func (s *CommunityService) ToggleLike(userID uint, req request.LikeRequest) (*re
 			like.PostID = req.TargetID
 		} else {
 			// 通过评论ID获取PostID
-			var comment miniprogram.CommunityComment
+			var comment model.CommunityComment
 			err = global.GVA_DB.Where("id = ?", req.TargetID).First(&comment).Error
 			if err != nil {
 				tx.Rollback()
@@ -494,7 +494,7 @@ func (s *CommunityService) truncateContent(content string, maxLen int) string {
 
 // getPostComments 获取帖子评论
 func (s *CommunityService) getPostComments(userID uint, postID uint) ([]response.CommentItem, error) {
-	var comments []miniprogram.CommunityComment
+	var comments []model.CommunityComment
 	err := global.GVA_DB.Preload("User").
 		Where("post_id = ? AND status = 1", postID).
 		Order("created_at ASC").
@@ -506,7 +506,7 @@ func (s *CommunityService) getPostComments(userID uint, postID uint) ([]response
 	// 获取用户点赞状态
 	likedComments := make(map[uint]bool)
 	if userID > 0 {
-		var likes []miniprogram.CommunityLike
+		var likes []model.CommunityLike
 		commentIDs := make([]uint, len(comments))
 		for i, comment := range comments {
 			commentIDs[i] = comment.ID
@@ -577,7 +577,7 @@ func (s *CommunityService) checkLikeTarget(targetID uint, likeType int) error {
 	if likeType == 1 {
 		// 检查帖子
 		var count int64
-		err := global.GVA_DB.Model(&miniprogram.CommunityPost{}).Where("id = ? AND status = 1", targetID).Count(&count).Error
+		err := global.GVA_DB.Model(&model.CommunityPost{}).Where("id = ? AND status = 1", targetID).Count(&count).Error
 		if err != nil {
 			return fmt.Errorf("查询帖子失败: %w", err)
 		}
@@ -587,7 +587,7 @@ func (s *CommunityService) checkLikeTarget(targetID uint, likeType int) error {
 	} else if likeType == 2 {
 		// 检查评论
 		var count int64
-		err := global.GVA_DB.Model(&miniprogram.CommunityComment{}).Where("id = ? AND status = 1", targetID).Count(&count).Error
+		err := global.GVA_DB.Model(&model.CommunityComment{}).Where("id = ? AND status = 1", targetID).Count(&count).Error
 		if err != nil {
 			return fmt.Errorf("查询评论失败: %w", err)
 		}
@@ -606,24 +606,24 @@ func (s *CommunityService) updateLikeCount(tx *gorm.DB, targetID uint, likeType 
 
 	if likeType == 1 {
 		// 更新帖子点赞数
-		err := tx.Model(&miniprogram.CommunityPost{}).Where("id = ?", targetID).
+		err := tx.Model(&model.CommunityPost{}).Where("id = ?", targetID).
 			UpdateColumn("like_count", gorm.Expr("like_count + ?", delta)).Error
 		if err != nil {
 			return 0, err
 		}
 
 		// 获取新的点赞数
-		tx.Model(&miniprogram.CommunityPost{}).Where("id = ?", targetID).Select("like_count").Scan(&newCount)
+		tx.Model(&model.CommunityPost{}).Where("id = ?", targetID).Select("like_count").Scan(&newCount)
 	} else {
 		// 更新评论点赞数
-		err := tx.Model(&miniprogram.CommunityComment{}).Where("id = ?", targetID).
+		err := tx.Model(&model.CommunityComment{}).Where("id = ?", targetID).
 			UpdateColumn("like_count", gorm.Expr("like_count + ?", delta)).Error
 		if err != nil {
 			return 0, err
 		}
 
 		// 获取新的点赞数
-		tx.Model(&miniprogram.CommunityComment{}).Where("id = ?", targetID).Select("like_count").Scan(&newCount)
+		tx.Model(&model.CommunityComment{}).Where("id = ?", targetID).Select("like_count").Scan(&newCount)
 	}
 
 	return int(newCount), nil
@@ -634,17 +634,17 @@ func (s *CommunityService) GetCommunityStats() (*response.CommunityStatsResponse
 	var stats response.CommunityStatsResponse
 
 	// 获取总帖子数
-	global.GVA_DB.Model(&miniprogram.CommunityPost{}).Where("status = 1").Count(&stats.TotalPosts)
+	global.GVA_DB.Model(&model.CommunityPost{}).Where("status = 1").Count(&stats.TotalPosts)
 
 	// 获取总评论数
-	global.GVA_DB.Model(&miniprogram.CommunityComment{}).Where("status = 1").Count(&stats.TotalComments)
+	global.GVA_DB.Model(&model.CommunityComment{}).Where("status = 1").Count(&stats.TotalComments)
 
 	// 获取总点赞数
-	global.GVA_DB.Model(&miniprogram.CommunityLike{}).Count(&stats.TotalLikes)
+	global.GVA_DB.Model(&model.CommunityLike{}).Count(&stats.TotalLikes)
 
 	// 获取今日帖子数
 	today := time.Now().Format("2006-01-02")
-	global.GVA_DB.Model(&miniprogram.CommunityPost{}).
+	global.GVA_DB.Model(&model.CommunityPost{}).
 		Where("status = 1 AND DATE(created_at) = ?", today).
 		Count(&stats.TodayPosts)
 
@@ -652,7 +652,7 @@ func (s *CommunityService) GetCommunityStats() (*response.CommunityStatsResponse
 	var categoryStats []response.CategoryStats
 	for i := 1; i <= 4; i++ {
 		var count int64
-		global.GVA_DB.Model(&miniprogram.CommunityPost{}).
+		global.GVA_DB.Model(&model.CommunityPost{}).
 			Where("status = 1 AND category = ?", i).
 			Count(&count)
 
@@ -669,7 +669,7 @@ func (s *CommunityService) GetCommunityStats() (*response.CommunityStatsResponse
 
 // GetUserPosts 获取用户发帖记录
 func (s *CommunityService) GetUserPosts(userID uint, req request.GetPostsRequest) (*response.UserPostsResponse, error) {
-	query := global.GVA_DB.Model(&miniprogram.CommunityPost{}).
+	query := global.GVA_DB.Model(&model.CommunityPost{}).
 		Preload("User").
 		Where("user_id = ? AND status = 1", userID)
 
@@ -693,7 +693,7 @@ func (s *CommunityService) GetUserPosts(userID uint, req request.GetPostsRequest
 	offset := (req.Page - 1) * req.PageSize
 	query = query.Offset(offset).Limit(req.PageSize)
 
-	var posts []miniprogram.CommunityPost
+	var posts []model.CommunityPost
 	err = query.Find(&posts).Error
 	if err != nil {
 		return nil, fmt.Errorf("获取用户帖子列表失败: %w", err)

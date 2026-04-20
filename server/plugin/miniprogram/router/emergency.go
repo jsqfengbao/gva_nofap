@@ -1,8 +1,9 @@
 package router
 
 import (
-	v1 "github.com/flipped-aurora/gin-vue-admin/server/api/v1"
-	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/middleware"
+	sys_mw "github.com/flipped-aurora/gin-vue-admin/server/middleware"
+	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/api"
+	miniprogram_mw "github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,9 +11,9 @@ type EmergencyRouter struct{}
 
 // InitEmergencyRouter 初始化紧急求助路由
 func (e *EmergencyRouter) InitEmergencyRouter(Router *gin.RouterGroup) {
-	emergencyRouter := Router.Group("emergency").Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
-	emergencyRouterWithoutRecord := Router.Group("emergency").Use(middleware.JWTAuth())
-	emergencyApi := v1.ApiGroupApp.MiniprogramApiGroup.EmergencyApi
+	emergencyRouter := Router.Group("emergency").Use(miniprogram_mw.MiniprogramJWTAuth()).Use(sys_mw.CasbinHandler())
+	emergencyRouterWithoutRecord := Router.Group("emergency").Use(miniprogram_mw.MiniprogramJWTAuth())
+	emergencyApi := api.ApiGroupApp.EmergencyApi
 	{
 		// 紧急求助管理
 		emergencyRouter.POST("help", emergencyApi.CreateEmergencyHelp)       // 创建紧急求助

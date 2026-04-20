@@ -1,7 +1,7 @@
 package router
 
 import (
-	v1 "github.com/flipped-aurora/gin-vue-admin/server/api/v1"
+	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/api"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/middleware"
 	"github.com/gin-gonic/gin"
 )
@@ -12,7 +12,7 @@ type CheckinRouter struct{}
 func (s *CheckinRouter) InitCheckinRouter(Router *gin.RouterGroup) {
 	checkinRouter := Router.Group("checkin").Use(middleware.MiniprogramJWTAuth())
 	checkinRouterWithoutRecord := Router.Group("checkin").Use(middleware.MiniprogramJWTAuth())
-	var checkinApi = v1.ApiGroupApp.MiniprogramApiGroup.CheckinApi
+	var checkinApi = api.ApiGroupApp.CheckinApi
 	{
 		checkinRouter.POST("daily", checkinApi.DailyCheckin)                       // 每日打卡
 		checkinRouter.GET("today", checkinApi.GetTodayCheckin)                     // 获取今日打卡状态

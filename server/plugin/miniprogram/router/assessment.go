@@ -1,7 +1,7 @@
 package router
 
 import (
-	v1 "github.com/flipped-aurora/gin-vue-admin/server/api/v1"
+	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/api"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/middleware"
 	"github.com/gin-gonic/gin"
 )
@@ -12,7 +12,7 @@ type AssessmentRouter struct{}
 func (s *AssessmentRouter) InitAssessmentRouter(Router *gin.RouterGroup) {
 	assessmentRouter := Router.Group("assessment").Use(middleware.MiniprogramJWTAuth())
 	assessmentRouterWithoutRecord := Router.Group("assessment").Use(middleware.MiniprogramJWTAuth())
-	miniprogramApi := v1.ApiGroupApp.MiniprogramApiGroup
+	miniprogramApi := api.ApiGroupApp
 
 	{
 		assessmentRouter.POST("submit", miniprogramApi.AssessmentApi.SubmitAssessment)     // 提交评估结果

@@ -171,7 +171,7 @@ type EmergencyDashboardResponse struct {
 }
 
 // ConvertToEmergencyHelpItem 转换为求助项目响应
-func ConvertToEmergencyHelpItem(help miniprogram.EmergencyHelp) EmergencyHelpItem {
+func ConvertToEmergencyHelpItem(help model.EmergencyHelp) EmergencyHelpItem {
 	item := EmergencyHelpItem{
 		ID:            help.ID,
 		Type:          help.Type,
@@ -206,7 +206,7 @@ func ConvertToEmergencyHelpItem(help miniprogram.EmergencyHelp) EmergencyHelpIte
 }
 
 // ConvertToEmergencyResourceItem 转换为资源项目响应
-func ConvertToEmergencyResourceItem(resource miniprogram.EmergencyResource) EmergencyResourceItem {
+func ConvertToEmergencyResourceItem(resource model.EmergencyResource) EmergencyResourceItem {
 	return EmergencyResourceItem{
 		ID:          resource.ID,
 		Title:       resource.Title,
@@ -227,7 +227,7 @@ func ConvertToEmergencyResourceItem(resource miniprogram.EmergencyResource) Emer
 }
 
 // ConvertToEmergencyVolunteerItem 转换为志愿者项目响应
-func ConvertToEmergencyVolunteerItem(volunteer miniprogram.EmergencyVolunteer) EmergencyVolunteerItem {
+func ConvertToEmergencyVolunteerItem(volunteer model.EmergencyVolunteer) EmergencyVolunteerItem {
 	statusName := "待审核"
 	switch volunteer.Status {
 	case 1:

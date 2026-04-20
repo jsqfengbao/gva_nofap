@@ -1,7 +1,7 @@
 package router
 
 import (
-	v1 "github.com/flipped-aurora/gin-vue-admin/server/api/v1"
+	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/api"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/middleware"
 	"github.com/gin-gonic/gin"
 )
@@ -10,8 +10,8 @@ type LearningRouter struct{}
 
 // InitLearningRouter 初始化学习内容路由
 func (r *LearningRouter) InitLearningRouter(Router *gin.RouterGroup) {
-	learningRouter := Router.Group("learning").Use(middleware.JWTAuth())
-	learningApi := v1.ApiGroupApp.MiniprogramApiGroup.LearningApi
+	learningRouter := Router.Group("learning").Use(middleware.MiniprogramJWTAuth())
+	learningApi := api.ApiGroupApp.LearningApi
 
 	{
 		// 需要JWT认证的路由 - 只保留实际存在的方法

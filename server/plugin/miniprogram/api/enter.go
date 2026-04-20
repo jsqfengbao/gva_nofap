@@ -11,3 +11,5 @@ type ApiGroup struct {
 	LearningApi    LearningApi
 	StatsApi       StatsApi
 }
+
+var ApiGroupApp = new(ApiGroup)

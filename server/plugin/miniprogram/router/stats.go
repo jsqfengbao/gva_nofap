@@ -1,7 +1,7 @@
 package router
 
 import (
-	v1 "github.com/flipped-aurora/gin-vue-admin/server/api/v1"
+	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/api"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/middleware"
 	"github.com/gin-gonic/gin"
 )
@@ -12,7 +12,7 @@ type StatsRouter struct{}
 func (s *StatsRouter) InitStatsRouter(Router *gin.RouterGroup) {
 	statsRouter := Router.Group("stats").Use(middleware.MiniprogramJWTAuth())
 	{
-		var statsApi = v1.ApiGroupApp.MiniprogramApiGroup.StatsApi
+		var statsApi = api.ApiGroupApp.StatsApi
 		statsRouter.GET("overall", statsApi.GetOverall) // 获取总体统计
 		statsRouter.GET("trends", statsApi.GetTrends)   // 获取趋势数据
 	}

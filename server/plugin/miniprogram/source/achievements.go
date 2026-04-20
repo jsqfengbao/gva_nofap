@@ -8,7 +8,7 @@ import (
 
 // InitAchievements 初始化成就系统基础数据
 func InitAchievements() {
-	achievements := []miniprogram.Achievement{
+	achievements := []model.Achievement{
 		// 打卡类成就
 		{
 			Name:         "初心不改",
@@ -243,7 +243,7 @@ func InitAchievements() {
 	db := global.GVA_DB
 	for _, achievement := range achievements {
 		var count int64
-		db.Model(&miniprogram.Achievement{}).Where("name = ?", achievement.Name).Count(&count)
+		db.Model(&model.Achievement{}).Where("name = ?", achievement.Name).Count(&count)
 		if count == 0 {
 			err := db.Create(&achievement).Error
 			if err != nil {

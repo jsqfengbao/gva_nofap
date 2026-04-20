@@ -19,8 +19,8 @@ import (
 type UserService struct{}
 
 // FindOrCreateWxUser 查找或创建微信用户
-func (s *UserService) FindOrCreateWxUser(openid, unionid string, userInfo *miniprogramReq.WxUserInfo) (*miniprogram.WxUser, error) {
-	var user miniprogram.WxUser
+func (s *UserService) FindOrCreateWxUser(openid, unionid string, userInfo *miniprogramReq.WxUserInfo) (*model.WxUser, error) {
+	var user model.WxUser
 
 	// 先查找用户是否存在
 	err := global.GVA_DB.Where("openid = ?", openid).First(&user).Error
@@ -57,7 +57,7 @@ func (s *UserService) FindOrCreateWxUser(openid, unionid string, userInfo *minip
 	}
 
 	// 用户不存在，创建新用户
-	user = miniprogram.WxUser{
+	user = model.WxUser{
 		Openid:       openid,
 		Unionid:      unionid,
 		PrivacyLevel: 1, // 默认低隐私级别
@@ -98,7 +98,7 @@ func (s *UserService) FindOrCreateWxUser(openid, unionid string, userInfo *minip
 
 // CreateAbstinenceRecord 为新用户创建戒色记录
 func (s *UserService) CreateAbstinenceRecord(userID uint) error {
-	record := miniprogram.AbstinenceRecord{
+	record := model.AbstinenceRecord{
 		UserID:        userID,
 		StartDate:     time.Now(),
 		CurrentStreak: 0,
@@ -115,7 +115,7 @@ func (s *UserService) CreateAbstinenceRecord(userID uint) error {
 
 // CreateUserSettings 为新用户创建默认设置
 func (s *UserService) CreateUserSettings(userID uint) error {
-	settings := miniprogram.UserSettings{
+	settings := model.UserSettings{
 		UserID:             userID,
 		CheckinReminder:    true,
 		CommunityReply:     true,
@@ -135,8 +135,8 @@ func (s *UserService) CreateUserSettings(userID uint) error {
 }
 
 // GetUserByID 根据ID获取用户信息
-func (s *UserService) GetUserByID(userID uint) (*miniprogram.WxUser, error) {
-	var user miniprogram.WxUser
+func (s *UserService) GetUserByID(userID uint) (*model.WxUser, error) {
+	var user model.WxUser
 	err := global.GVA_DB.Where("id = ? AND status = 1", userID).First(&user).Error
 	if err != nil {
 		return nil, err
@@ -146,7 +146,7 @@ func (s *UserService) GetUserByID(userID uint) (*miniprogram.WxUser, error) {
 
 // UpdateUser 更新用户信息
 func (s *UserService) UpdateUser(userID uint, updates map[string]interface{}) error {
-	return global.GVA_DB.Model(&miniprogram.WxUser{}).Where("id = ?", userID).Updates(updates).Error
+	return global.GVA_DB.Model(&model.WxUser{}).Where("id = ?", userID).Updates(updates).Error
 }
 
 // UpdatePrivacyLevel 更新用户隐私级别
@@ -154,11 +154,11 @@ func (s *UserService) UpdatePrivacyLevel(userID uint, level int) error {
 	if level < 1 || level > 3 {
 		return errors.New("隐私级别必须在1-3之间")
 	}
-	return global.GVA_DB.Model(&miniprogram.WxUser{}).Where("id = ?", userID).Update("privacy_level", level).Error
+	return global.GVA_DB.Model(&model.WxUser{}).Where("id = ?", userID).Update("privacy_level", level).Error
 }
 
 // GetUserProfile 获取用户详细资料（包括戒色记录）
-func (s *UserService) GetUserProfile(userID uint) (*miniprogram.WxUser, *miniprogram.AbstinenceRecord, error) {
+func (s *UserService) GetUserProfile(userID uint) (*model.WxUser, *model.AbstinenceRecord, error) {
 	// 获取用户信息
 	user, err := s.GetUserByID(userID)
 	if err != nil {
@@ -166,7 +166,7 @@ func (s *UserService) GetUserProfile(userID uint) (*miniprogram.WxUser, *minipro
 	}
 
 	// 获取戒色记录
-	var record miniprogram.AbstinenceRecord
+	var record model.AbstinenceRecord
 	err = global.GVA_DB.Where("user_id = ? AND status = 1", userID).First(&record).Error
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return user, nil, err
@@ -206,12 +206,12 @@ func (s *UserService) GetProfileStats(userID uint) (*miniprogramRes.ProfileStats
 
 	// 获取成就数量
 	var achievementCount int64
-	global.GVA_DB.Model(&miniprogram.UserAchievement{}).
+	global.GVA_DB.Model(&model.UserAchievement{}).
 		Where("user_id = ?", userID).Count(&achievementCount)
 
 	// 获取帮助他人次数（社区回复数量）
 	var helpCount int64
-	global.GVA_DB.Model(&miniprogram.CommunityComment{}).
+	global.GVA_DB.Model(&model.CommunityComment{}).
 		Where("user_id = ?", userID).Count(&helpCount)
 
 	// 获取等级称号
@@ -285,7 +285,7 @@ func (s *UserService) GetLevelTitle(level int) string {
 
 // GetRecentAchievements 获取最近成就
 func (s *UserService) GetRecentAchievements(userID uint, limit int) ([]miniprogramRes.RecentAchievement, error) {
-	var userAchievements []miniprogram.UserAchievement
+	var userAchievements []model.UserAchievement
 	err := global.GVA_DB.Where("user_id = ?", userID).
 		Order("unlocked_at DESC").
 		Limit(limit).
@@ -297,7 +297,7 @@ func (s *UserService) GetRecentAchievements(userID uint, limit int) ([]miniprogr
 	var recentAchievements []miniprogramRes.RecentAchievement
 	for _, ua := range userAchievements {
 		// 获取成就详情
-		var achievement miniprogram.Achievement
+		var achievement model.Achievement
 		err := global.GVA_DB.Where("id = ?", ua.AchievementID).First(&achievement).Error
 		if err != nil {
 			continue
@@ -335,8 +335,8 @@ func (s *UserService) GetRecentAchievements(userID uint, limit int) ([]miniprogr
 }
 
 // GetUserSettings 获取用户设置
-func (s *UserService) GetUserSettings(userID uint) (*miniprogram.UserSettings, error) {
-	var settings miniprogram.UserSettings
+func (s *UserService) GetUserSettings(userID uint) (*model.UserSettings, error) {
+	var settings model.UserSettings
 	err := global.GVA_DB.Where("user_id = ?", userID).First(&settings).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -365,7 +365,7 @@ func (s *UserService) UpdateNotificationSettings(userID uint, req *miniprogramRe
 		"learning_reminder":  req.LearningReminder,
 	}
 
-	return global.GVA_DB.Model(&miniprogram.UserSettings{}).
+	return global.GVA_DB.Model(&model.UserSettings{}).
 		Where("user_id = ?", userID).
 		Updates(updates).Error
 }
@@ -380,7 +380,7 @@ func (s *UserService) UpdatePrivacySettings(userID uint, req *miniprogramReq.Pri
 		"show_online_status":   req.ShowOnlineStatus,
 	}
 
-	return global.GVA_DB.Model(&miniprogram.UserSettings{}).
+	return global.GVA_DB.Model(&model.UserSettings{}).
 		Where("user_id = ?", userID).
 		Updates(updates).Error
 }
@@ -390,7 +390,7 @@ func (s *UserService) CreateDataExport(userID uint, req *miniprogramReq.DataExpo
 	// 检查导出频率限制（每天最多5次）
 	var todayCount int64
 	today := time.Now().Format("2006-01-02")
-	global.GVA_DB.Model(&miniprogram.DataExport{}).
+	global.GVA_DB.Model(&model.DataExport{}).
 		Where("user_id = ? AND DATE(created_at) = ?", userID, today).
 		Count(&todayCount)
 
@@ -412,7 +412,7 @@ func (s *UserService) CreateDataExport(userID uint, req *miniprogramReq.DataExpo
 	expiresAt := time.Now().Add(7 * 24 * time.Hour)
 
 	// 创建导出记录
-	export := miniprogram.DataExport{
+	export := model.DataExport{
 		UserID:     userID,
 		ExportType: req.ExportType,
 		DataTypes:  string(dataTypesJSON),
@@ -431,7 +431,7 @@ func (s *UserService) CreateDataExport(userID uint, req *miniprogramReq.DataExpo
 	go s.ProcessDataExport(&export, req)
 
 	// 更新用户设置中的导出计数
-	global.GVA_DB.Model(&miniprogram.UserSettings{}).
+	global.GVA_DB.Model(&model.UserSettings{}).
 		Where("user_id = ?", userID).
 		UpdateColumn("export_count", gorm.Expr("export_count + ?", 1))
 
@@ -444,7 +444,7 @@ func (s *UserService) CreateDataExport(userID uint, req *miniprogramReq.DataExpo
 }
 
 // ProcessDataExport 处理数据导出（异步）
-func (s *UserService) ProcessDataExport(export *miniprogram.DataExport, req *miniprogramReq.DataExportRequest) {
+func (s *UserService) ProcessDataExport(export *model.DataExport, req *miniprogramReq.DataExportRequest) {
 	// 这里实现具体的数据导出逻辑
 	// 根据 req.DataTypes 和 req.DateRange 导出相应的数据
 	// 生成文件并上传到文件服务器
@@ -465,14 +465,14 @@ func (s *UserService) ProcessDataExport(export *miniprogram.DataExport, req *min
 		"download_url": downloadURL,
 	}
 
-	global.GVA_DB.Model(&miniprogram.DataExport{}).
+	global.GVA_DB.Model(&model.DataExport{}).
 		Where("id = ?", export.ID).
 		Updates(updates)
 }
 
 // ValidateUserLogin 验证用户登录
-func (s *UserService) ValidateUserLogin(phone, password string) (*miniprogram.WxUser, error) {
-	var user miniprogram.WxUser
+func (s *UserService) ValidateUserLogin(phone, password string) (*model.WxUser, error) {
+	var user model.WxUser
 
 	// 根据手机号查找用户
 	err := global.GVA_DB.Where("phone = ? AND status = 1", phone).First(&user).Error
@@ -496,9 +496,9 @@ func (s *UserService) ValidateUserLogin(phone, password string) (*miniprogram.Wx
 }
 
 // CreateUser 创建新用户
-func (s *UserService) CreateUser(req *miniprogramReq.RegisterRequest) (*miniprogram.WxUser, error) {
+func (s *UserService) CreateUser(req *miniprogramReq.RegisterRequest) (*model.WxUser, error) {
 	// 检查手机号是否已存在
-	var existingUser miniprogram.WxUser
+	var existingUser model.WxUser
 	err := global.GVA_DB.Where("phone = ?", req.Phone).First(&existingUser).Error
 	if err == nil {
 		return nil, errors.New("手机号已被注册")
@@ -508,7 +508,7 @@ func (s *UserService) CreateUser(req *miniprogramReq.RegisterRequest) (*miniprog
 	}
 
 	// 创建新用户
-	user := miniprogram.WxUser{
+	user := model.WxUser{
 		Phone:        req.Phone,
 		Password:     req.Password, // TODO: 应该进行密码哈希
 		Nickname:     req.Nickname,

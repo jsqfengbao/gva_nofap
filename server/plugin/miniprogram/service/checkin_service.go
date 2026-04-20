@@ -21,7 +21,7 @@ func (s *CheckinService) DailyCheckin(userID uint, req request.CheckinRequest) (
 	today := time.Now().Format("2006-01-02")
 
 	// 检查今日是否已经打卡
-	var existingCheckin miniprogram.DailyCheckin
+	var existingCheckin model.DailyCheckin
 	err := global.GVA_DB.Where("user_id = ? AND DATE(checkin_date) = ?", userID, today).First(&existingCheckin).Error
 	if err == nil {
 		return nil, errors.New("今日已经打卡过了")
@@ -32,11 +32,11 @@ func (s *CheckinService) DailyCheckin(userID uint, req request.CheckinRequest) (
 	}
 
 	// 获取或创建戒色记录
-	var abstinenceRecord miniprogram.AbstinenceRecord
+	var abstinenceRecord model.AbstinenceRecord
 	err = global.GVA_DB.Where("user_id = ? AND status = 1", userID).First(&abstinenceRecord).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		// 创建新的戒色记录
-		abstinenceRecord = miniprogram.AbstinenceRecord{
+		abstinenceRecord = model.AbstinenceRecord{
 			UserID:        userID,
 			StartDate:     time.Now(),
 			CurrentStreak: 0,
@@ -57,7 +57,7 @@ func (s *CheckinService) DailyCheckin(userID uint, req request.CheckinRequest) (
 
 	// 计算连续天数
 	yesterday := time.Now().AddDate(0, 0, -1).Format("2006-01-02")
-	var yesterdayCheckin miniprogram.DailyCheckin
+	var yesterdayCheckin model.DailyCheckin
 	err = global.GVA_DB.Where("user_id = ? AND DATE(checkin_date) = ?", userID, yesterday).First(&yesterdayCheckin).Error
 
 	var newStreak int
@@ -76,7 +76,7 @@ func (s *CheckinService) DailyCheckin(userID uint, req request.CheckinRequest) (
 	totalRewards := gamificationService.CalculateCheckinRewards(newStreak, req.MoodLevel)
 
 	// 创建打卡记录
-	checkin := miniprogram.DailyCheckin{
+	checkin := model.DailyCheckin{
 		UserID:      userID,
 		CheckinDate: time.Now(),
 		MoodLevel:   req.MoodLevel,
@@ -152,7 +152,7 @@ func (s *CheckinService) DailyCheckin(userID uint, req request.CheckinRequest) (
 func (s *CheckinService) GetTodayCheckin(userID uint) (*response.TodayCheckinResponse, error) {
 	today := time.Now().Format("2006-01-02")
 
-	var checkin miniprogram.DailyCheckin
+	var checkin model.DailyCheckin
 	err := global.GVA_DB.Where("user_id = ? AND DATE(checkin_date) = ?", userID, today).First(&checkin).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -189,12 +189,12 @@ func (s *CheckinService) GetCheckinHistory(userID uint, page, pageSize int, mont
 	}
 
 	var total int64
-	err := query.Model(&miniprogram.DailyCheckin{}).Count(&total).Error
+	err := query.Model(&model.DailyCheckin{}).Count(&total).Error
 	if err != nil {
 		return nil, err
 	}
 
-	var checkins []miniprogram.DailyCheckin
+	var checkins []model.DailyCheckin
 	err = query.Order("checkin_date DESC").Offset(offset).Limit(pageSize).Find(&checkins).Error
 	if err != nil {
 		return nil, err
@@ -211,7 +211,7 @@ func (s *CheckinService) GetCheckinHistory(userID uint, page, pageSize int, mont
 // GetCheckinStatistics 获取打卡统计
 func (s *CheckinService) GetCheckinStatistics(userID uint) (*response.CheckinStatsResponse, error) {
 	// 获取戒色记录
-	var abstinenceRecord miniprogram.AbstinenceRecord
+	var abstinenceRecord model.AbstinenceRecord
 	err := global.GVA_DB.Where("user_id = ? AND status = 1", userID).First(&abstinenceRecord).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -234,14 +234,14 @@ func (s *CheckinService) GetCheckinStatistics(userID uint) (*response.CheckinSta
 
 	// 计算总打卡天数
 	var totalDays int64
-	err = global.GVA_DB.Model(&miniprogram.DailyCheckin{}).Where("user_id = ?", userID).Count(&totalDays).Error
+	err = global.GVA_DB.Model(&model.DailyCheckin{}).Where("user_id = ?", userID).Count(&totalDays).Error
 	if err != nil {
 		return nil, err
 	}
 
 	// 计算平均心情
 	var avgMood sql.NullFloat64
-	err = global.GVA_DB.Model(&miniprogram.DailyCheckin{}).Where("user_id = ?", userID).Select("AVG(mood_level)").Scan(&avgMood).Error
+	err = global.GVA_DB.Model(&model.DailyCheckin{}).Where("user_id = ?", userID).Select("AVG(mood_level)").Scan(&avgMood).Error
 	if err != nil {
 		return nil, err
 	}
@@ -254,7 +254,7 @@ func (s *CheckinService) GetCheckinStatistics(userID uint) (*response.CheckinSta
 
 	// 计算总奖励
 	var totalRewards int64
-	err = global.GVA_DB.Model(&miniprogram.DailyCheckin{}).Where("user_id = ?", userID).Select("SUM(rewards)").Scan(&totalRewards).Error
+	err = global.GVA_DB.Model(&model.DailyCheckin{}).Where("user_id = ?", userID).Select("SUM(rewards)").Scan(&totalRewards).Error
 	if err != nil {
 		return nil, err
 	}
@@ -262,7 +262,7 @@ func (s *CheckinService) GetCheckinStatistics(userID uint) (*response.CheckinSta
 	// 计算本月打卡天数
 	thisMonth := time.Now().Format("2006-01")
 	var thisMonthDays int64
-	err = global.GVA_DB.Model(&miniprogram.DailyCheckin{}).Where("user_id = ? AND DATE_FORMAT(checkin_date, '%Y-%m') = ?", userID, thisMonth).Count(&thisMonthDays).Error
+	err = global.GVA_DB.Model(&model.DailyCheckin{}).Where("user_id = ? AND DATE_FORMAT(checkin_date, '%Y-%m') = ?", userID, thisMonth).Count(&thisMonthDays).Error
 	if err != nil {
 		return nil, err
 	}
@@ -271,7 +271,7 @@ func (s *CheckinService) GetCheckinStatistics(userID uint) (*response.CheckinSta
 	startOfWeek := s.getStartOfWeek(time.Now())
 	endOfWeek := startOfWeek.AddDate(0, 0, 6)
 	var thisWeekDays int64
-	err = global.GVA_DB.Model(&miniprogram.DailyCheckin{}).Where("user_id = ? AND checkin_date BETWEEN ? AND ?", userID, startOfWeek, endOfWeek).Count(&thisWeekDays).Error
+	err = global.GVA_DB.Model(&model.DailyCheckin{}).Where("user_id = ? AND checkin_date BETWEEN ? AND ?", userID, startOfWeek, endOfWeek).Count(&thisWeekDays).Error
 	if err != nil {
 		return nil, err
 	}
@@ -305,7 +305,7 @@ func (s *CheckinService) GetWeeklyProgress(userID uint) (*response.WeeklyProgres
 		dateStr := date.Format("2006-01-02")
 
 		// 查询当天的打卡记录
-		var checkin miniprogram.DailyCheckin
+		var checkin model.DailyCheckin
 		err := global.GVA_DB.Where("user_id = ? AND DATE(checkin_date) = ?", userID, dateStr).First(&checkin).Error
 
 		hasChecked := !errors.Is(err, gorm.ErrRecordNotFound)
@@ -353,14 +353,14 @@ func (s *CheckinService) GetMonthlyCalendar(userID uint, year, month int) (*resp
 	lastDay := firstDay.AddDate(0, 1, -1)
 
 	// 获取本月的打卡记录
-	var checkins []miniprogram.DailyCheckin
+	var checkins []model.DailyCheckin
 	err := global.GVA_DB.Where("user_id = ? AND checkin_date BETWEEN ? AND ?", userID, firstDay, lastDay).Find(&checkins).Error
 	if err != nil {
 		return nil, err
 	}
 
 	// 创建日期映射
-	checkinMap := make(map[string]miniprogram.DailyCheckin)
+	checkinMap := make(map[string]model.DailyCheckin)
 	for _, checkin := range checkins {
 		date := checkin.CheckinDate.Format("2006-01-02")
 		checkinMap[date] = checkin
@@ -479,7 +479,7 @@ func (s *CheckinService) GetWeeklyProgressForChart(userID uint) (*response.Weekl
 		dateStr := date.Format("2006-01-02")
 
 		// 查询当天的打卡记录
-		var checkin miniprogram.DailyCheckin
+		var checkin model.DailyCheckin
 		err := global.GVA_DB.Where("user_id = ? AND DATE(checkin_date) = ?", userID, dateStr).First(&checkin).Error
 
 		hasChecked := !errors.Is(err, gorm.ErrRecordNotFound)

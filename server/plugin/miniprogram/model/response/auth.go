@@ -9,7 +9,7 @@ import (
 // WxLoginResponse 微信登录响应
 type WxLoginResponse struct {
 	Token string              `json:"token"` // JWT token
-	User  *miniprogram.WxUser `json:"user"`  // 用户信息
+	User  *model.WxUser `json:"user"`  // 用户信息
 }
 
 // RefreshTokenResponse 刷新token响应
@@ -20,18 +20,18 @@ type RefreshTokenResponse struct {
 // LoginResponse 普通登录响应
 type LoginResponse struct {
 	Token string              `json:"token"` // JWT token
-	User  *miniprogram.WxUser `json:"user"`  // 用户信息
+	User  *model.WxUser `json:"user"`  // 用户信息
 }
 
 // RegisterResponse 用户注册响应
 type RegisterResponse struct {
-	User *miniprogram.WxUser `json:"user"` // 用户信息
+	User *model.WxUser `json:"user"` // 用户信息
 }
 
 // UserProfileResponse 用户详细资料响应
 type UserProfileResponse struct {
-	User             *miniprogram.WxUser           `json:"user"`             // 用户基本信息
-	AbstinenceRecord *miniprogram.AbstinenceRecord `json:"abstinenceRecord"` // 戒色记录
+	User             *model.WxUser           `json:"user"`             // 用户基本信息
+	AbstinenceRecord *model.AbstinenceRecord `json:"abstinenceRecord"` // 戒色记录
 }
 
 // ProfileStatsResponse 个人中心统计数据响应

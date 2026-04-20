@@ -8,7 +8,7 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/model"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/model/request"
 	miniResponse "github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/model/response"
-	"github.com/flipped-aurora/gin-vue-admin/server/service"
+	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/service"
 	"github.com/flipped-aurora/gin-vue-admin/server/utils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -23,7 +23,7 @@ type EmergencyApi struct{}
 // @Accept json
 // @Produce json
 // @Param data body request.CreateEmergencyHelpRequest true "求助信息"
-// @Success 200 {object} response.Response{data=miniprogram.EmergencyHelp} "创建成功"
+// @Success 200 {object} response.Response{data=model.EmergencyHelp} "创建成功"
 // @Router /emergency/help [post]
 // @Security ApiKeyAuth
 func (e *EmergencyApi) CreateEmergencyHelp(c *gin.Context) {
@@ -391,7 +391,7 @@ func (e *EmergencyApi) GetEmergencyStats(c *gin.Context) {
 func (e *EmergencyApi) GetOnlineVolunteers(c *gin.Context) {
 	// 简化实现，获取在线志愿者数量
 	var count int64
-	global.GVA_DB.Model(&miniprogram.EmergencyVolunteer{}).
+	global.GVA_DB.Model(&model.EmergencyVolunteer{}).
 		Where("is_online = ? AND status = ?", true, 2).Count(&count)
 
 	result := miniResponse.OnlineVolunteersResponse{

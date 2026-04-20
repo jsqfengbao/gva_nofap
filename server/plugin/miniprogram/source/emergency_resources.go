@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var EmergencyResources = []miniprogram.EmergencyResource{
+var EmergencyResources = []model.EmergencyResource{
 	{
 		ID:          1,
 		Title:       "4-7-8深呼吸练习",
@@ -143,7 +143,7 @@ var EmergencyResources = []miniprogram.EmergencyResource{
 func InitializeEmergencyResources(db *gorm.DB) error {
 	// 检查是否已经初始化过
 	var count int64
-	db.Model(&miniprogram.EmergencyResource{}).Count(&count)
+	db.Model(&model.EmergencyResource{}).Count(&count)
 	if count > 0 {
 		return nil // 已经初始化过，跳过
 	}

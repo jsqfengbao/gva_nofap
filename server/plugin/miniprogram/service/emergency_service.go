@@ -15,8 +15,8 @@ import (
 type EmergencyService struct{}
 
 // CreateEmergencyHelp 创建紧急求助
-func (e *EmergencyService) CreateEmergencyHelp(userID uint, req request.CreateEmergencyHelpRequest) (miniprogram.EmergencyHelp, error) {
-	help := miniprogram.EmergencyHelp{
+func (e *EmergencyService) CreateEmergencyHelp(userID uint, req request.CreateEmergencyHelpRequest) (model.EmergencyHelp, error) {
+	help := model.EmergencyHelp{
 		UserID:      userID,
 		Type:        req.Type,
 		Priority:    req.Priority,
@@ -43,10 +43,10 @@ func (e *EmergencyService) CreateEmergencyHelp(userID uint, req request.CreateEm
 
 // GetEmergencyHelps 获取紧急求助列表
 func (e *EmergencyService) GetEmergencyHelps(userID uint, req request.GetEmergencyHelpsRequest) (miniprogramRes.EmergencyHelpListResponse, error) {
-	var helps []miniprogram.EmergencyHelp
+	var helps []model.EmergencyHelp
 	var total int64
 
-	db := global.GVA_DB.Model(&miniprogram.EmergencyHelp{})
+	db := global.GVA_DB.Model(&model.EmergencyHelp{})
 
 	// 如果不是管理员，只能看自己的记录
 	if req.UserID == 0 {
@@ -94,7 +94,7 @@ func (e *EmergencyService) GetEmergencyHelps(userID uint, req request.GetEmergen
 
 // GetEmergencyHelpDetail 获取紧急求助详情
 func (e *EmergencyService) GetEmergencyHelpDetail(userID uint, helpID uint) (miniprogramRes.EmergencyHelpDetailResponse, error) {
-	var help miniprogram.EmergencyHelp
+	var help model.EmergencyHelp
 
 	if err := global.GVA_DB.Preload("User").Preload("Volunteer").
 		Preload("Responses.Volunteer").First(&help, helpID).Error; err != nil {
@@ -148,7 +148,7 @@ func (e *EmergencyService) GetEmergencyHelpDetail(userID uint, helpID uint) (min
 
 // UpdateEmergencyHelp 更新紧急求助
 func (e *EmergencyService) UpdateEmergencyHelp(userID uint, req request.UpdateEmergencyHelpRequest) error {
-	var help miniprogram.EmergencyHelp
+	var help model.EmergencyHelp
 
 	if err := global.GVA_DB.First(&help, req.ID).Error; err != nil {
 		return err
@@ -189,7 +189,7 @@ func (e *EmergencyService) CreateEmergencyResponse(volunteerID uint, req request
 	}
 
 	// 检查求助记录
-	var help miniprogram.EmergencyHelp
+	var help model.EmergencyHelp
 	if err := global.GVA_DB.First(&help, req.HelpID).Error; err != nil {
 		return err
 	}
@@ -199,7 +199,7 @@ func (e *EmergencyService) CreateEmergencyResponse(volunteerID uint, req request
 	}
 
 	// 创建响应
-	response := miniprogram.EmergencyResponse{
+	response := model.EmergencyResponse{
 		HelpID:      req.HelpID,
 		VolunteerID: volunteerID,
 		Type:        req.Type,
@@ -228,7 +228,7 @@ func (e *EmergencyService) CreateEmergencyResponse(volunteerID uint, req request
 	}
 
 	// 更新志愿者当前服务数
-	if err := tx.Model(&miniprogram.EmergencyVolunteer{}).
+	if err := tx.Model(&model.EmergencyVolunteer{}).
 		Where("user_id = ?", volunteerID).
 		Update("current_load", gorm.Expr("current_load + ?", 1)).Error; err != nil {
 		tx.Rollback()
@@ -242,7 +242,7 @@ func (e *EmergencyService) CreateEmergencyResponse(volunteerID uint, req request
 // ConnectVolunteer 连接志愿者
 func (e *EmergencyService) ConnectVolunteer(userID uint, req request.ConnectVolunteerRequest) (miniprogramRes.ConnectVolunteerResponse, error) {
 	// 检查求助记录
-	var help miniprogram.EmergencyHelp
+	var help model.EmergencyHelp
 	if err := global.GVA_DB.First(&help, req.HelpID).Error; err != nil {
 		return miniprogramRes.ConnectVolunteerResponse{}, err
 	}
@@ -290,12 +290,12 @@ func (e *EmergencyService) ConnectVolunteer(userID uint, req request.ConnectVolu
 // RegisterVolunteer 注册志愿者
 func (e *EmergencyService) RegisterVolunteer(userID uint, req request.EmergencyVolunteerRequest) error {
 	// 检查是否已注册
-	var existing miniprogram.EmergencyVolunteer
+	var existing model.EmergencyVolunteer
 	if err := global.GVA_DB.Where("user_id = ?", userID).First(&existing).Error; err == nil {
 		return errors.New("已经是志愿者")
 	}
 
-	volunteer := miniprogram.EmergencyVolunteer{
+	volunteer := model.EmergencyVolunteer{
 		UserID:       userID,
 		Status:       1, // 待审核
 		IsOnline:     false,
@@ -317,7 +317,7 @@ func (e *EmergencyService) RegisterVolunteer(userID uint, req request.EmergencyV
 
 // UpdateVolunteerStatus 更新志愿者状态
 func (e *EmergencyService) UpdateVolunteerStatus(userID uint, req request.UpdateVolunteerStatusRequest) error {
-	return global.GVA_DB.Model(&miniprogram.EmergencyVolunteer{}).
+	return global.GVA_DB.Model(&model.EmergencyVolunteer{}).
 		Where("user_id = ?", userID).
 		Updates(map[string]interface{}{
 			"is_online":      req.IsOnline,
@@ -327,10 +327,10 @@ func (e *EmergencyService) UpdateVolunteerStatus(userID uint, req request.Update
 
 // GetEmergencyResources 获取紧急求助资源
 func (e *EmergencyService) GetEmergencyResources(req request.GetEmergencyResourcesRequest) (miniprogramRes.ResourceListResponse, error) {
-	var resources []miniprogram.EmergencyResource
+	var resources []model.EmergencyResource
 	var total int64
 
-	db := global.GVA_DB.Model(&miniprogram.EmergencyResource{}).Where("is_active = ?", true)
+	db := global.GVA_DB.Model(&model.EmergencyResource{}).Where("is_active = ?", true)
 
 	// 筛选条件
 	if req.Type > 0 {
@@ -372,7 +372,7 @@ func (e *EmergencyService) GetEmergencyResources(req request.GetEmergencyResourc
 
 // UseResource 使用资源(增加使用次数)
 func (e *EmergencyService) UseResource(resourceID uint) error {
-	return global.GVA_DB.Model(&miniprogram.EmergencyResource{}).
+	return global.GVA_DB.Model(&model.EmergencyResource{}).
 		Where("id = ?", resourceID).
 		Update("usage_count", gorm.Expr("usage_count + ?", 1)).Error
 }
@@ -380,7 +380,7 @@ func (e *EmergencyService) UseResource(resourceID uint) error {
 // RateResource 资源评分
 func (e *EmergencyService) RateResource(userID uint, req request.RateResourceRequest) error {
 	// 检查资源是否存在
-	var resource miniprogram.EmergencyResource
+	var resource model.EmergencyResource
 	if err := global.GVA_DB.First(&resource, req.ResourceID).Error; err != nil {
 		return err
 	}
@@ -400,15 +400,15 @@ func (e *EmergencyService) GetEmergencyStats() (miniprogramRes.EmergencyStatsRes
 	var stats miniprogramRes.EmergencyStatsResponse
 
 	// 基础统计
-	global.GVA_DB.Model(&miniprogram.EmergencyHelp{}).Count(&stats.TotalHelps)
-	global.GVA_DB.Model(&miniprogram.EmergencyHelp{}).Where("status = ?", 1).Count(&stats.PendingHelps)
-	global.GVA_DB.Model(&miniprogram.EmergencyHelp{}).Where("status = ?", 2).Count(&stats.InProgressHelps)
-	global.GVA_DB.Model(&miniprogram.EmergencyHelp{}).Where("status = ?", 3).Count(&stats.ResolvedHelps)
-	global.GVA_DB.Model(&miniprogram.EmergencyVolunteer{}).Where("is_online = ? AND status = ?", true, 2).Count(&stats.OnlineVolunteers)
+	global.GVA_DB.Model(&model.EmergencyHelp{}).Count(&stats.TotalHelps)
+	global.GVA_DB.Model(&model.EmergencyHelp{}).Where("status = ?", 1).Count(&stats.PendingHelps)
+	global.GVA_DB.Model(&model.EmergencyHelp{}).Where("status = ?", 2).Count(&stats.InProgressHelps)
+	global.GVA_DB.Model(&model.EmergencyHelp{}).Where("status = ?", 3).Count(&stats.ResolvedHelps)
+	global.GVA_DB.Model(&model.EmergencyVolunteer{}).Where("is_online = ? AND status = ?", true, 2).Count(&stats.OnlineVolunteers)
 
 	// 平均响应时间(分钟)
 	var avgResponse sql.NullFloat64
-	global.GVA_DB.Model(&miniprogram.EmergencyHelp{}).
+	global.GVA_DB.Model(&model.EmergencyHelp{}).
 		Where("responded_at IS NOT NULL").
 		Select("AVG(TIMESTAMPDIFF(MINUTE, created_at, responded_at))").
 		Scan(&avgResponse)
@@ -418,7 +418,7 @@ func (e *EmergencyService) GetEmergencyStats() (miniprogramRes.EmergencyStatsRes
 
 	// 平均解决时间(分钟)
 	var avgResolution sql.NullFloat64
-	global.GVA_DB.Model(&miniprogram.EmergencyHelp{}).
+	global.GVA_DB.Model(&model.EmergencyHelp{}).
 		Where("resolved_at IS NOT NULL").
 		Select("AVG(TIMESTAMPDIFF(MINUTE, created_at, resolved_at))").
 		Scan(&avgResolution)
@@ -431,12 +431,12 @@ func (e *EmergencyService) GetEmergencyStats() (miniprogramRes.EmergencyStatsRes
 		Type  int   `json:"type"`
 		Count int64 `json:"count"`
 	}
-	global.GVA_DB.Model(&miniprogram.EmergencyHelp{}).
+	global.GVA_DB.Model(&model.EmergencyHelp{}).
 		Select("type, COUNT(*) as count").
 		Group("type").Find(&typeStats)
 
 	for _, ts := range typeStats {
-		help := miniprogram.EmergencyHelp{Type: ts.Type}
+		help := model.EmergencyHelp{Type: ts.Type}
 		stats.HelpsByType = append(stats.HelpsByType, miniprogramRes.TypeStat{
 			Type:     ts.Type,
 			TypeName: help.GetTypeName(),
@@ -449,12 +449,12 @@ func (e *EmergencyService) GetEmergencyStats() (miniprogramRes.EmergencyStatsRes
 		Priority int   `json:"priority"`
 		Count    int64 `json:"count"`
 	}
-	global.GVA_DB.Model(&miniprogram.EmergencyHelp{}).
+	global.GVA_DB.Model(&model.EmergencyHelp{}).
 		Select("priority, COUNT(*) as count").
 		Group("priority").Find(&priorityStats)
 
 	for _, ps := range priorityStats {
-		help := miniprogram.EmergencyHelp{Priority: ps.Priority}
+		help := model.EmergencyHelp{Priority: ps.Priority}
 		stats.HelpsByPriority = append(stats.HelpsByPriority, miniprogramRes.PriorityStat{
 			Priority:     ps.Priority,
 			PriorityName: help.GetPriorityName(),
@@ -469,7 +469,7 @@ func (e *EmergencyService) GetEmergencyStats() (miniprogramRes.EmergencyStatsRes
 
 // autoMatchVolunteer 自动匹配志愿者
 func (e *EmergencyService) autoMatchVolunteer(helpID uint) {
-	var help miniprogram.EmergencyHelp
+	var help model.EmergencyHelp
 	if err := global.GVA_DB.First(&help, helpID).Error; err != nil {
 		return
 	}
@@ -485,8 +485,8 @@ func (e *EmergencyService) autoMatchVolunteer(helpID uint) {
 }
 
 // findAvailableVolunteer 查找可用志愿者
-func (e *EmergencyService) findAvailableVolunteer(helpType, priority int) (*miniprogram.EmergencyVolunteer, error) {
-	var volunteer miniprogram.EmergencyVolunteer
+func (e *EmergencyService) findAvailableVolunteer(helpType, priority int) (*model.EmergencyVolunteer, error) {
+	var volunteer model.EmergencyVolunteer
 
 	// 优先选择专长匹配且当前负载较低的志愿者
 	db := global.GVA_DB.Preload("User").
@@ -507,7 +507,7 @@ func (e *EmergencyService) findAvailableVolunteer(helpType, priority int) (*mini
 }
 
 // canUserRespond 检查用户是否可以响应
-func (e *EmergencyService) canUserRespond(userID uint, help miniprogram.EmergencyHelp) bool {
+func (e *EmergencyService) canUserRespond(userID uint, help model.EmergencyHelp) bool {
 	// 不能响应自己的求助
 	if help.UserID == userID {
 		return false
@@ -520,7 +520,7 @@ func (e *EmergencyService) canUserRespond(userID uint, help miniprogram.Emergenc
 // isActiveVolunteer 检查是否是活跃志愿者
 func (e *EmergencyService) isActiveVolunteer(userID uint) bool {
 	var count int64
-	global.GVA_DB.Model(&miniprogram.EmergencyVolunteer{}).
+	global.GVA_DB.Model(&model.EmergencyVolunteer{}).
 		Where("user_id = ? AND status = ? AND current_load < max_load", userID, 2).
 		Count(&count)
 	return count > 0

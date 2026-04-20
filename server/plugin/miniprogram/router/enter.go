@@ -12,3 +12,5 @@ type RouterGroup struct {
 	LearningRouter
 	StatsRouter
 }
+
+var RouterGroupApp = new(RouterGroup)

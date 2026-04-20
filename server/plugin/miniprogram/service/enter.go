@@ -11,3 +11,5 @@ type ServiceGroup struct {
 	EmergencyService
 	LearningService
 }
+
+var ServiceGroupApp = new(ServiceGroup)

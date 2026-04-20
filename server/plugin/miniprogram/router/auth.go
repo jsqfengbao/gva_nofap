@@ -1,7 +1,7 @@
 package router
 
 import (
-	v1 "github.com/flipped-aurora/gin-vue-admin/server/api/v1"
+	"github.com/flipped-aurora/gin-vue-admin/server/plugin/miniprogram/api"
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,7 +10,7 @@ type AuthRouter struct{}
 // InitAuthRouter 初始化认证路由
 func (s *AuthRouter) InitAuthRouter(Router *gin.RouterGroup) {
 	authRouter := Router.Group("auth")
-	authApi := v1.ApiGroupApp.MiniprogramApiGroup.AuthApi
+	authApi := api.ApiGroupApp.AuthApi
 
 	{
 		// 无需认证的路由

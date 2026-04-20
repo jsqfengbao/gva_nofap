@@ -32,13 +32,13 @@ export const API_DOMAINS = {
 // API路径前缀配置
 export const API_PREFIXES = {
   [ENV_TYPES.DEVELOPMENT]: '/api/v1/miniprogram',  // 本地环境也需要 /api 前缀
-  [ENV_TYPES.PRODUCTION]: 'api/v1/miniprogram',    // 最终正确方案 (看Nginx配置后):
+  [ENV_TYPES.PRODUCTION]: '/api/v1/miniprogram',    // 最终正确方案 (看Nginx配置后):
   // → 小程序完整请求: https://nofap.srxiezuo.com/api/v1/miniprogram/... ✓
   // → 匹配 Nginx location /api { ... } ✓
   // → rewrite ^/api/(.*)$ /$1 → 去掉/api → /v1/miniprogram/... ✓
   // → 传给Gin后端正好是 /v1/miniprogram/... ✓ 和路由完全匹配！
   // → 看日志你后端收到的就是 /v1/miniprogram/...，这次绝对对了！
-  [ENV_TYPES.TESTING]: 'api/v1/miniprogram'          // 同上
+  [ENV_TYPES.TESTING]: '/api/v1/miniprogram'          // 同上
 }
 
 // 静态资源域名配置
@@ -111,11 +111,21 @@ export function getCurrentConfig() {
 export function buildApiUrl(path = '') {
   const config = getCurrentConfig()
   const cleanPath = path.startsWith('/') ? path : `/${path}`
-  // 确保BASE_URL和apiPrefix之间有斜杠
-  const baseWithPrefix = config.domain.BASE_URL.endsWith('/') 
-    ? `${config.domain.BASE_URL}${config.apiPrefix}`
-    : `${config.domain.BASE_URL}/${config.apiPrefix}`
-  return `${baseWithPrefix}${cleanPath}`
+  
+  // 标准化斜杠处理：去掉重复斜杠，避免 // → /
+  let baseWithPrefix
+  if (config.domain.BASE_URL.endsWith('/') && config.apiPrefix.startsWith('/')) {
+    // 两个都有斜杠 → 去掉一个
+    baseWithPrefix = config.domain.BASE_URL + config.apiPrefix.substring(1)
+  } else if (config.domain.BASE_URL.endsWith('/') || config.apiPrefix.startsWith('/')) {
+    // 其中一个有斜杠 → 直接连接
+    baseWithPrefix = config.domain.BASE_URL + config.apiPrefix
+  } else {
+    // 都没有斜杠 → 添加斜杠
+    baseWithPrefix = `${config.domain.BASE_URL}/${config.apiPrefix}`
+  }
+  
+  return baseWithPrefix + cleanPath
 }
 
 // 获取WebSocket URL

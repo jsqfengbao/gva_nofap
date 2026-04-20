@@ -81,7 +81,10 @@ const httpInterceptor = {
       console.log(`📤 API请求 [${requestId}]:`, {
         url: options.url,
         method: options.method || 'GET',
-        hasAuth: !!options.header.Authorization
+        data: options.data,
+        query: options.query,
+        hasAuth: !!options.header.Authorization,
+        headers: options.header
       })
 
     } catch (error) {
@@ -175,7 +178,9 @@ const responseInterceptor = {
     const requestId = options?.requestId || 'unknown'
     console.log(`📥 API响应 [${requestId}]:`, {
       status: response.statusCode,
-      success: response.statusCode === 200
+      success: response.statusCode === 200,
+      data: response.data,
+      headers: response.header
     })
 
     // 处理认证错误

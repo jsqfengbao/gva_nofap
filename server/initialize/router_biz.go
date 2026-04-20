@@ -17,7 +17,7 @@ func initBizRouter(routers ...*gin.RouterGroup) {
 
 	// 小程序路由 - 认证相关接口
 	miniprogramRouter := router.RouterGroupApp.Miniprogram
-	miniprogramGroup := publicGroup.Group("api/v1/miniprogram")
+	miniprogramGroup := publicGroup.Group("v1/miniprogram")
 	{
 		miniprogramRouter.AuthRouter.InitAuthRouter(miniprogramGroup)               // 小程序认证路由
 		miniprogramRouter.UserRouter.InitUserRouter(miniprogramGroup)               // 小程序用户路由

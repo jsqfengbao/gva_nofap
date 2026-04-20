@@ -11,8 +11,5 @@ func bizModel() error {
 		return err
 	}
 
-	// 初始化小程序相关数据表
-	MiniProgramTables()
-
 	return nil
 }

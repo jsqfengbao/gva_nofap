@@ -41,49 +41,54 @@
         </view>
       </view>
 
-      <!-- 登录区域 -->
+      <!-- 操作区域 -->
       <view class="login-section">
         <view class="login-intro">
           <text class="intro-title">开始您的自律之旅</text>
-          <text class="intro-desc">使用微信登录，享受完整的个性化服务</text>
+          <text class="intro-desc">支持游客模式体验，也可以登录解锁完整功能</text>
         </view>
 
-        <!-- 微信登录按钮 -->
+        <!-- 优先显示游客体验按钮 -->
         <button 
-          class="wx-login-btn"
-          :class="{ 'loading': isLoading }"
-          @click="handleWxLogin"
+          class="guest-btn"
+          @click="guestMode"
           :disabled="isLoading"
         >
-          <view class="btn-content">
-            <text class="wx-logo" v-if="!isLoading">🔑</text>
-            <view class="loading-spinner" v-else>
-              <view class="spinner"></view>
-            </view>
-            <text class="btn-text">{{ isLoading ? '登录中...' : '微信快速登录' }}</text>
-          </view>
+          <text class="guest-text">👋 游客模式体验</text>
         </button>
-
-        <!-- 快速体验 -->
+        
         <view class="quick-actions">
           <text class="divider-text">或者</text>
+          <!-- 微信登录按钮 -->
           <button 
-            class="guest-btn"
-            @click="guestMode"
+            class="wx-login-btn"
+            :class="{ 'loading': isLoading }"
+            @click="handleWxLogin"
             :disabled="isLoading"
           >
-            <text class="guest-text">游客模式体验</text>
+            <view class="btn-content">
+              <text class="wx-logo" v-if="!isLoading">🔑</text>
+              <view class="loading-spinner" v-else>
+                <view class="spinner"></view>
+              </view>
+              <text class="btn-text">{{ isLoading ? '登录中...' : '微信登录' }}</text>
+            </view>
           </button>
         </view>
 
-        <!-- 用户协议 -->
-        <view class="agreement">
-          <text class="agreement-text">
-            登录即表示同意
-            <text class="link" @click="showAgreement('user')">《用户协议》</text>
-            和
-            <text class="link" @click="showAgreement('privacy')">《隐私政策》</text>
-          </text>
+        <!-- 隐私政策勾选 - 必须用户主动勾选 -->
+        <view class="privacy-section">
+          <view class="checkbox-container" @click="togglePrivacy">
+            <view class="checkbox" :class="{ checked: agreedToPrivacy }">
+              <text v-if="agreedToPrivacy">✓</text>
+            </view>
+            <text class="privacy-text">
+              我已阅读并同意
+              <text class="link" @click.stop="showAgreement('user')">《用户服务协议》</text>
+              和
+              <text class="link" @click.stop="showAgreement('privacy')">《隐私政策》</text>
+            </text>
+          </view>
         </view>
       </view>
 
@@ -102,6 +107,12 @@ import { setUserInfo } from '@/utils/auth.js'
 
 // 响应式数据
 const isLoading = ref(false)
+const agreedToPrivacy = ref(false) // 用户必须主动勾选
+
+// 勾选隐私政策
+const togglePrivacy = () => {
+  agreedToPrivacy.value = !agreedToPrivacy.value
+}
 
 // 检查是否已登录
 const checkLoginStatus = () => {
@@ -114,11 +125,10 @@ const checkLoginStatus = () => {
   }
 }
 
-// 临时开发模式：自动进入游客模式
+// 临时开发模式：自动进入游客模式（生产环境关闭）
 const enableDevelopmentMode = () => {
-  // 检查是否启用开发模式（可通过环境变量控制）
   const isDevelopment = process.env.NODE_ENV === 'development'
-  const autoGuestMode = true // 设置为 false 可关闭自动游客模式
+  const autoGuestMode = false // 审核期间关闭，让审核人员看到完整页面
   
   if (isDevelopment && autoGuestMode) {
     console.log('🚀 开发模式：自动进入游客模式')
@@ -131,6 +141,16 @@ const enableDevelopmentMode = () => {
 // 执行微信登录
 const handleWxLogin = async () => {
   if (isLoading.value) return
+  
+  // 必须先勾选隐私政策
+  if (!agreedToPrivacy.value) {
+    uni.showToast({
+      title: '请先阅读并同意用户协议和隐私政策',
+      icon: 'none',
+      duration: 2500
+    })
+    return
+  }
   
   isLoading.value = true
   
@@ -454,88 +474,128 @@ onMounted(() => {
     }
   }
   
-  .wx-login-btn {
+  .guest-btn {
     width: 100%;
-    height: 96rpx;
-    background: linear-gradient(135deg, #1aad19 0%, #2dc653 100%);
+    height: 84rpx;
+    background: rgba(255, 255, 255, 0.95);
     border: none;
-    border-radius: 24rpx;
-    color: white;
-    font-size: 36rpx;
-    font-weight: 600;
-    margin-bottom: 40rpx;
-    transition: all 0.3s ease;
-    box-shadow: 0 8rpx 24rpx rgba(26, 173, 25, 0.3);
+    border-radius: 20rpx;
     
     &:active {
+      background: white;
       transform: scale(0.98);
     }
-    
-    &.loading {
-      opacity: 0.8;
-      transform: none;
-    }
-    
-    .btn-content {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20rpx;
-    }
-    
-    .wx-logo {
-      font-size: 36rpx;
-    }
-    
-    .loading-spinner {
-      width: 36rpx;
-      height: 36rpx;
-      
-      .spinner {
-        width: 100%;
-        height: 100%;
-        border: 4rpx solid rgba(255, 255, 255, 0.3);
-        border-top: 4rpx solid white;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-      }
-    }
+  }
+  
+  .guest-text {
+    color: #667eea;
+    font-size: 32rpx;
+    font-weight: 600;
   }
   
   .quick-actions {
-    text-align: center;
-    margin-bottom: 40rpx;
+    margin-top: 32rpx;
     
     .divider-text {
       display: block;
-      font-size: 24rpx;
+      text-align: center;
       color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 20rpx;
+      font-size: 24rpx;
+      margin-bottom: 32rpx;
     }
     
-    .guest-btn {
-      background: transparent;
-      border: 2rpx solid rgba(255, 255, 255, 0.3);
-      border-radius: 48rpx;
-      padding: 24rpx 48rpx;
+    .wx-login-btn {
+      width: 100%;
+      height: 96rpx;
+      background: linear-gradient(135deg, #1aad19 0%, #2dc653 100%);
+      border: none;
+      border-radius: 24rpx;
+      color: white;
+      font-size: 36rpx;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 8rpx 24rpx rgba(26, 173, 25, 0.3);
       
-      .guest-text {
-        font-size: 28rpx;
-        color: rgba(255, 255, 255, 0.8);
+      &:active {
+        transform: scale(0.98);
+      }
+      
+      &.loading {
+        opacity: 0.8;
+        transform: none;
+      }
+      
+      .btn-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20rpx;
+      }
+      
+      .wx-logo {
+        font-size: 36rpx;
+      }
+      
+      .loading-spinner {
+        width: 36rpx;
+        height: 36rpx;
+        
+        .spinner {
+          width: 100%;
+          height: 100%;
+          border: 4rpx solid rgba(255, 255, 255, 0.3);
+          border-top: 4rpx solid white;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        }
+      }
+      
+      .btn-text {
+        color: white;
       }
     }
   }
+}
+
+/* 隐私政策勾选区域 */
+.privacy-section {
+  margin-top: 40rpx;
+  padding: 24rpx 32rpx;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16rpx;
   
-  .agreement {
-    text-align: center;
+  .checkbox-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 20rpx;
     
-    .agreement-text {
+    .checkbox {
+      width: 36rpx;
+      height: 36rpx;
+      border: 2rpx solid rgba(255, 255, 255, 0.5);
+      border-radius: 6rpx;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 4rpx;
+      
+      &.checked {
+        background: #10b981;
+        border-color: #10b981;
+        color: white;
+        font-size: 24rpx;
+        font-weight: bold;
+      }
+    }
+    
+    .privacy-text {
       font-size: 24rpx;
-      color: rgba(255, 255, 255, 0.7);
-      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.9);
+      line-height: 1.6;
       
       .link {
-        color: rgba(255, 255, 255, 0.9);
+        color: #93c5fd;
         text-decoration: underline;
       }
     }

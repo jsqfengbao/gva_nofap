@@ -26,17 +26,17 @@
       <!-- 统计概览 -->
       <view class="stats-overview">
         <view class="stat-item">
-          <text class="stat-number">{{ totalDays }}</text>
+          <text class="stat-number">{{ userStats.totalDays }}</text>
           <text class="stat-label">总天数</text>
         </view>
         <view class="stat-divider"></view>
         <view class="stat-item">
-          <text class="stat-number">{{ successRate }}%</text>
+          <text class="stat-number">{{ userStats.successRate }}%</text>
           <text class="stat-label">成功率</text>
         </view>
         <view class="stat-divider"></view>
         <view class="stat-item">
-          <text class="stat-number">{{ longestStreak }}</text>
+          <text class="stat-number">{{ userStats.longestStreak }}</text>
           <text class="stat-label">最长纪录</text>
         </view>
       </view>
@@ -552,6 +552,42 @@ onShow(() => {
       }
     }
   }
+}
+
+/* 统计概览样式 */
+.stats-overview {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
+  border-radius: 32rpx;
+  padding: 32rpx 24rpx;
+  margin: 0 48rpx 48rpx;
+  box-shadow: 0 8rpx 32rpx rgba(52, 211, 153, 0.2);
+}
+
+.stats-overview .stat-item {
+  flex: 1;
+  text-align: center;
+}
+
+.stats-overview .stat-item .stat-number {
+  display: block;
+  font-size: 48rpx;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 8rpx;
+}
+
+.stats-overview .stat-item .stat-label {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.stats-overview .stat-divider {
+  width: 2rpx;
+  height: 60rpx;
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .main-content {

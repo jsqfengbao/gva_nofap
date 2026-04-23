@@ -457,11 +457,7 @@ onMounted(() => {
     }
   }
   
-  .guest-text {
-    color: #667eea;
-    font-size: 32rpx;
-    font-weight: 600;
-  }
+  
   
   .quick-actions {
     margin-top: 32rpx;

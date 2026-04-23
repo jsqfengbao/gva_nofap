@@ -45,36 +45,24 @@
       <view class="login-section">
         <view class="login-intro">
           <text class="intro-title">开始您的自律之旅</text>
-          <text class="intro-desc">支持游客模式体验，也可以登录解锁完整功能</text>
+          <text class="intro-desc">登录后即可使用所有功能</text>
         </view>
 
-        <!-- 优先显示游客体验按钮 -->
+        <!-- 微信登录按钮 -->
         <button 
-          class="guest-btn"
-          @click="guestMode"
+          class="wx-login-btn"
+          :class="{ 'loading': isLoading }"
+          @click="handleWxLogin"
           :disabled="isLoading"
         >
-          <text class="guest-text">👋 游客模式体验</text>
-        </button>
-        
-        <view class="quick-actions">
-          <text class="divider-text">或者</text>
-          <!-- 微信登录按钮 -->
-          <button 
-            class="wx-login-btn"
-            :class="{ 'loading': isLoading }"
-            @click="handleWxLogin"
-            :disabled="isLoading"
-          >
-            <view class="btn-content">
-              <text class="wx-logo" v-if="!isLoading">🔑</text>
-              <view class="loading-spinner" v-else>
-                <view class="spinner"></view>
-              </view>
-              <text class="btn-text">{{ isLoading ? '登录中...' : '微信登录' }}</text>
+          <view class="btn-content">
+            <text class="wx-logo" v-if="!isLoading">🔑</text>
+            <view class="loading-spinner" v-else>
+              <view class="spinner"></view>
             </view>
-          </button>
-        </view>
+            <text class="btn-text">{{ isLoading ? '登录中...' : '微信登录' }}</text>
+          </view>
+        </button>
 
         <!-- 隐私政策勾选 - 必须用户主动勾选 -->
         <view class="privacy-section">
@@ -249,35 +237,7 @@ const performWxLogin = async (code) => {
 }
 
 // 游客模式
-const guestMode = () => {
-  // 必须先勾选隐私政策
-  if (!agreedToPrivacy.value) {
-    uni.showToast({
-      title: '请先阅读并同意用户协议和隐私政策',
-      icon: 'none',
-      duration: 2500
-    })
-    return
-  }
-  
-  uni.setStorageSync('token', 'guest_token')
-  uni.setStorageSync('userInfo', {
-    id: 0,
-    nickname: '游客用户',
-    isGuest: true
-  })
-  
-  uni.showToast({
-    title: '进入游客模式',
-    icon: 'success'
-  })
-  
-  setTimeout(() => {
-    uni.switchTab({
-      url: '/pages/index/index'
-    })
-  }, 1500)
-}
+
 
 // 显示协议
 const showAgreement = (type) => {

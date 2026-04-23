@@ -61,19 +61,6 @@
         </div>
     </div>
 
-    <!-- 游客模式提示条 - 审核整改 (整改问题2) -->
-    <div id="guest-banner" class="bg-amber-50 border-b border-amber-200 px-4 py-2">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-                <i class="fas fa-user-secret text-amber-600"></i>
-                <span class="text-sm text-amber-800 font-medium">游客模式</span>
-            </div>
-            <button onclick="showLoginTip()" class="text-xs bg-amber-500 text-white px-3 py-1 rounded-full font-medium">
-                登录同步数据
-            </button>
-        </div>
-    </div>
-
     <!-- Header -->
     <div class="bg-surface px-6 pt-4 pb-6">
         <div class="flex items-center justify-between mb-4">
@@ -85,8 +72,8 @@
                 <button class="p-2 bg-gray-100 rounded-full">
                     <i class="fas fa-bell text-gray-600"></i>
                 </button>
-                <!-- 游客模式头像 -->
-                <div class="w-10 h-10 bg-gradient-to-br from-gray-400 to-gray-500 rounded-full flex items-center justify-center">
+                <!-- 用户头像 -->
+                <div class="w-10 h-10 bg-gradient-to-br from-primary to-success rounded-full flex items-center justify-center">
                     <i class="fas fa-user text-white text-sm"></i>
                 </div>
             </div>
@@ -95,7 +82,7 @@
 
     <!-- Main Content -->
     <div class="px-6 pb-20">
-        <!-- Streak Counter Card - 游客可见 (只读内容) -->
+        <!-- Streak Counter Card -->
         <div class="bg-gradient-to-br from-primary to-success rounded-3xl p-6 mb-6 streak-glow">
             <div class="text-center text-white">
                 <div class="mb-4">
@@ -114,14 +101,14 @@
                     </div>
                 </div>
 
-                <!-- 打卡按钮 - 游客点击时提示登录 (审核整改) -->
-                <button onclick="needLogin('打卡记录')" class="w-full bg-white text-primary font-bold py-3 rounded-2xl shadow-lg card-hover">
+                <!-- 打卡按钮 -->
+                <button onclick="checkIn()" class="w-full bg-white text-primary font-bold py-3 rounded-2xl shadow-lg card-hover">
                     <i class="fas fa-check-circle mr-2"></i>今日打卡
                 </button>
             </div>
         </div>
 
-        <!-- Quick Stats - 游客可见 (只读内容) -->
+        <!-- Quick Stats -->
         <div class="grid grid-cols-3 gap-4 mb-6">
             <div class="bg-surface rounded-2xl p-4 text-center shadow-sm">
                 <div class="text-2xl font-bold text-gray-800 mb-1">0%</div>
@@ -137,27 +124,27 @@
             </div>
         </div>
 
-        <!-- Quick Actions - 游客可见 -->
+        <!-- Quick Actions -->
         <div class="grid grid-cols-4 gap-4 mb-6">
-            <button onclick="needLogin('紧急求助')" class="flex flex-col items-center">
+            <button onclick="goToPage('emergency.html')" class="flex flex-col items-center">
                 <div class="w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center mb-2">
                     <i class="fas fa-sos text-red-500 text-xl"></i>
                 </div>
                 <span class="text-xs text-gray-600">紧急求助</span>
             </button>
-            <button onclick="needLogin('自我评估')" class="flex flex-col items-center">
+            <button onclick="goToPage('assessment.html')" class="flex flex-col items-center">
                 <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center mb-2">
                     <i class="fas fa-chart-pie text-blue-500 text-xl"></i>
                 </div>
                 <span class="text-xs text-gray-600">自我评估</span>
             </button>
-            <button onclick="alert('学习内容 - 游客可浏览')" class="flex flex-col items-center">
+            <button onclick="goToPage('learning.html')" class="flex flex-col items-center">
                 <div class="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center mb-2">
                     <i class="fas fa-book-open text-purple-500 text-xl"></i>
                 </div>
                 <span class="text-xs text-gray-600">学习内容</span>
             </button>
-            <button onclick="alert('社区 - 游客可浏览')" class="flex flex-col items-center">
+            <button onclick="goToPage('community.html')" class="flex flex-col items-center">
                 <div class="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center mb-2">
                     <i class="fas fa-users text-green-500 text-xl"></i>
                 </div>
@@ -165,7 +152,7 @@
             </button>
         </div>
 
-        <!-- Recent Achievements - 游客可见 (只读内容) -->
+        <!-- Recent Achievements -->
         <div class="bg-surface rounded-2xl p-5 shadow-sm mb-6">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-semibold text-gray-800">成就徽章</h3>
@@ -185,10 +172,10 @@
                     <i class="fas fa-lock text-gray-400"></i>
                 </div>
             </div>
-            <p class="text-xs text-gray-400 mt-3 text-center">登录后即可解锁成就系统</p>
+            <p class="text-xs text-gray-400 mt-3 text-center">完成打卡即可解锁成就</p>
         </div>
 
-        <!-- Tips Card - 游客可见 (只读内容) -->
+        <!-- Tips Card -->
         <div class="bg-gradient-to-br from-secondary to-cyan-600 rounded-2xl p-5 text-white">
             <div class="flex items-start space-x-3">
                 <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
@@ -204,28 +191,28 @@
         </div>
     </div>
 
-    <!-- Bottom Navigation - 游客可见所有页面入口 -->
+    <!-- Bottom Navigation -->
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-3">
         <div class="flex justify-around items-center">
             <button class="flex flex-col items-center text-primary">
                 <i class="fas fa-home text-lg mb-1"></i>
                 <span class="text-xs font-medium">首页</span>
             </button>
-            <button onclick="alert('学习页面 - 游客可浏览')" class="flex flex-col items-center text-gray-400">
+            <button onclick="goToPage('learning.html')" class="flex flex-col items-center text-gray-400">
                 <i class="fas fa-book text-lg mb-1"></i>
                 <span class="text-xs">学习</span>
             </button>
-            <button onclick="needLogin('打卡记录')" class="flex flex-col items-center text-gray-400 relative">
+            <button onclick="checkIn()" class="flex flex-col items-center text-gray-400 relative">
                 <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center -mt-6 shadow-lg">
                     <i class="fas fa-plus text-white text-lg"></i>
                 </div>
                 <span class="text-xs mt-1">记录</span>
             </button>
-            <button onclick="alert('社区页面 - 游客可浏览')" class="flex flex-col items-center text-gray-400">
+            <button onclick="goToPage('community.html')" class="flex flex-col items-center text-gray-400">
                 <i class="fas fa-users text-lg mb-1"></i>
                 <span class="text-xs">社区</span>
             </button>
-            <button onclick="needLogin('个人中心')" class="flex flex-col items-center text-gray-400">
+            <button onclick="goToPage('profile.html')" class="flex flex-col items-center text-gray-400">
                 <i class="fas fa-user text-lg mb-1"></i>
                 <span class="text-xs">我的</span>
             </button>
@@ -233,13 +220,12 @@
     </div>
 
     <script>
-        // 需要登录的操作提示 (审核整改)
-        function needLogin(featureName) {
-            alert('【' + featureName + '】\n\n此功能需要登录后使用\n\n是否立即登录？\n\n【审核要点】\n游客模式下只读内容全部可见\n仅在写入操作时提示登录');
+        function checkIn() {
+            alert('打卡成功！\\n\\n恭喜你完成今日打卡，继续加油！');
         }
-
-        function showLoginTip() {
-            alert('跳转到登录页面...\n\n登录后可同步数据、解锁成就、参与社区互动');
+        
+        function goToPage(page) {
+            window.location.href = page;
         }
     </script>
 </body>

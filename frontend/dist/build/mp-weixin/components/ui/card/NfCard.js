@@ -1,1 +1,1 @@
-"use strict";const e=require("../index.js");wx.createComponent(e.Component$1);
+"use strict";const e=require("../index.js");wx.createComponent(e.Component$2);

@@ -164,6 +164,9 @@
         <NfButton type="primary" @click="closeSuccessModal">继续</NfButton>
       </view>
     </view>
+    
+    <!-- 底部导航 -->
+    <nf-tab-bar current="checkin" />
   </view>
 </template>
 
@@ -171,9 +174,13 @@
 import { ref, reactive, onMounted, computed } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { checkinApi } from '@/apis/index.js'
+import NfTabBar from '@/components/ui/navigation/NfTabBar.vue'
 
 export default {
   name: 'CheckinIndex',
+  components: {
+    NfTabBar
+  },
   setup() {
     // 响应式数据
     const currentTime = ref('')
@@ -757,5 +764,10 @@ export default {
   font-size: 14px;
   color: #666;
   margin-bottom: 4px;
+}
+
+/* 底部安全间距 */
+.checkin-page {
+  padding-bottom: 120rpx;
 }
 </style> 

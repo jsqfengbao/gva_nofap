@@ -1,5 +1,7 @@
 {
   "navigationBarTitleText": "自律助手",
   "navigationStyle": "custom",
-  "usingComponents": {}
+  "usingComponents": {
+    "nf-tab-bar": "../../components/ui/navigation/NfTabBar"
+  }
 }

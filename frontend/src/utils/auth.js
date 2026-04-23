@@ -84,11 +84,7 @@ export function clearUserInfo() {
 // 登出
 export function logout() {
   clearUserInfo()
-  
-  // 跳转到登录页
-  uni.reLaunch({
-    url: '/pages/welcome/welcome'
-  })
+  // 不跳转，留在当前页面
 }
 
 // 检查是否需要登录

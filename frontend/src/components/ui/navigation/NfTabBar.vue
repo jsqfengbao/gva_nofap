@@ -28,15 +28,15 @@ export default {
       tabs: [
         {
           icon: '🏠',
-          text: '主页',
+          text: '首页',
           name: 'home',
           pagePath: '/pages/index/index'
         },
         {
-          icon: '📊',
-          text: '进度',
-          name: 'progress',
-          pagePath: '/pages/progress/index'
+          icon: '✅',
+          text: '打卡',
+          name: 'checkin',
+          pagePath: '/pages/checkin/index'
         },
         {
           icon: '👥',
@@ -79,7 +79,7 @@ export default {
         // 页面跳转
         const tab = this.tabs[index]
         if (tab.pagePath) {
-          uni.switchTab({
+          uni.redirectTo({
             url: tab.pagePath
           })
         }

@@ -1,7 +1,6 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/welcome/welcome",
     "pages/assessment/index",
     "pages/assessment/assessment",
     "pages/assessment/questionnaire",
@@ -34,34 +33,6 @@
     "navigationBarTitleText": "自律助手",
     "navigationBarBackgroundColor": "#FFFFFF",
     "backgroundColor": "#F8FAFC"
-  },
-  "tabBar": {
-    "color": "#8B93A6",
-    "selectedColor": "#667eea",
-    "borderStyle": "white",
-    "backgroundColor": "rgba(255, 255, 255, 0.95)",
-    "list": [
-      {
-        "pagePath": "pages/index/index",
-        "text": "首页"
-      },
-      {
-        "pagePath": "pages/checkin/index",
-        "text": "打卡"
-      },
-      {
-        "pagePath": "pages/community/index",
-        "text": "社区"
-      },
-      {
-        "pagePath": "pages/learning/index",
-        "text": "学习"
-      },
-      {
-        "pagePath": "pages/profile/index",
-        "text": "我的"
-      }
-    ]
   },
   "plugins": {},
   "permission": {},

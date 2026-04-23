@@ -193,6 +193,9 @@
         </view>
       </view>
       
+      <!-- 底部导航 -->
+      <nf-tab-bar current="home" />
+      
       <!-- 底部安全间距 -->
       <view class="bottom-spacer"></view>
     </view>
@@ -203,6 +206,7 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import homeApi from '@/apis/home.js'
+import NfTabBar from '@/components/ui/navigation/NfTabBar.vue'
 
 // 响应式数据
 const currentTime = ref('')
@@ -384,14 +388,10 @@ const formatTime = (dateStr) => {
 const handleCheckin = () => {
   const token = uni.getStorageSync('token')
   if (!token) {
-    uni.showModal({
-      title: '需要登录',
-      content: '打卡功能需要登录后使用，是否前往登录？',
-      success: (res) => {
-        if (res.confirm) {
-          uni.navigateTo({ url: '/pages/welcome/welcome' })
-        }
-      }
+    uni.showToast({
+      title: '请先到「我的」页面登录',
+      icon: 'none',
+      duration: 2000
     })
     return
   }
@@ -399,12 +399,6 @@ const handleCheckin = () => {
 }
 
 // 导航方法
-const goToLogin = () => {
-  uni.redirectTo({
-    url: '/pages/welcome/welcome'
-  })
-}
-
 const goToCheckin = () => {
   uni.switchTab({ url: '/pages/checkin/index' })
 }
@@ -1013,5 +1007,10 @@ onShow(() => {
       }
     }
   }
+}
+
+/* 底部安全间距 */
+.bottom-spacer {
+  height: 120rpx;
 }
 </style> 

@@ -223,6 +223,9 @@
         <text class="loading-text">{{ loadingText }}</text>
       </view>
     </view>
+    
+    <!-- 底部导航 -->
+    <nf-tab-bar current="profile" />
   </view>
 </template>
 
@@ -231,6 +234,7 @@ import { ref, onMounted, computed } from 'vue'
 import { isLoggedIn as checkIsLoggedIn, getUserInfo, wxLogin, logout, getAvatarUrl, setUserInfo, getToken } from '@/utils/auth'
 import { userApi, achievementApi } from '@/apis'
 import { buildApiUrl } from '@/config/env.js'
+import NfTabBar from '@/components/ui/navigation/NfTabBar.vue'
 
 // 响应式数据
 const currentTime = ref('9:41')
@@ -1279,6 +1283,11 @@ const updateUserAvatar = async (avatarUrl) => {
 .loading-text {
   font-size: 28rpx;
   color: #1F2937;
+}
+
+/* 底部安全间距 */
+.profile-page {
+  padding-bottom: 120rpx;
 }
 
 

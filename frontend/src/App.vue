@@ -9,26 +9,6 @@ import { onLaunch, onShow, onHide } from '@dcloudio/uni-app'
 
 onLaunch(() => {
   console.log('App Launch')
-  
-  // 检查是否首次启动
-  const isFirstLaunch = !uni.getStorageSync('hasLaunched')
-  
-  if (isFirstLaunch) {
-    // 标记已启动
-    uni.setStorageSync('hasLaunched', true)
-    
-    // 首次启动时可以显示欢迎页面，但在 H5 环境下保持当前页面
-    // #ifdef MP-WEIXIN
-    uni.redirectTo({
-      url: '/pages/welcome/welcome'
-    })
-    // #endif
-  }
-  
-  // #ifdef H5
-  // H5环境下检查登录状态
-  checkH5LoginStatus()
-  // #endif
 })
 
 onShow(() => {
@@ -40,27 +20,6 @@ onHide(() => {
   console.log('App Hide')
   // 应用隐藏时的逻辑
 })
-
-// #ifdef H5
-const checkH5LoginStatus = () => {
-  const token = uni.getStorageSync('token')
-  const currentPages = getCurrentPages()
-  const currentPage = currentPages[currentPages.length - 1]
-  const currentRoute = currentPage ? currentPage.route : ''
-  
-  // 如果未登录且不在登录相关页面，则跳转到登录页
-  if (!token && 
-      !currentRoute.includes('auth/login') && 
-      !currentRoute.includes('auth/register') &&
-      !currentRoute.includes('welcome')) {
-    setTimeout(() => {
-      uni.navigateTo({
-        url: '/pages/auth/login'
-      })
-    }, 1000)
-  }
-}
-// #endif
 </script>
 
 <style lang="scss">

@@ -3,6 +3,15 @@
     <!-- 状态栏占位 -->
     <view class="status-bar-spacer"></view>
     
+    <!-- 游客模式提示横幅 -->
+    <view class="guest-banner" v-if="isGuest">
+      <text class="guest-icon">👤</text>
+      <text class="guest-text">游客模式 - 打卡和发布功能需要登录后使用</text>
+      <view class="guest-login-btn" @click="goToLogin">
+        <text class="btn-text">登录</text>
+      </view>
+    </view>
+    
     <!-- 头部问候区域 - 毛玻璃效果 -->
     <view class="header-section">
       <view class="header-bg"></view>
@@ -73,9 +82,9 @@
             </view>
           </view>
           
-          <view class="checkin-button" :class="{ 'checked': hasCheckedToday }" @click.stop="handleCheckin">
+          <view class="checkin-button" :class="{ 'checked': hasCheckedToday, 'guest': isGuest }" @click.stop="handleCheckin">
             <text class="checkin-text">
-              {{ hasCheckedToday ? '✅ 今日已打卡' : '👉 点击今日打卡' }}
+              {{ isGuest ? '🔒 登录后可打卡' : (hasCheckedToday ? '✅ 今日已打卡' : '👉 点击今日打卡') }}
             </text>
           </view>
         </view>
@@ -214,6 +223,25 @@ const nextLevelExp = ref(100)
 const todayAchievements = ref([])
 const recentAchievements = ref([])
 
+// 游客模式判断
+const isGuest = computed(() => {
+  const token = uni.getStorageSync('token')
+  return token === 'guest_token' || !token
+})
+
+// 用户名称
+const userName = computed(() => {
+  const userInfo = uni.getStorageSync('userInfo')
+  if (isGuest.value) return '游客'
+  return userInfo?.nickname || '朋友'
+})
+
+// 用户头像
+const userAvatar = computed(() => {
+  const userInfo = uni.getStorageSync('userInfo')
+  return userInfo?.avatarUrl || ''
+})
+
 const userStats = reactive({
   level: 1,
   experience: 0,
@@ -304,14 +332,9 @@ const updateTime = () => {
 const loadUserData = async () => {
   try {
     const token = uni.getStorageSync('token')
-    if (!token) {
-      console.log('用户未登录')
-      // #ifdef H5
-      // H5环境下跳转到登录页面
-      uni.navigateTo({
-        url: '/pages/auth/login'
-      })
-      // #endif
+    if (!token || token === 'guest_token') {
+      console.log('游客模式，使用默认数据')
+      // 游客模式下设置默认数据，不跳转到登录页
       return
     }
 
@@ -372,14 +395,30 @@ const formatTime = (dateStr) => {
 }
 
 const handleCheckin = () => {
-  if (hasCheckedToday.value) {
-    goToCheckin()
-  } else {
-    goToCheckin()
+  if (isGuest.value) {
+    uni.showModal({
+      title: '需要登录',
+      content: '打卡功能需要登录后才能使用，是否前往登录？',
+      confirmText: '去登录',
+      cancelText: '取消',
+      success: (res) => {
+        if (res.confirm) {
+          goToLogin()
+        }
+      }
+    })
+    return
   }
+  goToCheckin()
 }
 
 // 导航方法
+const goToLogin = () => {
+  uni.redirectTo({
+    url: '/pages/welcome/welcome'
+  })
+}
+
 const goToCheckin = () => {
   uni.switchTab({ url: '/pages/checkin/index' })
 }
@@ -439,6 +478,38 @@ onShow(() => {
 .home-page {
   min-height: 100vh;
   background: #F8FAFC;
+}
+
+/* 游客模式横幅 */
+.guest-banner {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 32rpx;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  gap: 16rpx;
+  
+  .guest-icon {
+    font-size: 32rpx;
+  }
+  
+  .guest-text {
+    flex: 1;
+    font-size: 26rpx;
+    color: #92400e;
+    line-height: 1.4;
+  }
+  
+  .guest-login-btn {
+    padding: 12rpx 24rpx;
+    background: #f59e0b;
+    border-radius: 20rpx;
+    
+    .btn-text {
+      font-size: 24rpx;
+      color: white;
+      font-weight: 500;
+    }
+  }
 }
 
 .status-bar {

@@ -1,1 +1,0 @@
-<view class="nf-tabbar data-v-d6f9864e"><view wx:for="{{a}}" wx:for-item="item" wx:key="c" class="{{['data-v-d6f9864e', item.d]}}" bindtap="{{item.e}}"><view class="nf-tabbar__icon data-v-d6f9864e"><text class="nf-icon data-v-d6f9864e">{{item.a}}</text></view><text class="nf-tabbar__text data-v-d6f9864e">{{item.b}}</text></view></view>

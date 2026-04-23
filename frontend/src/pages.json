@@ -1,18 +1,18 @@
 {
-  "easycom": {
-    "autoscan": true,
-    "custom": {
-      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
-    }
-  },
-  "pages": [
-    {
-      "path": "pages/index/index",
-      "style": {
-        "navigationBarTitleText": "戒色助手",
-        "navigationStyle": "custom"
+    "easycom": {
+      "autoscan": true,
+      "custom": {
+        "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
       }
     },
+    "pages": [
+      {
+        "path": "pages/index/index",
+        "style": {
+          "navigationBarTitleText": "自律助手",
+          "navigationStyle": "custom"
+        }
+      },
     {
       "path": "pages/welcome/welcome",
       "style": {
@@ -205,7 +205,7 @@
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "戒色助手",
+    "navigationBarTitleText": "自律助手",
     "navigationBarBackgroundColor": "#FFFFFF",
     "backgroundColor": "#F8FAFC",
     "app-plus": {

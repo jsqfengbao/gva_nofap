@@ -1,13 +1,13 @@
 {
   "id": "com.nofap.helper",
-  "name": "戒色助手",
+  "name": "自律助手",
   "version": {
-    "name": "1.1.4",
-    "code": "114"
+    "name": "1.2.0",
+    "code": "120"
   },
-  "description": "专注于帮助年轻人戒除色情内容依赖的游戏化健康管理应用",
-  "versionName": "1.1.4",
-  "versionCode": "114",
+  "description": "专注于帮助年轻人培养良好生活习惯的游戏化健康管理应用，通过打卡、成就系统等方式激励用户坚持自律生活",
+  "versionName": "1.2.0",
+  "versionCode": "120",
   "transformPx": false,
   "app-plus": {
     "usingComponents": true,
@@ -95,14 +95,7 @@
       "useCompilerPlugins": false
     },
     "usingComponents": true,
-    "permission": {
-      "scope.userLocation": {
-        "desc": "你的位置信息将用于小程序位置接口的效果展示"
-      }
-    },
-    "requiredPrivateInfos": [
-      "getLocation"
-    ]
+    "permission": {}
   },
   "mp-alipay": {
     "usingComponents": true

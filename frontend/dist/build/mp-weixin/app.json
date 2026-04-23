@@ -31,7 +31,7 @@
   ],
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "戒色助手",
+    "navigationBarTitleText": "自律助手",
     "navigationBarBackgroundColor": "#FFFFFF",
     "backgroundColor": "#F8FAFC"
   },
@@ -64,13 +64,6 @@
     ]
   },
   "plugins": {},
-  "permission": {
-    "scope.userLocation": {
-      "desc": "你的位置信息将用于小程序位置接口的效果展示"
-    }
-  },
-  "requiredPrivateInfos": [
-    "getLocation"
-  ],
+  "permission": {},
   "usingComponents": {}
 }

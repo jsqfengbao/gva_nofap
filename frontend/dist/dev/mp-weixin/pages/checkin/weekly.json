@@ -1,9 +1,0 @@
-{
-  "navigationBarTitleText": "本周进度",
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "nf-nav-bar": "../../components/ui/navigation/NfNavBar",
-    "nf-card": "../../components/ui/card/NfCard",
-    "nf-button": "../../components/ui/button/NfButton"
-  }
-}

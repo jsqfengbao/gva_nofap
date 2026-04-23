@@ -1,7 +1,0 @@
-{
-  "navigationBarTitleText": "学习成长",
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "nf-tab-bar": "../../components/ui/navigation/NfTabBar"
-  }
-}

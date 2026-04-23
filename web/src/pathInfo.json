@@ -37,6 +37,11 @@
   "/src/view/layout/setting/title.vue": "layoutSettingTitle",
   "/src/view/layout/tabs/index.vue": "HistoryComponent",
   "/src/view/login/index.vue": "Login",
+  "/src/view/miniprogram/achievement/index.vue": "AchievementManagement",
+  "/src/view/miniprogram/assessment/index.vue": "AssessmentManagement",
+  "/src/view/miniprogram/community/index.vue": "CommunityManagement",
+  "/src/view/miniprogram/learning/index.vue": "LearningManagement",
+  "/src/view/miniprogram/user/index.vue": "UserManagement",
   "/src/view/person/person.vue": "Person",
   "/src/view/routerHolder.vue": "RouterHolder",
   "/src/view/superAdmin/api/api.vue": "Api",
@@ -70,5 +75,12 @@
   "/src/view/systemTools/system/system.vue": "Config",
   "/src/plugin/announcement/form/info.vue": "InfoForm",
   "/src/plugin/announcement/view/info.vue": "Info",
-  "/src/plugin/email/view/index.vue": "Email"
+  "/src/plugin/email/view/index.vue": "Email",
+  "/src/plugin/nofap/view/achievement/achievement.vue": "NofapAchievements",
+  "/src/plugin/nofap/view/community/comments.vue": "NofapComments",
+  "/src/plugin/nofap/view/community/posts.vue": "NofapPosts",
+  "/src/plugin/nofap/view/emergency/emergency.vue": "NofapEmergency",
+  "/src/plugin/nofap/view/index.vue": "NofapIndex",
+  "/src/plugin/nofap/view/learning/learning.vue": "NofapLearning",
+  "/src/plugin/nofap/view/users/users.vue": "NofapUsers"
 }

@@ -17,7 +17,7 @@
           </view>
           <view class="logo-glow"></view>
         </view>
-        <text class="app-name">NoFap 戒色助手</text>
+        <text class="app-name">自律助手</text>
         <text class="app-slogan">重新定义自律 · 塑造更好的自己</text>
       </view>
 
@@ -250,6 +250,16 @@ const performWxLogin = async (code) => {
 
 // 游客模式
 const guestMode = () => {
+  // 必须先勾选隐私政策
+  if (!agreedToPrivacy.value) {
+    uni.showToast({
+      title: '请先阅读并同意用户协议和隐私政策',
+      icon: 'none',
+      duration: 2500
+    })
+    return
+  }
+  
   uni.setStorageSync('token', 'guest_token')
   uni.setStorageSync('userInfo', {
     id: 0,

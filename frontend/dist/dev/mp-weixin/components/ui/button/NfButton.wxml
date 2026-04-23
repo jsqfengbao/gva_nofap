@@ -1,1 +1,0 @@
-<view class="{{['data-v-62d418e1', g]}}" bindtap="{{h}}"><text wx:if="{{a}}" class="{{['data-v-62d418e1', b]}}"></text><text wx:if="{{c}}" class="button-text data-v-62d418e1"><block wx:if="{{$slots.d}}"><slot></slot></block><block wx:else>{{d}}</block></text><text wx:if="{{e}}" class="{{['data-v-62d418e1', f]}}"></text></view>

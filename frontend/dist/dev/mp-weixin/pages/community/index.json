@@ -1,7 +1,0 @@
-{
-  "navigationBarTitleText": "社区互助",
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "nf-tab-bar": "../../components/ui/navigation/NfTabBar"
-  }
-}

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>主页 - 戒色助手</title>
+    <title>主页 - 自律助手</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -61,6 +61,19 @@
         </div>
     </div>
 
+    <!-- 游客模式提示条 - 审核整改 (整改问题2) -->
+    <div id="guest-banner" class="bg-amber-50 border-b border-amber-200 px-4 py-2">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-user-secret text-amber-600"></i>
+                <span class="text-sm text-amber-800 font-medium">游客模式</span>
+            </div>
+            <button onclick="showLoginTip()" class="text-xs bg-amber-500 text-white px-3 py-1 rounded-full font-medium">
+                登录同步数据
+            </button>
+        </div>
+    </div>
+
     <!-- Header -->
     <div class="bg-surface px-6 pt-4 pb-6">
         <div class="flex items-center justify-between mb-4">
@@ -72,8 +85,9 @@
                 <button class="p-2 bg-gray-100 rounded-full">
                     <i class="fas fa-bell text-gray-600"></i>
                 </button>
-                <div class="w-10 h-10 bg-gradient-to-br from-primary to-success rounded-full flex items-center justify-center">
-                    <span class="text-white font-bold text-sm">L8</span>
+                <!-- 游客模式头像 -->
+                <div class="w-10 h-10 bg-gradient-to-br from-gray-400 to-gray-500 rounded-full flex items-center justify-center">
+                    <i class="fas fa-user text-white text-sm"></i>
                 </div>
             </div>
         </div>
@@ -81,12 +95,12 @@
 
     <!-- Main Content -->
     <div class="px-6 pb-20">
-        <!-- Streak Counter Card -->
+        <!-- Streak Counter Card - 游客可见 (只读内容) -->
         <div class="bg-gradient-to-br from-primary to-success rounded-3xl p-6 mb-6 streak-glow">
             <div class="text-center text-white">
                 <div class="mb-4">
                     <i class="fas fa-fire text-4xl mb-2"></i>
-                    <h2 class="text-3xl font-bold">23</h2>
+                    <h2 class="text-3xl font-bold">0</h2>
                     <p class="text-green-100">连续坚持天数</p>
                 </div>
                 
@@ -96,152 +110,137 @@
                         <span class="text-sm font-semibold">7天</span>
                     </div>
                     <div class="w-full bg-white/30 rounded-full h-2">
-                        <div class="bg-white h-2 rounded-full" style="width: 76%"></div>
+                        <div class="bg-white h-2 rounded-full" style="width: 0%"></div>
                     </div>
                 </div>
-                
-                <button class="w-full bg-white text-primary font-bold py-3 rounded-2xl active:scale-95 transition-transform pulse-animation">
-                    今日打卡 ✓
+
+                <!-- 打卡按钮 - 游客点击时提示登录 (审核整改) -->
+                <button onclick="needLogin('打卡记录')" class="w-full bg-white text-primary font-bold py-3 rounded-2xl shadow-lg card-hover">
+                    <i class="fas fa-check-circle mr-2"></i>今日打卡
                 </button>
             </div>
         </div>
 
-        <!-- Level Progress -->
-        <div class="bg-surface rounded-2xl p-4 mb-6 shadow-sm">
-            <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center space-x-3">
-                    <div class="w-12 h-12 bg-gradient-to-br from-accent to-orange-500 rounded-xl flex items-center justify-center">
-                        <i class="fas fa-star text-white text-lg"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-gray-800">等级 8 - 稳定期</h3>
-                        <p class="text-sm text-gray-600">1,250 / 1,500 EXP</p>
-                    </div>
-                </div>
-                <span class="text-2xl">🎮</span>
+        <!-- Quick Stats - 游客可见 (只读内容) -->
+        <div class="grid grid-cols-3 gap-4 mb-6">
+            <div class="bg-surface rounded-2xl p-4 text-center shadow-sm">
+                <div class="text-2xl font-bold text-gray-800 mb-1">0%</div>
+                <div class="text-xs text-gray-500">成功率</div>
             </div>
-            <div class="w-full bg-gray-200 rounded-full h-3">
-                <div class="level-progress h-3 rounded-full" style="width: 83%"></div>
+            <div class="bg-surface rounded-2xl p-4 text-center shadow-sm">
+                <div class="text-2xl font-bold text-gray-800 mb-1">0</div>
+                <div class="text-xs text-gray-500">最高纪录</div>
+            </div>
+            <div class="bg-surface rounded-2xl p-4 text-center shadow-sm">
+                <div class="text-2xl font-bold text-gray-800 mb-1">L1</div>
+                <div class="text-xs text-gray-500">当前等级</div>
             </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="grid grid-cols-2 gap-4 mb-6">
-            <button class="bg-surface rounded-2xl p-4 card-hover shadow-sm">
-                <div class="text-center">
-                    <div class="w-12 h-12 bg-danger/10 rounded-xl flex items-center justify-center mx-auto mb-3">
-                        <i class="fas fa-exclamation-triangle text-danger text-xl"></i>
-                    </div>
-                    <h3 class="font-semibold text-gray-800 mb-1">紧急求助</h3>
-                    <p class="text-xs text-gray-600">需要帮助时点这里</p>
+        <!-- Quick Actions - 游客可见 -->
+        <div class="grid grid-cols-4 gap-4 mb-6">
+            <button onclick="needLogin('紧急求助')" class="flex flex-col items-center">
+                <div class="w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center mb-2">
+                    <i class="fas fa-sos text-red-500 text-xl"></i>
                 </div>
+                <span class="text-xs text-gray-600">紧急求助</span>
             </button>
-            
-            <button class="bg-surface rounded-2xl p-4 card-hover shadow-sm">
-                <div class="text-center">
-                    <div class="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center mx-auto mb-3">
-                        <i class="fas fa-users text-secondary text-xl"></i>
-                    </div>
-                    <h3 class="font-semibold text-gray-800 mb-1">社区</h3>
-                    <p class="text-xs text-gray-600">与伙伴们交流</p>
+            <button onclick="needLogin('自我评估')" class="flex flex-col items-center">
+                <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center mb-2">
+                    <i class="fas fa-chart-pie text-blue-500 text-xl"></i>
                 </div>
+                <span class="text-xs text-gray-600">自我评估</span>
+            </button>
+            <button onclick="alert('学习内容 - 游客可浏览')" class="flex flex-col items-center">
+                <div class="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center mb-2">
+                    <i class="fas fa-book-open text-purple-500 text-xl"></i>
+                </div>
+                <span class="text-xs text-gray-600">学习内容</span>
+            </button>
+            <button onclick="alert('社区 - 游客可浏览')" class="flex flex-col items-center">
+                <div class="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center mb-2">
+                    <i class="fas fa-users text-green-500 text-xl"></i>
+                </div>
+                <span class="text-xs text-gray-600">社区</span>
             </button>
         </div>
 
-        <!-- Today's Achievements -->
-        <div class="bg-surface rounded-2xl p-4 mb-6 shadow-sm">
-            <h3 class="font-semibold text-gray-800 mb-4">今日成就</h3>
-            <div class="space-y-3">
-                <div class="flex items-center space-x-3 p-3 bg-green-50 rounded-xl">
-                    <div class="w-8 h-8 bg-success/20 rounded-full flex items-center justify-center">
-                        <i class="fas fa-check text-success text-sm"></i>
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-medium text-gray-800">完成每日打卡</p>
-                        <p class="text-xs text-gray-600">+10 经验值</p>
-                    </div>
-                    <span class="text-success font-bold">+10</span>
+        <!-- Recent Achievements - 游客可见 (只读内容) -->
+        <div class="bg-surface rounded-2xl p-5 shadow-sm mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-semibold text-gray-800">成就徽章</h3>
+                <span class="text-xs text-gray-500">0/50</span>
+            </div>
+            <div class="flex space-x-3">
+                <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center relative">
+                    <i class="fas fa-lock text-gray-400"></i>
                 </div>
-                
-                <div class="flex items-center space-x-3 p-3 bg-blue-50 rounded-xl">
-                    <div class="w-8 h-8 bg-secondary/20 rounded-full flex items-center justify-center">
-                        <i class="fas fa-book text-secondary text-sm"></i>
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-medium text-gray-800">阅读健康文章</p>
-                        <p class="text-xs text-gray-600">+15 经验值</p>
-                    </div>
-                    <span class="text-secondary font-bold">+15</span>
+                <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center relative">
+                    <i class="fas fa-lock text-gray-400"></i>
+                </div>
+                <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center relative">
+                    <i class="fas fa-lock text-gray-400"></i>
+                </div>
+                <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center relative">
+                    <i class="fas fa-lock text-gray-400"></i>
                 </div>
             </div>
+            <p class="text-xs text-gray-400 mt-3 text-center">登录后即可解锁成就系统</p>
         </div>
 
-        <!-- Daily Tips -->
-        <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-4 mb-6 border border-purple-100">
+        <!-- Tips Card - 游客可见 (只读内容) -->
+        <div class="bg-gradient-to-br from-secondary to-cyan-600 rounded-2xl p-5 text-white">
             <div class="flex items-start space-x-3">
-                <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mt-1">
-                    <i class="fas fa-lightbulb text-purple-600 text-sm"></i>
+                <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-lightbulb text-white"></i>
                 </div>
                 <div>
-                    <h3 class="font-semibold text-gray-800 mb-2">今日小贴士</h3>
-                    <p class="text-sm text-gray-700 leading-relaxed">
-                        当感到冲动时，尝试做10个深呼吸或者快速做20个俯卧撑。身体运动能有效转移注意力并释放内啡肽。
+                    <h3 class="font-semibold mb-1">今日小贴士</h3>
+                    <p class="text-sm text-cyan-100 leading-relaxed">
+                        保持规律作息，每天运动30分钟，有助于培养健康的生活习惯
                     </p>
                 </div>
             </div>
         </div>
-
-        <!-- Recent Milestones -->
-        <div class="bg-surface rounded-2xl p-4 shadow-sm">
-            <h3 class="font-semibold text-gray-800 mb-4">最近成就</h3>
-            <div class="space-y-3">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
-                        <i class="fas fa-medal text-white"></i>
-                    </div>
-                    <div>
-                        <p class="font-medium text-gray-800">坚持3周达成</p>
-                        <p class="text-xs text-gray-600">3天前获得</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-xl flex items-center justify-center">
-                        <i class="fas fa-trophy text-white"></i>
-                    </div>
-                    <div>
-                        <p class="font-medium text-gray-800">社区贡献者</p>
-                        <p class="text-xs text-gray-600">1周前获得</p>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <!-- Bottom Navigation -->
-    <div class="fixed bottom-0 left-0 right-0 bg-surface border-t border-gray-100 px-6 py-3">
+    <!-- Bottom Navigation - 游客可见所有页面入口 -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-3">
         <div class="flex justify-around items-center">
-            <button class="flex flex-col items-center space-y-1">
-                <i class="fas fa-home text-primary text-lg"></i>
-                <span class="text-xs text-primary font-medium">主页</span>
+            <button class="flex flex-col items-center text-primary">
+                <i class="fas fa-home text-lg mb-1"></i>
+                <span class="text-xs font-medium">首页</span>
             </button>
-            <button class="flex flex-col items-center space-y-1">
-                <i class="fas fa-chart-line text-gray-400 text-lg"></i>
-                <span class="text-xs text-gray-400">进度</span>
+            <button onclick="alert('学习页面 - 游客可浏览')" class="flex flex-col items-center text-gray-400">
+                <i class="fas fa-book text-lg mb-1"></i>
+                <span class="text-xs">学习</span>
             </button>
-            <button class="flex flex-col items-center space-y-1">
-                <i class="fas fa-users text-gray-400 text-lg"></i>
-                <span class="text-xs text-gray-400">社区</span>
+            <button onclick="needLogin('打卡记录')" class="flex flex-col items-center text-gray-400 relative">
+                <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center -mt-6 shadow-lg">
+                    <i class="fas fa-plus text-white text-lg"></i>
+                </div>
+                <span class="text-xs mt-1">记录</span>
             </button>
-            <button class="flex flex-col items-center space-y-1">
-                <i class="fas fa-book text-gray-400 text-lg"></i>
-                <span class="text-xs text-gray-400">学习</span>
+            <button onclick="alert('社区页面 - 游客可浏览')" class="flex flex-col items-center text-gray-400">
+                <i class="fas fa-users text-lg mb-1"></i>
+                <span class="text-xs">社区</span>
             </button>
-            <button class="flex flex-col items-center space-y-1">
-                <i class="fas fa-user text-gray-400 text-lg"></i>
-                <span class="text-xs text-gray-400">我的</span>
+            <button onclick="needLogin('个人中心')" class="flex flex-col items-center text-gray-400">
+                <i class="fas fa-user text-lg mb-1"></i>
+                <span class="text-xs">我的</span>
             </button>
         </div>
     </div>
+
+    <script>
+        // 需要登录的操作提示 (审核整改)
+        function needLogin(featureName) {
+            alert('【' + featureName + '】\n\n此功能需要登录后使用\n\n是否立即登录？\n\n【审核要点】\n游客模式下只读内容全部可见\n仅在写入操作时提示登录');
+        }
+
+        function showLoginTip() {
+            alert('跳转到登录页面...\n\n登录后可同步数据、解锁成就、参与社区互动');
+        }
+    </script>
 </body>
-</html> 
+</html>

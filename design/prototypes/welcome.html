@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>欢迎使用戒色助手</title>
+    <title>欢迎使用自律助手</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -37,6 +37,10 @@
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
         }
+        .checkbox-custom:checked {
+            background-color: #10B981;
+            border-color: #10B981;
+        }
     </style>
 </head>
 <body class="bg-background h-screen overflow-hidden">
@@ -63,7 +67,7 @@
                 </div>
             </div>
             
-            <h1 class="text-3xl font-bold text-white mb-4">戒色助手</h1>
+            <h1 class="text-3xl font-bold text-white mb-4">自律助手</h1>
             <p class="text-lg text-green-100 leading-relaxed px-4">
                 重获健康生活<br>
                 开启全新的自己
@@ -71,14 +75,14 @@
         </div>
 
         <!-- Features Preview -->
-        <div class="space-y-4 mb-8">
+        <div class="space-y-4 mb-6">
             <div class="flex items-center space-x-4 text-white">
                 <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
                     <i class="fas fa-chart-line text-white"></i>
                 </div>
                 <div>
                     <h3 class="font-semibold">科学评估系统</h3>
-                    <p class="text-sm text-green-100">专业的依赖程度评估</p>
+                    <p class="text-sm text-green-100">专业的自我评估</p>
                 </div>
             </div>
             
@@ -105,21 +109,56 @@
 
         <!-- Action Buttons -->
         <div class="space-y-3">
-            <button class="w-full bg-white text-primary font-semibold py-4 rounded-2xl shadow-lg active:scale-95 transition-transform">
-                开始使用
-            </button>
-            
-            <button class="w-full border-2 border-white/30 text-white font-semibold py-4 rounded-2xl active:scale-95 transition-transform">
-                了解更多
-            </button>
-            
-            <div class="text-center pt-4">
-                <p class="text-xs text-green-100">
-                    点击"开始使用"即表示您同意我们的
-                    <span class="underline">服务协议</span> 和 <span class="underline">隐私政策</span>
-                </p>
+            <!-- 隐私协议复选框 - 用户必须主动勾选 (整改问题1) -->
+            <div class="flex items-start space-x-3 mb-4">
+                <input type="checkbox" id="privacy-check" class="checkbox-custom mt-1 w-5 h-5 rounded border-2 border-white/50 bg-transparent appearance-none cursor-pointer" onchange="toggleButtons()">
+                <label for="privacy-check" class="text-xs text-green-100 leading-relaxed cursor-pointer">
+                    我已阅读并同意
+                    <a href="#" class="underline font-medium">《用户服务协议》</a>
+                    和
+                    <a href="#" class="underline font-medium">《隐私政策》</a>
+                </label>
             </div>
+
+            <!-- 登录注册按钮 - 仅在勾选协议后可用 -->
+            <button id="login-btn" onclick="handleLogin()" class="w-full bg-white text-primary font-semibold py-4 rounded-2xl shadow-lg active:scale-95 transition-transform opacity-50 cursor-not-allowed" disabled>
+                登录 / 注册
+            </button>
+            
+            <!-- 游客体验按钮 - 允许用户不登录即可浏览功能 (整改问题2) -->
+            <button id="guest-btn" onclick="handleGuest()" class="w-full border-2 border-white/30 text-white font-semibold py-4 rounded-2xl active:scale-95 transition-transform opacity-50 cursor-not-allowed" disabled>
+                <i class="fas fa-user-secret mr-2"></i>游客体验
+            </button>
         </div>
     </div>
+
+    <script>
+        // 控制按钮状态 - 必须勾选协议才能点击
+        function toggleButtons() {
+            const checked = document.getElementById('privacy-check').checked;
+            const loginBtn = document.getElementById('login-btn');
+            const guestBtn = document.getElementById('guest-btn');
+            
+            if (checked) {
+                loginBtn.disabled = false;
+                loginBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                guestBtn.disabled = false;
+                guestBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                loginBtn.disabled = true;
+                loginBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                guestBtn.disabled = true;
+                guestBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        function handleLogin() {
+            alert('跳转到微信授权登录页面...\n\n【审核要点】\n用户主动勾选协议后才请求授权');
+        }
+
+        function handleGuest() {
+            alert('进入游客模式...\n\n【审核要点】\n用户可以浏览所有只读内容\n仅在打卡、发帖等操作时提示登录');
+        }
+    </script>
 </body>
-</html> 
+</html>

@@ -317,8 +317,11 @@ const loadUserData = async () => {
   try {
     const token = uni.getStorageSync('token')
     if (!token) {
-      console.log('未登录，跳转到登录页')
-      uni.redirectTo({ url: '/pages/welcome/welcome' })
+      console.log('未登录，显示默认数据')
+      // 未登录时显示默认数据，不跳转
+      hasCheckedToday.value = false
+      streakDays.value = 0
+      userLevel.value = 1
       return
     }
 
@@ -379,6 +382,19 @@ const formatTime = (dateStr) => {
 }
 
 const handleCheckin = () => {
+  const token = uni.getStorageSync('token')
+  if (!token) {
+    uni.showModal({
+      title: '需要登录',
+      content: '打卡功能需要登录后使用，是否前往登录？',
+      success: (res) => {
+        if (res.confirm) {
+          uni.navigateTo({ url: '/pages/welcome/welcome' })
+        }
+      }
+    })
+    return
+  }
   goToCheckin()
 }
 

@@ -29,40 +29,26 @@ export function getUserInfo() {
 // 获取token
 export function getToken() {
   const token = uni.getStorageSync('token') || ''
-  // 验证token格式
-  if (token && token !== 'guest_token' && !isValidJWT(token)) {
-    console.warn('检测到无效token，自动清除:', token)
-    clearUserInfo()
-    return ''
+  // 验证token格式 - 简化版本，只检查三段式结构
+  if (token && token !== 'guest_token') {
+    const parts = token.split('.')
+    if (parts.length !== 3) {
+      console.warn('检测到无效token，自动清除:', token)
+      clearUserInfo()
+      return ''
+    }
   }
   return token
 }
 
-// 验证JWT token格式
+// 验证JWT token格式 - 简化版本
 function isValidJWT(token) {
   if (!token || typeof token !== 'string') {
     return false
   }
   
-  // JWT应该有3个部分，用点分隔
-  const parts = token.split('.')
-  if (parts.length !== 3) {
-    return false
-  }
-  
-  // 检查每个部分是否为有效的base64
-  try {
-    for (let part of parts) {
-      // 添加必要的padding
-      while (part.length % 4) {
-        part += '='
-      }
-      atob(part.replace(/-/g, '+').replace(/_/g, '/'))
-    }
-    return true
-  } catch (e) {
-    return false
-  }
+  // 只检查是否是三段式结构，避免base64解码在小程序环境的问题
+  return token.split('.').length === 3
 }
 
 // 设置用户信息

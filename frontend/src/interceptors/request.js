@@ -124,24 +124,14 @@ async function handleAuthentication(options) {
 
 /**
  * 验证JWT token格式
+ * 简化版本，只检查三段式结构，避免atob在小程序环境的兼容性问题
  */
 function isValidJWT(token) {
   if (!token || typeof token !== 'string') return false
   
   const parts = token.split('.')
-  if (parts.length !== 3) return false
-  
-  try {
-    for (let part of parts) {
-      while (part.length % 4) {
-        part += '='
-      }
-      atob(part.replace(/-/g, '+').replace(/_/g, '/'))
-    }
-    return true
-  } catch (e) {
-    return false
-  }
+  // 只检查是否是三段式结构，不做base64解码验证
+  return parts.length === 3
 }
 
 /**
@@ -236,21 +226,15 @@ async function handleAuthError(response, options) {
   if (options?.requestType !== REQUEST_TYPES.AUTH_REQUIRED) {
     return response
   }
-
+  
   // 显示登录提示
   uni.showToast({
     title: '登录已过期，请重新登录',
     icon: 'none',
     duration: 2000
   })
-
-  // 延迟跳转到登录页
-  setTimeout(() => {
-    uni.reLaunch({
-      url: '/pages/welcome/welcome'
-    })
-  }, 2000)
-
+  
+  // 不跳转页面，用户可以自行去"我的"页面登录
   throw new Error('认证失败')
 }
 

@@ -2,6 +2,9 @@ const ci = require('miniprogram-ci');
 const fs = require('fs');
 const path = require('path');
 
+// 从 package.json 读取版本号
+const pkg = require('./package.json');
+
 // 配置信息
 const config = {
   appid: 'wx07c9e8e4f105260b',
@@ -11,10 +14,10 @@ const config = {
   ignores: ['node_modules/**/*'],
 };
 
-// 上传配置 - 从命令行读取参数
+// 上传配置 - 优先从命令行读取，否则从 package.json 读取
 const uploadConfig = {
-  version: process.argv[2] || '1.0.0',
-  desc: process.argv[3] || 'NOPEMON 戒色小程序 - 自动发布',
+  version: process.argv[2] || pkg.version || '1.0.0',
+  desc: process.argv[3] || '自律助手小程序 - 自动发布',
   robot: 1, // 使用第1个机器人
 };
 

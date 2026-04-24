@@ -536,25 +536,34 @@ onShow(() => {
   background: #FFFFFF;
   padding: 32rpx 48rpx 48rpx;
   
-  .greeting-area {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    
-    .greeting-text {
-      .greeting {
-        display: block;
-        font-size: 48rpx;
-        font-weight: bold;
-        color: #1f2937;
-        margin-bottom: 8rpx;
-      }
+    .greeting-area {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       
-      .motto {
-        font-size: 28rpx;
-        color: #6b7280;
+      .greeting-text {
+        flex: 1;
+        min-width: 0;
+        
+        .greeting {
+          display: block;
+          font-size: 48rpx;
+          font-weight: bold;
+          color: #1f2937;
+          margin-bottom: 8rpx;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        
+        .motto {
+          font-size: 28rpx;
+          color: #6b7280;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
       }
-    }
     
     .header-actions {
       display: flex;
